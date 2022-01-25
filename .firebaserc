@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "sorelax": {
+      "hosting": {
+        "sorelax_frontend": [
+          "sorelax"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "sorelax"
+  }
+}
