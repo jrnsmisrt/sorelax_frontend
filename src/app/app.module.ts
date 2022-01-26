@@ -13,23 +13,26 @@ import {RouterModule} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {LayoutModule} from "./layout/layout.module";
 import {HomeComponent} from "./home/home.component";
-import { UserLoginComponent } from './user/user-login/user-login.component';
-import { UserRegisterComponent } from './user/user-register/user-register.component';
+import { SignupComponent } from './signup/signup.component';
+import { LoginComponent } from './login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    UserLoginComponent,
-    UserRegisterComponent
+    SignupComponent,
+    LoginComponent,
+    DashboardComponent
 
 
   ],
   imports: [
     BrowserModule,
     LayoutModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
@@ -37,6 +40,7 @@ import { UserRegisterComponent } from './user/user-register/user-register.compon
     AppRoutingModule,
     RouterModule.forRoot([]),
     HttpClientModule,
+    ReactiveFormsModule,
   ],
   providers: [
     FirebaseService

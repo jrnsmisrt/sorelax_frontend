@@ -1,0 +1,21 @@
+<button routerLink="/home">
+  Home
+</button>
+
+  <form [formGroup]="signupForm" (ngSubmit)="signup()">
+
+        <label>Full Name</label>
+        <input autocomplete="off" formControlName="displayName" type="text" placeholder="Display Name">
+
+        <label>Email</label>
+        <input formControlName="email" type="email" placeholder="Email">
+
+        <label>Password</label>
+        <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
+
+    <div *ngIf="firebaseErrorMessage != ''" class="error-style">
+      <span>{{ firebaseErrorMessage }}</span>
+    </div>
+
+    <button>Signup</button>
+  </form>
