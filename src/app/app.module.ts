@@ -13,12 +13,16 @@ import {RouterModule} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {LayoutModule} from "./layout/layout.module";
 import {HomeComponent} from "./home/home.component";
+import { UserLoginComponent } from './user/user-login/user-login.component';
+import { UserRegisterComponent } from './user/user-register/user-register.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    UserLoginComponent,
+    UserRegisterComponent
 
 
   ],
