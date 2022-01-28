@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {DatabaseService} from "../services/database.service";
 
 @Component({
   selector: 'app-signup',
@@ -10,36 +11,57 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./signup.component.css']
 })
 export class SignupComponent implements OnInit {
-  signupForm!: FormGroup;
+  currentUserUid!: string;
+  signupEmailPasswordForm = this.formBuilder.group({
+    'email': new FormControl('', [Validators.required, Validators.email]),
+    'password': new FormControl('', Validators.required)
+  });
+
+  signupForm = this.formBuilder.group({
+    'id': '',
+    'firstName': new FormControl('', [Validators.required]),
+    'lastName': new FormControl('', [Validators.required]),
+    'dateOfBirth': new FormControl('', [Validators.required]),
+    'phoneNumber': new FormControl('', [Validators.required]),
+    'email': '',
+    'address': new FormControl('', [Validators.required]),
+    'role': new FormControl('', [Validators.required])
+  });
+
   firebaseErrorMessage: string;
 
 
-  constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth) {
+  constructor(private authService: AuthService, private router: Router,
+              private afAuth: AngularFireAuth, private databaseService: DatabaseService,
+              private formBuilder: FormBuilder) {
     this.firebaseErrorMessage = '';
 
 
   }
 
   ngOnInit(): void {
-    this.signupForm = new FormGroup({
-      'displayName': new FormControl('', Validators.required),
-      'email': new FormControl('', [Validators.required, Validators.email]),
-      'password': new FormControl('', Validators.required)
-    });
+
   }
 
   signup() {
-    if (this.signupForm.invalid)                            // if there's an error in the form, don't submit it
-      return;
+    // if (this.signupForm.invalid||this.signupEmailPasswordForm.invalid)                            // if there's an error in the form, don't submit it
+    //   return;
 
-    this.authService.signupUser(this.signupForm.value).then((result) => {
+    this.authService.signupUser(this.signupEmailPasswordForm.value).then((result) => {
       if (result == null)                                 // null is success, false means there was an error
         this.router.navigate(['/dashboard']);
       else if (result.isValid == false)
         this.firebaseErrorMessage = result.message;
     }).catch(() => {
-
     });
+
+    this.signupForm.get('email')?.patchValue(`${this.signupEmailPasswordForm.get('email')?.value}`);
+    console.log(this.signupForm.get('email'));
+    this.signupForm.get('id')?.patchValue(this.afAuth.currentUser.then(data => {
+      if (data != null) this.currentUserUid = data.uid;
+    }));
+    console.log(this.signupForm.get('id'));
+    this.databaseService.addUser(this.signupForm.value);
   }
 
 

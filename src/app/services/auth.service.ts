@@ -1,14 +1,20 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {Router} from "@angular/router";
+import firebase from "firebase/compat";
+import {Observable, of, switchMap} from "rxjs";
+import {User} from "../user/model/User";
+import {AngularFirestore, AngularFirestoreDocument} from "@angular/fire/compat/firestore";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   userLoggedIn: boolean;
+  user$!: Observable<User>|any
 
-  constructor(private router: Router, private afAuth: AngularFireAuth) {
+
+  constructor(private router: Router, private afAuth: AngularFireAuth, private afs: AngularFirestore) {
     this.userLoggedIn = false;
 
     this.afAuth.onAuthStateChanged((user) => {
@@ -19,7 +25,47 @@ export class AuthService {
       }
     });
 
+    this.user$ = this.afAuth.authState.pipe(
+      switchMap(user => {
+        if (user) {
+          return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+        } else {
+          return of(null);
+        }
+      })
+    )
+
   }
+
+  async googleSignin() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const credential = await this.afAuth.signInWithPopup(provider);
+    return this.updateUserData(credential.user);
+  }
+
+  private updateUserData(user:any) {
+    const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
+
+    const data = {
+      uid: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dateOfBirth: user.dateOfBirth,
+      phoneNumber: user.phoneNumber,
+      emailAddress: user.emailAddress,
+      address: user.address,
+      role: user.role
+    }
+    return userRef.set(data, {merge: true})
+
+  }
+
+  async signOut(){
+    await this.afAuth.signOut();
+    this.router.navigate(['/']);
+  }
+
 
   signupUser(user: any): Promise<any> {
     return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)

@@ -2,20 +2,25 @@
   Home
 </button>
 
-  <form [formGroup]="signupForm" (ngSubmit)="signup()">
-
-        <label>Full Name</label>
-        <input autocomplete="off" formControlName="displayName" type="text" placeholder="Display Name">
-
-        <label>Email</label>
-        <input formControlName="email" type="email" placeholder="Email">
-
-        <label>Password</label>
-        <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
-
-    <div *ngIf="firebaseErrorMessage != ''" class="error-style">
-      <span>{{ firebaseErrorMessage }}</span>
-    </div>
-
-    <button>Signup</button>
-  </form>
+<form [formGroup]="signupForm">
+<label>Firstname</label>
+<input autocomplete="off" formControlName="firstName" type="text" placeholder="Firstname">
+<label>LastName</label>
+<input autocomplete="off" formControlName="lastName" type="text" placeholder="Lastname">
+<label>Date Of Birth</label>
+<input autocomplete="off" formControlName="dateOfBirth" type="text" placeholder="Date of birth">
+<label>Phonenumber</label>
+<input autocomplete="off" formControlName="phoneNumber" type="text" placeholder="Phonenumber">
+<label>Address</label>
+<input autocomplete="off" formControlName="address" type="text" placeholder="Address">
+</form>
+<form [formGroup]="signupEmailPasswordForm" (ngSubmit)="signup()">
+  <label>Email</label>
+  <input formControlName="email" type="email" placeholder="Email">
+  <label>Password</label>
+  <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
+  <div *ngIf="firebaseErrorMessage != ''" class="error-style">
+    <span>{{ firebaseErrorMessage }}</span>
+  </div>
+  <button>Signup</button>
+</form>
