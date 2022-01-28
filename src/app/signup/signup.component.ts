@@ -18,12 +18,12 @@ export class SignupComponent implements OnInit {
   });
 
   signupForm = this.formBuilder.group({
-    'id': '',
+    'email': new FormControl('', [Validators.required, Validators.email]),
+    'password': new FormControl('', Validators.required),
     'firstName': new FormControl('', [Validators.required]),
     'lastName': new FormControl('', [Validators.required]),
     'dateOfBirth': new FormControl('', [Validators.required]),
     'phoneNumber': new FormControl('', [Validators.required]),
-    'email': '',
     'address': new FormControl('', [Validators.required]),
     'role': new FormControl('', [Validators.required])
   });
@@ -47,19 +47,13 @@ export class SignupComponent implements OnInit {
     // if (this.signupForm.invalid||this.signupEmailPasswordForm.invalid)                            // if there's an error in the form, don't submit it
     //   return;
 
-    this.authService.signupUser(this.signupEmailPasswordForm.value).then((result) => {
+    this.authService.signupUser(this.signupForm.value).then((result) => {
       if (result == null)                                 // null is success, false means there was an error
         this.router.navigate(['/dashboard']);
       else if (result.isValid == false)
         this.firebaseErrorMessage = result.message;
     }).catch(() => {
     });
-
-    this.signupForm.get('email')?.patchValue(`${this.signupEmailPasswordForm.get('email')?.value}`);
-    console.log(this.signupForm.get('email'));
-    this.signupForm.get('id')?.patchValue(this.afAuth.currentUser.then(data => {
-      if (data != null) this.currentUserUid = data.uid;
-    }));
     console.log(this.signupForm.get('id'));
     this.databaseService.addUser(this.signupForm.value);
   }

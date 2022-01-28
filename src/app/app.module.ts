@@ -17,7 +17,7 @@ import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import { UserProfileComponent } from './users/user-profile/user-profile.component';
+import { UserProfileComponent } from './user/user-profile/user-profile.component';
 
 
 @NgModule({

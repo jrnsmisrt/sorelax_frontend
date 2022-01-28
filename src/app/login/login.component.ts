@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   firebaseErrorMessage: string;
 
-  constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth,private formBuilder: FormBuilder) {
+  constructor(public auth: AuthService, private router: Router, private afAuth: AngularFireAuth,private formBuilder: FormBuilder) {
     this.firebaseErrorMessage = '';
   }
 
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid)
       return;
 
-    this.authService.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
+    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
       if (result == null) {
         console.log('logging in...');
         this.router.navigate(['/dashboard']);
