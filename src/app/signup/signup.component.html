@@ -3,24 +3,22 @@
 </button>
 
 <form [formGroup]="signupForm">
-<label>Firstname</label>
-<input autocomplete="off" formControlName="firstName" type="text" placeholder="Firstname">
-<label>LastName</label>
-<input autocomplete="off" formControlName="lastName" type="text" placeholder="Lastname">
-<label>Date Of Birth</label>
-<input autocomplete="off" formControlName="dateOfBirth" type="text" placeholder="Date of birth">
-<label>Phonenumber</label>
-<input autocomplete="off" formControlName="phoneNumber" type="text" placeholder="Phonenumber">
-<label>Address</label>
-<input autocomplete="off" formControlName="address" type="text" placeholder="Address">
-</form>
-<form [formGroup]="signupEmailPasswordForm" (ngSubmit)="signup()">
+  <label>Firstname</label>
+  <input autocomplete="on" formControlName="firstName" type="text" placeholder="Firstname">
+  <label>LastName</label>
+  <input autocomplete="on" formControlName="lastName" type="text" placeholder="Lastname">
+  <label>Date Of Birth</label>
+  <input autocomplete="on" formControlName="dateOfBirth" type="text" placeholder="Date of birth">
+  <label>Phone number</label>
+  <input autocomplete="on" formControlName="phoneNumber" type="text" placeholder="Phone number">
+  <label>Address</label>
+  <input autocomplete="on" formControlName="address" type="text" placeholder="Address">
   <label>Email</label>
-  <input formControlName="email" type="email" placeholder="Email">
+  <input autocomplete="on" formControlName="email" type="email" placeholder="Email">
   <label>Password</label>
   <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
   <div *ngIf="firebaseErrorMessage != ''" class="error-style">
     <span>{{ firebaseErrorMessage }}</span>
   </div>
-  <button>Signup</button>
+  <button (click)="signupUser()">Signup</button>
 </form>

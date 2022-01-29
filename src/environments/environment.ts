@@ -4,7 +4,6 @@ export const environment = {
   firebase: {
     apiKey: "AIzaSyCbmaY4uOWxP0OWglx9k04EBXdsQOcXRxk",
     authDomain: "sorelax.firebaseapp.com",
-    databaseURL: "https://sorelax-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "sorelax",
     storageBucket: "sorelax.appspot.com",
     messagingSenderId: "416230477435",
