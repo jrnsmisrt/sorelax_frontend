@@ -47,8 +47,8 @@ export class SignupComponent implements OnInit {
   }
 
   openModalSignup(){
-    let modal1 = M.Modal.getInstance(document.querySelector('#modal1')!);
-    modal1.open();
+    let signupModal = M.Modal.getInstance(document.querySelector('#signupModal')!);
+    signupModal.open();
   }
 
   signupUser() {

@@ -5,7 +5,7 @@
         <label>Massage</label>
         <select formControlName="massage" class="select-dropdown validate">
           <option disabled>Selecteer een massage</option>
-          <option *ngFor="let massage of massages" [ngValue]="massage">
+          <option *ngFor="let massage of massages" [ngValue]="massage" (change)="changeMassage($event)">
             {{massage}}
           </option>
         </select>
@@ -27,7 +27,7 @@
       <div class="col s2">
         <label>tijdsduur</label>
         <select formControlName="duration" class="select-dropdown validate">
-          <option *ngFor="let duration of durationMinutes" [ngValue]="duration">
+          <option *ngFor="let duration of durationMinutes" [ngValue]="duration" (change)="changeDuration($event)">
           {{duration}}
           </option>
         </select>
@@ -43,7 +43,7 @@
 
     <div class="row">
       <div class="col-2">
-        <a class="btn-large waves-effect waves-teal">Boek Massage</a>
+        <a class="btn-large waves-effect waves-teal" (click)="openModalBookingConfirmation()">Boek Massage</a>
       </div>
       <div class="col-2">
 
@@ -51,6 +51,16 @@
     </div>
 
   </form>
+
+  <div id="bookingModal" class="modal">
+    <div class="modal-content">
+      <h4>Confirm Booking</h4>
+      <p>Please confirm Booking by pressing the confirm button</p>
+    </div>
+    <div class="modal-footer">
+      <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-flat">Confirm</a>
+    </div>
+  </div>
 
 
 </div>

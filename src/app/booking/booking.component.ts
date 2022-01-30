@@ -4,6 +4,7 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {FirebaseService} from "../services/firebase.service";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {InitService} from "../materialize/init.service";
+import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 
 @Component({
   selector: 'app-booking',
@@ -11,6 +12,8 @@ import {InitService} from "../materialize/init.service";
   styleUrls: ['./booking.component.css']
 })
 export class BookingComponent implements OnInit {
+  auth = getAuth();
+  uid!: string;
   massages: any = ['Ontspanning','Boost', 'Sport', 'Anti-stress', 'Scrub'];
   durationMinutes: any = ['30', '60', '90'];
 
@@ -22,23 +25,47 @@ export class BookingComponent implements OnInit {
     message: new FormControl('', [Validators.required])
   })
 
-  constructor(private afStore: AngularFirestore, private afAuth: AngularFireAuth, private fbService: FirebaseService, private formBuilder: FormBuilder, private initService: InitService) {
+  constructor(private afStore: AngularFirestore, private afAuth: AngularFireAuth,
+              private fbService: FirebaseService, private formBuilder: FormBuilder,
+              private initService: InitService) {
+
   }
 
   ngOnInit(): void {
     this.initService.initSelect();
     this.initService.initDatePicker();
     this.initService.initTimePicker();
+
+    document.addEventListener('DOMContentLoaded', function () {
+      var elems = document.querySelectorAll('.modal');
+      var instances = M.Modal.init(elems, {
+        dismissible: true,
+      });
+    });
+
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        this.uid = user.uid.toString();
+      }
+    });
+
   }
 
   bookMassage() {
+    this.bookingForm.patchValue({
+      date: $('.datepicker').val(),
+      time: $('.timepicker').val()
+    })
+
     return this.afStore.collection('bookings').doc().set({
-      userUid: this.afAuth.currentUser.then(user => user?.uid),
+      userUid: this.uid,
       date: this.bookingForm.get(['date'])?.value,
       time: this.bookingForm.get(['time'])?.value,
       massage: this.bookingForm.get(['massage'])?.value,
       duration: this.bookingForm.get(['duration'])?.value,
-      personalMessage: this.bookingForm.get(['message'])?.value
+      personalMessage: this.bookingForm.get(['message'])?.value,
+      requestedOn: new Date(Date.now()),
+      status: 'pending'
     }).then(() => {
       this.bookingForm.reset();
     }).catch(error => {
@@ -58,6 +85,10 @@ export class BookingComponent implements OnInit {
     });
   }
 
+  openModalBookingConfirmation(){
+    let bookingModal = M.Modal.getInstance(document.querySelector('#bookingModal')!);
+    bookingModal.open();
+  }
 
   clear() {
     this.bookingForm.reset();
