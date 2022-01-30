@@ -1,13 +1,59 @@
 <nav class="white" role="navigation">
   <div class="nav-wrapper container">
+    <div class="row">
+    <div class="col">
     <a id="logo-container" href="#" class="brand-logo">Logo</a>
-    <ul class="right hide-on-med-and-down">
-      <li><a href="#">Navbar Link</a></li>
+    </div>
+    <div class="col black-text ">
+    <ul>
+      <li>
+        <a href="#"> Home </a>
+      </li>
+      <li>
+        <a href="#">About</a>
+      </li>
+      <li>
+        <a href="#">Massages</a>
+      </li>
+      <li>
+        <a href="#">Contact</a>
+      </li>
+      <li>
+        <a href="#"> Book a Massage</a>
+      </li>
+    </ul></div>
+    <ul class="right">
+      <li>
+        <div *ngIf="!(afAuth.user|async)">
+          <button class="waves-effect waves-light btn-small" routerLink="/signup">
+            Signup
+          </button>
+        </div>
+      </li>
+      <li>
+        <div *ngIf="!(afAuth.user|async)">
+          <button class="waves-effect waves-light btn-small" routerLink="/login">
+            Login
+          </button>
+        </div>
+      </li>
+      <li>
+        <div *ngIf="(afAuth.user | async)">
+          User is logged in
+          <button class="waves-effect waves-light btn-small" routerLink="/dashboard">
+            Dashboard
+          </button>
+          <button (click)="logout()">
+            Log out
+          </button>
+        </div>
+      </li>
+      <li>
+        <div *ngIf="!(afAuth.user | async)">
+          User is not logged in
+        </div>
+      </li>
     </ul>
-
-    <ul id="nav-mobile" class="sidenav">
-      <li><a href="#">Navbar Link</a></li>
-    </ul>
-    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
   </div>
 </nav>

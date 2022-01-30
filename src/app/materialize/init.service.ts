@@ -11,14 +11,15 @@ export class InitService {
 
   initParallax() {
     setTimeout(() => {
-      console.log('init form select');
+      console.log('init parallax');
       M.Parallax.init(document.querySelectorAll('.parallax'));
     }, 1);
   }
 
-/*
-  initSideNav():any{
+
+ /* initSideNav():any{
     $(document).ready(function(){
+      console.log('init sidenav')
       $('.sidenav').sidenav();
     });
   }

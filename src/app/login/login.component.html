@@ -1,3 +1,4 @@
+<div class="container">
 <button routerLink="/home">
   Home
 </button>
@@ -5,7 +6,6 @@
 <form [formGroup]="loginForm" (ngSubmit)="loginUser()" type="">
   <label>Email</label>
   <input autocomplete="off" formControlName="email" type="email" placeholder="Email">
-
   <label>Password</label>
   <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
   <div *ngIf="firebaseErrorMessage != ''" class="error-style">
@@ -14,3 +14,4 @@
 
   <button>Login</button>
 </form>
+</div>

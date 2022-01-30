@@ -13,8 +13,5 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  logout():void{
-    this.afAuth.signOut();
-  }
 
 }
