@@ -1,0 +1,56 @@
+<div class="container">
+  <form [formGroup]="bookingForm">
+    <div class="row">
+      <div class="col s6">
+        <label>Massage</label>
+        <select formControlName="massage" class="select-dropdown validate">
+          <option disabled>Selecteer een massage</option>
+          <option *ngFor="let massage of massages" [ngValue]="massage">
+            {{massage}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s6">
+        <label>Datum</label>
+        <input formControlName="date" class="datepicker validate">
+      </div>
+      <div class="col s4">
+        <label>Tijdstip</label>
+        <input formControlName="time" class="timepicker validate">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s2">
+        <label>tijdsduur</label>
+        <select formControlName="duration" class="select-dropdown validate">
+          <option *ngFor="let duration of durationMinutes" [ngValue]="duration">
+          {{duration}}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s6">
+        <label>Handige informatie / toevoegingen</label>
+        <textarea formControlName="message" class="materialize-textarea validate"></textarea>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-2">
+        <a class="btn-large waves-effect waves-teal">Boek Massage</a>
+      </div>
+      <div class="col-2">
+
+      </div>
+    </div>
+
+  </form>
+
+
+</div>
