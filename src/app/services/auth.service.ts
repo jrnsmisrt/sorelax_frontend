@@ -9,13 +9,11 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
   providedIn: 'root'
 })
 export class AuthService {
-  userLoggedIn: boolean;
+  userLoggedIn!: boolean;
   user$: Observable<User> | any;
 
 
   constructor(private router: Router, private afAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
-    this.userLoggedIn = false;
-
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
         this.userLoggedIn = true;

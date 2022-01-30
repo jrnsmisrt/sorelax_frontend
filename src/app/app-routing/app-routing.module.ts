@@ -13,9 +13,9 @@ const routes:Routes = [
   {path:'', redirectTo: 'home', pathMatch:'full'},
   {path:'home', component: HomeComponent},
   {path:'login', component: LoginComponent},
-  {path:'users/profile', component: UserProfileComponent},
+  {path:'users/profile', component: UserProfileComponent, canActivate:[AuthGuard]},
   {path:'signup', component: SignupComponent},
-  {path: 'bookings', component: BookingComponent},
+  {path: 'bookings', component: BookingComponent, canActivate:[AuthGuard]},
   {path:'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path:'**', component: HomeComponent}
 ]
