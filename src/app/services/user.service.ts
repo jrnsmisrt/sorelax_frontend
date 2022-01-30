@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {DatabaseService} from "./database.service";
-import {User} from "../user/model/User";
+import {User} from "../model/User";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -12,8 +12,5 @@ export class UserService {
     this.allUsers = databaseService.getRealtimeDbUsers();
   }
 
-  addUser(user: User){
-    this.databaseService.addUser(user);
-  }
 
 }

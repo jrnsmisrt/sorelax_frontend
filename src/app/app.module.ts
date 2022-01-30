@@ -19,6 +19,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
+import { BookingComponent } from './booking/booking.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
     SignupComponent,
     LoginComponent,
     DashboardComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    BookingComponent
 
 
   ],

@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
 import {Observable, of, switchMap} from "rxjs";
-import {User} from "../user/model/User";
+import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,8 +19,7 @@ export class AuthService {
     this.afAuth.onAuthStateChanged((user) => {
       if (user) {
         this.userLoggedIn = true;
-      }
-     else {
+      } else {
         this.userLoggedIn = false;
       }
     });
@@ -34,52 +34,12 @@ export class AuthService {
         }
       })
     )
-
   }
-
- /* async googleSignin() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    const credential = await this.afAuth.signInWithPopup(provider);
-    return this.updateUserData(credential.user);
-  }*/
-
-  /* private updateUserData(user:any) {
-     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
-
-     const data = {
-       uid: user.uid,
-       email: user.email,
-       firstName: user.firstName,
-       lastName: user.lastName,
-       displayName: user.firstName+' '+user.lastName,
-       dateOfBirth: user.dateOfBirth,
-       phoneNumber: user.phoneNumber,
-       address: user.address,
-       role: user.role
-     }
-     return userRef.set(data, {merge: true})
-
-   }
-   */
 
   async signOut() {
     await this.afAuth.signOut();
     this.router.navigate(['/']);
   }
-
-
-  /* signupUser(user: any): Promise<any> {
-     return this.afAuth.createUserWithEmailAndPassword(user.email, user.password)
-       .then((result) => {
-         let emailLower = user.email.toLowerCase();
-         result.user!.sendEmailVerification();
-       })
-       .catch(error => {
-         console.log('Auth Service: signup error', error);
-         if (error.code)
-           return {isValid: false, message: error.message};
-       });
-   }*/
 
   loginUser(email: string, password: string): Promise<any> {
     return this.afAuth.signInWithEmailAndPassword(email, password)
