@@ -13,6 +13,9 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
   logout():void{
-    this.afAuth.signOut();
+    this.afAuth.signOut().then(()=>{
+      M.toast({html:`Succesfully logged out!`});
+
+    });
   }
 }
