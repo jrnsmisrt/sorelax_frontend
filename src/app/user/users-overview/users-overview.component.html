@@ -1,0 +1,42 @@
+users overview<br>
+
+<div *ngFor="let user of users|async">
+  <div class="row">
+    <div class="col s4"><label>ID</label></div>
+    <div class="col s4"><label>Role</label></div>
+  </div>
+  <div class="row">
+    <div class="col s4">{{user.uid}}</div>
+    <div class="col s4">{{user.role}}</div>
+  </div>
+  <div class="row">
+    <div class="col s4"><label>Firstname</label></div>
+    <div class="col s4"><label>LastName</label></div>
+  </div>
+  <div class="row">
+    <div class="col s4">{{user.firstName}}</div>
+    <div class="col s4">{{user.lastName}}</div>
+  </div>
+  <div class="row">
+    <div class="col s4"><label>Date of birth</label></div>
+  </div>
+  <div class="row">
+    <div class="col s4">{{user.dateOfBirth}}</div>
+  </div>
+  <div class="row">
+    <div class="col s4"><label>Address</label></div>
+  </div>
+  <div class="row">
+    <div class="col s4">{{user.address}}</div>
+  </div>
+  <div class="row">
+    <div class="col s4"><label>E-mail</label></div>
+    <div class="col s4"><label>Phonenumber</label></div>
+  </div>
+  <div class="row">
+    <div class="col s4">{{user.email}}</div>
+    <div class="col s4">{{user.phoneNumber}}</div>
+  </div>
+  -----------------------------------------------------------------
+</div>
+
