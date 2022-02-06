@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
-import {HomeComponent} from "../home/home.component";
-import {LoginComponent} from "../login/login.component";
-import {SignupComponent} from "../signup/signup.component";
-import {DashboardComponent} from "../dashboard/dashboard.component";
+import {HomeComponent} from "../static-web-pages/home/home.component";
+import {LoginComponent} from "../dynamic-web-pages/login/login.component";
+import {SignupComponent} from "../dynamic-web-pages/signup/signup.component";
+import {DashboardComponent} from "../dynamic-web-pages/dashboard/dashboard.component";
 
 import {AuthGuard} from "../services/auth.guard";
 import {UserProfileComponent} from "../user/user-profile/user-profile.component";
-import {BookingComponent} from "../booking/booking.component";
-import {AboutComponent} from "../about/about.component";
-import {MassageComponent} from "../massage/massage.component";
+import {BookingComponent} from "../dynamic-web-pages/booking/booking.component";
+import {AboutComponent} from "../static-web-pages/about/about.component";
+import {MassageComponent} from "../static-web-pages/massage/massage.component";
+import {UsersOverviewComponent} from "../user/users-overview/users-overview.component";
 
 const routes:Routes = [
   {path:'', redirectTo: 'home', pathMatch:'full'},
@@ -18,6 +19,7 @@ const routes:Routes = [
   {path:'massages', component: MassageComponent},
   {path:'login', component: LoginComponent},
   {path:'signup', component: SignupComponent},
+  {path: 'users/overview', component: UsersOverviewComponent},
   {path:'users/:id/profile', component: UserProfileComponent, canActivate:[AuthGuard]},
   {path: 'users/:id/bookmassage', component: BookingComponent, canActivate:[AuthGuard]},
   {path:'users/:id/dashboard', component: DashboardComponent, canActivate: [AuthGuard]},

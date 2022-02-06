@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {InitService} from "../materialize/init.service";
+import {InitService} from "../../materialize/init.service";
 
 @Component({
   selector: 'app-massage',

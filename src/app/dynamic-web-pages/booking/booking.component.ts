@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {InitService} from "../materialize/init.service";
+import {InitService} from "../../materialize/init.service";
 import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 
 @Component({

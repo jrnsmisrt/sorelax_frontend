@@ -11,17 +11,18 @@ import {AppRoutingModule} from "./app-routing/app-routing.module";
 import {RouterModule} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {LayoutModule} from "./layout/layout.module";
-import {HomeComponent} from "./home/home.component";
-import { SignupComponent } from './signup/signup.component';
-import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import {HomeComponent} from "./static-web-pages/home/home.component";
+import { SignupComponent } from './dynamic-web-pages/signup/signup.component';
+import { LoginComponent } from './dynamic-web-pages/login/login.component';
+import { DashboardComponent } from './dynamic-web-pages/dashboard/dashboard.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
-import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
-import { BookingComponent } from './booking/booking.component';
-import { AboutComponent } from './about/about.component';
-import { MassageComponent } from './massage/massage.component';
-import { ContactComponent } from './contact/contact.component';
+import {AngularFirestore, AngularFirestoreModule} from "@angular/fire/compat/firestore";
+import { BookingComponent } from './dynamic-web-pages/booking/booking.component';
+import { AboutComponent } from './static-web-pages/about/about.component';
+import { MassageComponent } from './static-web-pages/massage/massage.component';
+import { ContactComponent } from './static-web-pages/contact/contact.component';
+import { UsersOverviewComponent } from './user/users-overview/users-overview.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { ContactComponent } from './contact/contact.component';
     BookingComponent,
     AboutComponent,
     MassageComponent,
-    ContactComponent
+    ContactComponent,
+    UsersOverviewComponent
 
 
   ],
@@ -45,16 +47,13 @@ import { ContactComponent } from './contact/contact.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFirestoreModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideDatabase(() => getDatabase()),
     AppRoutingModule,
     RouterModule.forRoot([]),
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [
-  ],
+  providers: [AngularFirestore],
 
   bootstrap: [
     AppComponent]

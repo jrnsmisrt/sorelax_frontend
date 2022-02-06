@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../services/auth.service";
+import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
-import {UserService} from "../services/user.service";
-import {User} from "../model/User";
+import {UserService} from "../../services/user.service";
+import {User} from "../../model/User";
 import {Observable} from "rxjs";
 
 @Component({
@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
     if (!this.afAuth.userLoggedIn) {
       this.router.navigate(['/home']);
     }
-    console.log(this.userService.funky());
+
   }
 
 
