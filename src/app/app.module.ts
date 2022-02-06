@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {environment} from "../environments/environment";
-import {FirebaseService} from "./services/firebase.service";
 import {AngularFireModule} from "@angular/fire/compat";
 import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import {provideAuth, getAuth} from '@angular/fire/auth';
@@ -20,6 +19,9 @@ import {ReactiveFormsModule} from "@angular/forms";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import {AngularFirestoreModule} from "@angular/fire/compat/firestore";
 import { BookingComponent } from './booking/booking.component';
+import { AboutComponent } from './about/about.component';
+import { MassageComponent } from './massage/massage.component';
+import { ContactComponent } from './contact/contact.component';
 
 
 @NgModule({
@@ -30,7 +32,10 @@ import { BookingComponent } from './booking/booking.component';
     LoginComponent,
     DashboardComponent,
     UserProfileComponent,
-    BookingComponent
+    BookingComponent,
+    AboutComponent,
+    MassageComponent,
+    ContactComponent
 
 
   ],
@@ -49,7 +54,6 @@ import { BookingComponent } from './booking/booking.component';
     ReactiveFormsModule,
   ],
   providers: [
-    FirebaseService
   ],
 
   bootstrap: [

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {AuthService} from "../../services/auth.service";
+import {User} from "../../model/User";
 
 @Component({
   selector: 'app-header',
@@ -7,8 +9,10 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-
-  constructor(public afAuth: AngularFireAuth) { }
+  user!: User;
+  constructor(public afAuth: AngularFireAuth, private afAuthService: AuthService) {
+    this.user = afAuthService.user$;
+  }
 
   ngOnInit(): void {
   }

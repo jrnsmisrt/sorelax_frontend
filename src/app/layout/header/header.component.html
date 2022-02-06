@@ -1,62 +1,100 @@
-<header>
-  <nav class="white" role="navigation">
-    <div class="nav-wrapper container">
-      <div class="row">
-        <div class="col s1">
-          <a id="logo-container" href="#" class="brand-logo">Logo</a>
-        </div>
-        <div class="col black-text ">
-          <ul>
-            <li>
-              <a href="#"> Home </a>
-            </li>
-            <li>
-              <a href="#">About</a>
-            </li>
-            <li>
-              <a href="#">Massages</a>
-            </li>
-            <li>
-              <a href="#">Contact</a>
-            </li>
-            <li>
-              <a href="#"> Book a Massage</a>
-            </li>
-          </ul>
-        </div>
-        <div class="col">
-          <ul class="right">
-            <li>
-              <div *ngIf="!(afAuth.user|async)">
-                <button class="waves-effect waves-light btn-small" routerLink="/signup">
-                  Signup
-                </button>
-              </div>
-            </li>
-            <li>
-              <div *ngIf="!(afAuth.user|async)">
-                <button class="waves-effect waves-light btn-small" routerLink="/login">
-                  Login
-                </button>
-              </div>
-            </li>
-            <li>
-              <div *ngIf="(afAuth.user | async)">
-                <button class="waves-effect waves-light btn-small" routerLink="/dashboard">
-                  Dashboard
-                </button>
-              </div>
-            </li>
-            <li>
-              <div *ngIf="(afAuth.user | async)">
-                <button class="waves-effect waves-light btn-small" (click)="logout()">
-                  Log out
-                </button>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+<nav class="teal lighten-3 hide-on-small-and-down">
+  <div class="row">
+
+    <div class="col">
+      <ul class="left">
+        <li>
+          <a routerLink="/home"> Home </a>
+        </li>
+        <li>
+          <a routerLink="/about">About</a>
+        </li>
+        <li>
+          <a routerLink="/massages">Massages</a>
+        </li>
+        <li>
+          <a href="#">Contact</a>
+        </li>
+        <li>
+          <a > Book a Massage</a>
+        </li>
+      </ul>
     </div>
-  </nav>
-</header>
+    <div class="col right">
+      <ul class="right">
+        <li *ngIf="!(afAuth.user|async)">
+          <button class="waves-teal waves-effect btn" routerLink="/signup">
+            Signup
+          </button>
+        </li>
+        <li> &nbsp; </li>
+        <li *ngIf="!(afAuth.user|async)">
+          <button class="waves-teal waves-effect btn" routerLink="/login">
+            Login
+          </button>
+        </li>
+        <li *ngIf="(afAuth.user | async)">
+          <button class="waves-teal waves-effect btn"  [routerLink]="['./','users',user.uid, 'dashboard']">
+            Dashboard
+          </button>
+        </li>
+        <li> &nbsp; </li>
+        <li *ngIf="(afAuth.user | async)">
+          <button class="waves-teal waves-effect btn"  (click)="logout()">
+            Log out
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="hide-on-med-and-up">
+
+    <a href="#" data-target="sidenav" class="sidenav-trigger"><i class="medium material-icons">menu</i></a>
+  <ul id="sidenav" class="sidenav teal lighten-5 ">
+    <li>
+      <a href="#"> Home </a>
+    </li>
+    <li>
+      <a routerLink="/about">About</a>
+    </li>
+    <li>
+      <a href="/massages">Massages</a>
+    </li>
+    <li>
+      <a href="#">Contact</a>
+    </li>
+    <li>
+      <a href="#"> Book a Massage</a>
+    </li>
+    <li *ngIf="!(afAuth.user|async)">
+
+      <a routerLink="/signup">
+        Signup
+      </a>
+
+    </li>
+    <li *ngIf="!(afAuth.user|async)">
+
+      <a routerLink="/login">
+        Login
+      </a>
+    </li>
+
+    <li *ngIf="(afAuth.user | async)">
+
+      <a routerLink="/dashboard">
+        Dashboard
+      </a>
+
+    </li>
+    <li *ngIf="(afAuth.user | async)">
+
+      <a (click)="logout()">
+        Log out
+      </a>
+
+    </li>
+  </ul>
+</div>

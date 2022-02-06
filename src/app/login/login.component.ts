@@ -2,11 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {UserService} from "../services/user.service";
-import {FirebaseService} from "../services/firebase.service";
-import {first} from "rxjs";
+
 
 @Component({
   selector: 'app-login',
@@ -22,9 +18,8 @@ export class LoginComponent implements OnInit {
   firebaseErrorMessage: string;
 
   constructor(public auth: AuthService, private router: Router,
-              private afAuth: AngularFireAuth,
-              private formBuilder: FormBuilder,
-              private afDb: AngularFirestore) {
+              private formBuilder: FormBuilder
+              ) {
     this.firebaseErrorMessage = '';
   }
 
@@ -32,7 +27,6 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
-    let loggedInUser =this.afAuth.authState.pipe(first()).toPromise();
     if (this.loginForm.invalid)
       return;
 

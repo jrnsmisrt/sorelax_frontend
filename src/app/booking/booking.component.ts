@@ -1,7 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {FirebaseService} from "../services/firebase.service";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {InitService} from "../materialize/init.service";
 import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
@@ -11,7 +10,7 @@ import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css']
 })
-export class BookingComponent implements OnInit {
+export class BookingComponent implements OnInit, AfterViewInit {
   auth = getAuth();
   uid!: string;
   massages: any = ['Ontspanning','Boost', 'Sport', 'Anti-stress', 'Scrub'];
@@ -26,7 +25,7 @@ export class BookingComponent implements OnInit {
   })
 
   constructor(private afStore: AngularFirestore, private afAuth: AngularFireAuth,
-              private fbService: FirebaseService, private formBuilder: FormBuilder,
+              private formBuilder: FormBuilder,
               private initService: InitService) {
 
   }
@@ -37,8 +36,8 @@ export class BookingComponent implements OnInit {
     this.initService.initTimePicker();
 
     document.addEventListener('DOMContentLoaded', function () {
-      var elems = document.querySelectorAll('.modal');
-      var instances = M.Modal.init(elems, {
+      let elems = document.querySelectorAll('.modal');
+      let instances = M.Modal.init(elems, {
         dismissible: true,
       });
     });
@@ -49,6 +48,10 @@ export class BookingComponent implements OnInit {
       }
     });
 
+  }
+
+  ngAfterViewInit(): void {
+    this.initService.initParallax();
   }
 
   bookMassage() {

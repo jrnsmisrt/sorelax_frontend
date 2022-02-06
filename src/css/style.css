@@ -55,3 +55,13 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+.logosorelaxheader{
+  background-image: url("../assets/img/topbg.jpg");
+  background-repeat: no-repeat, repeat;
+  background-size: 50%;
+  background-position: left top;
+}
+.parallax-container {
+  height: 20px;
+}

@@ -32,7 +32,7 @@ export class SignupComponent implements OnInit {
   firebaseErrorMessage: string;
 
 
-  constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth, private afDb: AngularFirestore) {
+  constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth, private fireStore: AngularFirestore) {
     this.firebaseErrorMessage = '';
   }
 
@@ -56,10 +56,11 @@ export class SignupComponent implements OnInit {
     return this.afAuth.createUserWithEmailAndPassword(this.signupForm.get('email')?.value, this.signupForm.get('password')?.value)
         .then((result) => {
           result.user!.sendEmailVerification();
-          return this.afDb.collection('users').doc(result.user?.uid).set({
+          return this.fireStore.collection('users').doc(result.user?.uid).set({
             firstName: this.signupForm.get(['firstName'])?.value,
             lastName: this.signupForm.get(['lastName'])?.value,
             dateOfBirth: this.signupForm.get(['dateOfBirth'])?.value,
+            email: this.signupForm.get(['email'])?.value,
             phoneNumber: this.signupForm.get(['phoneNumber'])?.value,
             address: this.signupForm.get(['address'])?.value,
             role: 'customer',

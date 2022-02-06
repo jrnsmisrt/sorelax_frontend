@@ -12,9 +12,12 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.initService.initSideNav();
+
   }
   ngAfterViewInit(): void {
-    this.initService.initParallax();
+
+
   }
 
 }

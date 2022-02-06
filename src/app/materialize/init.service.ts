@@ -16,14 +16,13 @@ export class InitService {
     }, 1);
   }
 
-
- /* initSideNav():any{
+  initSideNav():any{
     $(document).ready(function(){
       console.log('init sidenav')
       $('.sidenav').sidenav();
     });
   }
-*/
+
   initSelect(){
     $(document).ready(function(){
       $('select').formSelect();
