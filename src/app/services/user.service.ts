@@ -3,8 +3,8 @@ import {User} from "../model/User";
 import {Observable, Subscription} from "rxjs";
 import {AuthService} from "./auth.service";
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/compat/firestore';
-import {doc} from "@angular/fire/firestore";
 import {FirestoreService} from "./firestore.service";
+
 
 
 @Injectable({
@@ -22,6 +22,8 @@ export class UserService {
     this.allUsers = this.userCollection.valueChanges({idField: 'uid'});
 
   }
+
+
 
 
 
