@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import firebase from "firebase/compat";
+import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
+import {getAuth, signInWithPopup} from "@angular/fire/auth";
 
 
 @Component({
@@ -33,6 +36,7 @@ export class LoginComponent implements OnInit {
     this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
       if (result == null) {
         console.log('logging in...');
+        M.toast({html:`Logging in...`});
         M.toast({html:`Succesfully logged in!`});
         this.router.navigate(['/dashboard']);
       }
@@ -42,5 +46,21 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
+  signInWithGoogle(){
+    this.auth.signInWithGoogle().then(()=>{
+      console.log('Signing in with Google...');
+      M.toast({html:`Signing in  with Google...`});
+
+      if(this.auth.isUserSignedIn()){
+        M.toast({html:`Succesfully logged in!`});
+      }
+      else{
+        M.toast({html:'Sign in was unsuccessful please try again'})
+      }
+
+    });
+  }
+
 
 }

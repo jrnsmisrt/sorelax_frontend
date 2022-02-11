@@ -4,6 +4,9 @@ import {Observable, of, switchMap} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
+import {getAuth, onAuthStateChanged, signInWithPopup, signOut} from "@angular/fire/auth";
+import firebase from "firebase/compat/app";
+import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 
 @Injectable({
   providedIn: 'root'
@@ -15,18 +18,18 @@ export class AuthService {
 
 
   constructor(private router: Router, private afAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
+    onAuthStateChanged(getAuth(), (user) => {
+      this.userLoggedIn = !!user;
+    });
+
     this.afAuth.authState.subscribe(authState => {
       this.authState = authState;
     });
 
-    this.afAuth.onAuthStateChanged((user) => {
-      if (user) {
-        this.userLoggedIn = true;
-      } else {
-        this.userLoggedIn = false;
-      }
-    });
+    this.addUserToFireStore();
+  }
 
+  private addUserToFireStore() {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
@@ -36,6 +39,49 @@ export class AuthService {
         }
       })
     )
+  }
+
+  loginUser(email: string, password: string): Promise<any> {
+    return this.afAuth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('Auth Service: loginUser: success');
+        this.userLoggedIn = true;
+        this.router.navigate(['/dashboard']);
+      })
+      .catch(error => {
+        console.log('Auth Service: login error...');
+        console.log('error code', error.code);
+        console.log('error', error);
+        this.userLoggedIn = false;
+        if (error.code)
+          return {isValid: false, message: error.message};
+      });
+  }
+
+  async signInWithGoogle() {
+    let provider = new GoogleAuthProvider();
+    await signInWithPopup(getAuth(), provider);
+  }
+
+  async signOut() {
+    await this.afAuth.signOut();
+    this.router.navigate(['/']);
+  }
+
+  isUserSignedIn() {
+    return !!getAuth().currentUser;
+  }
+
+  getUserName() {
+    return getAuth().currentUser?.displayName;
+  }
+
+  getUserEmail() {
+    return getAuth().currentUser?.email;
+  }
+
+  getUserUid() {
+    return getAuth().currentUser?.uid;
   }
 
   get isAuthenticated(): boolean {
@@ -58,28 +104,5 @@ export class AuthService {
       }
     ];
   }
-
-  async signOut() {
-    await this.afAuth.signOut();
-    this.router.navigate(['/']);
-  }
-
-  loginUser(email: string, password: string): Promise<any> {
-    return this.afAuth.signInWithEmailAndPassword(email, password)
-      .then(() => {
-        console.log('Auth Service: loginUser: success');
-        this.userLoggedIn = true;
-        this.router.navigate(['/dashboard']);
-      })
-      .catch(error => {
-        console.log('Auth Service: login error...');
-        console.log('error code', error.code);
-        console.log('error', error);
-        this.userLoggedIn = false;
-        if (error.code)
-          return {isValid: false, message: error.message};
-      });
-  }
-
 
 }

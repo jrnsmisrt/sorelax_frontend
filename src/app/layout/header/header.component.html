@@ -28,18 +28,18 @@
           </button>
         </li>
         <li> &nbsp; </li>
-        <li *ngIf="!(afAuth.user|async)">
+        <li *ngIf="!(afAuthService.user$|async)">
           <button class="waves-teal waves-effect btn" routerLink="/login">
             Login
           </button>
         </li>
-        <li *ngIf="(afAuth.user | async)">
+        <li *ngIf="(afAuthService.user$ | async)">
           <button class="waves-teal waves-effect btn"  [routerLink]="['./','users',user.uid, 'dashboard']">
             Dashboard
           </button>
         </li>
         <li> &nbsp; </li>
-        <li *ngIf="(afAuth.user | async)">
+        <li *ngIf="(afAuthService.user$ | async)">
           <button class="waves-teal waves-effect btn"  (click)="logout()">
             Log out
           </button>

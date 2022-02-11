@@ -1,17 +1,40 @@
 <div class="container">
-<button routerLink="/home">
-  Home
-</button>
+  <div class="row"></div>
+  <div class="row">
+    <div class="col s3"></div>
+    <div class="col s6">
 
-<form [formGroup]="loginForm" (ngSubmit)="loginUser()" type="">
-  <label>Email</label>
-  <input autocomplete="off" formControlName="email" type="email" placeholder="Email">
-  <label>Password</label>
-  <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
-  <div *ngIf="firebaseErrorMessage != ''" class="error-style">
-    <span>{{ firebaseErrorMessage }}</span>
+      <form [formGroup]="loginForm" (ngSubmit)="loginUser()" type="">
+        <div class="row">
+          <label>Email</label></div>
+        <div class="row">
+          <input autocomplete="off" class="email" formControlName="email" type="email" placeholder="Email">
+        </div>
+        <div class="row">
+          <label>Password</label></div>
+        <div class="row">
+          <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
+        </div>
+        <div class="row">
+          <div *ngIf="firebaseErrorMessage != ''" class="error-style">
+            <span>{{ firebaseErrorMessage }}</span>
+          </div>
+        </div>
+        <div class="row center">
+          <button class="btn-large waves-teal waves-effect">Login</button>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col s6">
+          <button class="btn-large waves-teal waves-effect" (click)="signInWithGoogle()">
+            <i class="material-icons">account-circle</i>Sign in with Google
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <button>Login</button>
-</form>
+  <div class="col s3"></div>
+
 </div>
