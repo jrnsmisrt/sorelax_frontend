@@ -4,7 +4,6 @@ export class TimeSlot {
   private _id!: string;
   private _customerId!: string;
   private _dateTime!: Date;
-  private _time!: Time;
   private _isAvailable: boolean = false;
 
   constructor(dateTime: Date) {
@@ -43,14 +42,6 @@ export class TimeSlot {
 
   set dateTime(value: Date) {
     this._dateTime = value;
-  }
-
-  get time(): Time {
-    return this._time;
-  }
-
-  set time(value: Time) {
-    this._time = value;
   }
 
   get isAvailable(): boolean {

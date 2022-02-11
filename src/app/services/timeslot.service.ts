@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Time} from "@angular/common";
 import {TimeSlot} from "../model/TimeSlot";
+import {AngularFirestore} from "@angular/fire/compat/firestore";
+import {Observable} from "rxjs";
 
 
 @Injectable({
@@ -13,16 +15,24 @@ export class TimeslotService {
   createdTimeSlot!: TimeSlot;
 
 
-  constructor() {
+  constructor(private fireStore: AngularFirestore) {
   }
 
   createTimeSlot(date: Date): void {
     let newTimeSlot: TimeSlot = new TimeSlot(date);
     this.timeSlots.push(newTimeSlot);
+    this.fireStore.collection('timeslots').doc().set({
+      id: newTimeSlot.id,
+      dateTime: newTimeSlot.dateTime,
+      customerId: newTimeSlot.customerId,
+      isAvailable: newTimeSlot.isAvailable
+    }).then(() => {
+      M.toast({html:`New timeslot has been created: ${newTimeSlot.dateTime.toString()}`});
+    });
   }
 
-  getAllTimeSlots(): TimeSlot[] {
-    return this.timeSlots;
+  getAllTimeSlots(): Observable<any> {
+    return this.fireStore.collection('timeslots').get();
   }
 
   deleteTimeSlot(timeSlot: TimeSlot): void {
