@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initService.initParallax();
+    this.initService.initSlider();
   }
 
 

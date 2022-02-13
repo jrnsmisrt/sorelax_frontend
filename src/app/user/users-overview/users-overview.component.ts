@@ -3,7 +3,6 @@ import {collection, Firestore, getFirestore, getDocs, orderBy, query, onSnapshot
 import {Observable} from "rxjs";
 import {User} from "../../model/User";
 import {UserService} from "../../services/user.service";
-import {snapshotChanges} from "@angular/fire/compat/database";
 
 @Component({
   selector: 'app-users-overview',
@@ -20,19 +19,8 @@ export class UsersOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllUsers().then(()=>M.toast({html:'Viewing all users'}));
   }
 
-  async getAllUsers(){
-    let q = query(collection(this.db, 'users'), orderBy('lastname', 'asc'));
-    onSnapshot(q, snaps =>{
-      document.querySelector('#allusers')!.innerHTML = '';
-      snaps.forEach(doc=>{
-        const entry = document.createElement('p');
-        entry.textContent = doc.data()['firstname']+' '+ doc.data()['lastname'];
-        document.querySelector('#allusers')!.appendChild(entry);
-      })
-    });
-  }
+
 
 }

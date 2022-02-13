@@ -1,8 +1,14 @@
-<div *ngFor="let user of users | async">Welcome {{user.firstName}}</div>
-
-<br>
+<div class="row"></div>
+<div class="row">
+  <div class="col s3"></div>
+  <div class="col s6 center">
 Dashboard<br>
-
-<button routerLink="/home">
-  Home
-</button>
+<div>Welcome {{name}}</div>
+<ul>
+  <li><a [routerLink]="['../profile']" >Profile</a></li>
+  <li><a [routerLink]="['../bookmassage']">Book a massage</a></li>
+  <li>Your massages overview</li>
+</ul>
+  </div>
+  <div class="col s3"></div>
+</div>

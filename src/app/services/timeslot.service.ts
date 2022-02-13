@@ -3,6 +3,7 @@ import {Time} from "@angular/common";
 import {TimeSlot} from "../model/TimeSlot";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {Observable} from "rxjs";
+import {collection, getFirestore, onSnapshot, orderBy, query} from "@angular/fire/firestore";
 
 
 @Injectable({
@@ -31,9 +32,6 @@ export class TimeslotService {
     });
   }
 
-  getAllTimeSlots(): Observable<any> {
-    return this.fireStore.collection('timeslots').get();
-  }
 
   deleteTimeSlot(timeSlot: TimeSlot): void {
     this.timeSlots.forEach((element, index) => {

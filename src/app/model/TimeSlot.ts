@@ -1,6 +1,6 @@
-import {Time} from "@angular/common";
 
 export class TimeSlot {
+
   private _id!: string;
   private _customerId!: string;
   private _dateTime!: Date;

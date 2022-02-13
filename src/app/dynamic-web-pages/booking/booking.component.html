@@ -1,66 +1,84 @@
-<div class="container">
-  <form [formGroup]="bookingForm">
-    <div class="row">
-      <div class="col s6">
-        <label>Massage</label>
-        <select formControlName="massage" class="select-dropdown validate">
-          <option disabled>Selecteer een massage</option>
-          <option *ngFor="let massage of massages" [ngValue]="massage" (change)="changeMassage($event)">
-            {{massage}}
-          </option>
-        </select>
-      </div>
+  <div class="row"></div>
+  <div class="row">
+    <div class="col l3"></div>
+    <div class="col l6">
+      <form [formGroup]="bookingForm">
+        <div class="row">
+          <div class="col s6">
+            <label>Massage</label>
+            <select formControlName="massage" class="select-dropdown validate">
+              <option disabled>Selecteer een massage</option>
+              <option *ngFor="let massage of massages" [ngValue]="massage" (change)="changeMassage($event)">
+                {{massage}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s6">
+            <label>Timeslot</label>
+            <select formControlName="timeslot" class="select-dropdown validate">
+              <option disabled>Selecteer een timeslot</option>
+              <option *ngFor="let timeslot of timeslots" [ngValue]="timeslot" (change)="changeTimeSlot($event)">
+                {{timeslot}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s6">
+            <label>Datum</label>
+            <input formControlName="date" class="datepicker validate">
+          </div>
+          <div class="col s4">
+            <label>Tijdstip</label>
+            <input formControlName="time" class="timepicker validate">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s2">
+            <label>tijdsduur</label>
+            <select formControlName="duration" class="select-dropdown validate">
+              <option *ngFor="let duration of durationMinutes" [ngValue]="duration" (change)="changeDuration($event)">
+                {{duration}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s6">
+            <label>Handige informatie / toevoegingen</label>
+            <textarea formControlName="message" class="materialize-textarea validate"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-2">
+            <a class="btn-large waves-effect waves-teal" (click)="bookMassage()">Boek Massage</a>
+          </div>
+          <div class="col-2">
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="col l3">
+
     </div>
 
-    <div class="row">
-      <div class="col s6">
-        <label>Datum</label>
-        <input formControlName="date" class="datepicker validate">
+    <div id="bookingModal" class="modal">
+      <div class="modal-content">
+        <h4>Confirm Booking</h4>
+        <p>Please confirm Booking by pressing the confirm button</p>
       </div>
-      <div class="col s4">
-        <label>Tijdstip</label>
-        <input formControlName="time" class="timepicker validate">
+      <div class="modal-footer">
+        <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-flat">Confirm</a>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col s2">
-        <label>tijdsduur</label>
-        <select formControlName="duration" class="select-dropdown validate">
-          <option *ngFor="let duration of durationMinutes" [ngValue]="duration" (change)="changeDuration($event)">
-          {{duration}}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col s6">
-        <label>Handige informatie / toevoegingen</label>
-        <textarea formControlName="message" class="materialize-textarea validate"></textarea>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-2">
-        <a class="btn-large waves-effect waves-teal" (click)="bookMassage()">Boek Massage</a>
-      </div>
-      <div class="col-2">
-
-      </div>
-    </div>
-
-  </form>
-
-  <div id="bookingModal" class="modal">
-    <div class="modal-content">
-      <h4>Confirm Booking</h4>
-      <p>Please confirm Booking by pressing the confirm button</p>
-    </div>
-    <div class="modal-footer">
-      <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-flat">Confirm</a>
     </div>
   </div>
 
-
-</div>

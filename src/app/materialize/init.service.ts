@@ -59,4 +59,9 @@ export class InitService {
 
   }
 
+  initSlider(){
+    $(document).ready(function(){
+      $('.slider').slider();
+    });
+  }
 }

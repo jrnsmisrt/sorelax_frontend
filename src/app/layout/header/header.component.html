@@ -22,24 +22,24 @@
     </div>
     <div class="col right">
       <ul class="right">
-        <li *ngIf="!(afAuth.user|async)">
+        <li *ngIf="!(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn" routerLink="/signup">
             Signup
           </button>
         </li>
         <li> &nbsp; </li>
-        <li *ngIf="!(afAuthService.user$|async)">
+        <li *ngIf="!(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn" routerLink="/login">
             Login
           </button>
         </li>
-        <li *ngIf="(afAuthService.user$ | async)">
-          <button class="waves-teal waves-effect btn"  [routerLink]="['./','users',user.uid, 'dashboard']">
+        <li *ngIf="(afAuthService.userLoggedIn)">
+          <button class="waves-teal waves-effect btn"  [routerLink]="['./','users',afAuthService.getUserUid(), 'dashboard']">
             Dashboard
           </button>
         </li>
         <li> &nbsp; </li>
-        <li *ngIf="(afAuthService.user$ | async)">
+        <li *ngIf="(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn"  (click)="logout()">
             Log out
           </button>
@@ -68,28 +68,28 @@
     <li>
       <a href="#"> Book a Massage</a>
     </li>
-    <li *ngIf="!(afAuth.user|async)">
+    <li *ngIf="!(afAuthService.userLoggedIn)">
 
       <a routerLink="/signup">
         Signup
       </a>
 
     </li>
-    <li *ngIf="!(afAuth.user|async)">
+    <li *ngIf="!(afAuthService.userLoggedIn)">
 
       <a routerLink="/login">
         Login
       </a>
     </li>
 
-    <li *ngIf="(afAuth.user | async)">
+    <li *ngIf="(afAuthService.userLoggedIn)">
 
-      <a routerLink="/dashboard">
+      <a [routerLink]="['./','users',afAuthService.getUserUid(), 'dashboard']">
         Dashboard
       </a>
 
     </li>
-    <li *ngIf="(afAuth.user | async)">
+    <li *ngIf="(afAuthService.userLoggedIn)">
 
       <a (click)="logout()">
         Log out

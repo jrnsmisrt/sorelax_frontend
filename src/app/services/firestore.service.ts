@@ -8,7 +8,7 @@ export class FirestoreService {
 
   constructor(private fireStore: AngularFirestore) { }
 
-  getFirstName(uid: string){
+  getFirstName(uid: string|undefined|null){
     return this.fireStore.firestore.doc(`users/${uid}`).get();
   }
 }

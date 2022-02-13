@@ -19,9 +19,9 @@ const routes:Routes = [
   {path:'massages', component: MassageComponent},
   {path:'login', component: LoginComponent},
   {path:'signup', component: SignupComponent},
+  {path: 'users/:id/bookmassage', component: BookingComponent, canActivate:[AuthGuard]},
   {path: 'users/overview', component: UsersOverviewComponent},
   {path:'users/:id/profile', component: UserProfileComponent, canActivate:[AuthGuard]},
-  {path: 'users/:id/bookmassage', component: BookingComponent, canActivate:[AuthGuard]},
   {path:'users/:id/dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path:'**', component: HomeComponent}
 ]

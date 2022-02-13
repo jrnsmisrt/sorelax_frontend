@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-signup',
@@ -32,7 +33,8 @@ export class SignupComponent implements OnInit {
   firebaseErrorMessage: string;
 
 
-  constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth, private fireStore: AngularFirestore) {
+  constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth,
+              private fireStore: AngularFirestore, private router: Router) {
     this.firebaseErrorMessage = '';
   }
 
@@ -46,35 +48,39 @@ export class SignupComponent implements OnInit {
 
   }
 
-  openModalSignup(){
-    let signupModal = M.Modal.getInstance(document.querySelector('#signupModal')!);
-    signupModal.open();
-  }
-
   signupUser() {
 
     return this.afAuth.createUserWithEmailAndPassword(this.signupForm.get('email')?.value, this.signupForm.get('password')?.value)
-        .then((result) => {
-          result.user!.sendEmailVerification();
-          return this.fireStore.collection('users').doc(result.user?.uid).set({
-            firstName: this.signupForm.get(['firstName'])?.value,
-            lastName: this.signupForm.get(['lastName'])?.value,
-            dateOfBirth: this.signupForm.get(['dateOfBirth'])?.value,
-            email: this.signupForm.get(['email'])?.value,
-            phoneNumber: this.signupForm.get(['phoneNumber'])?.value,
-            address: this.signupForm.get(['address'])?.value,
-            role: 'customer',
-          });
-        }).then(() => {
-          this.signupForm.reset();
-        })
-        .catch(error => {
-          console.log('Auth Service: signup error', error);
-          if (error.code)
-            return {isValid: false, message: error.message};
+      .then((result) => {
+        result.user!.sendEmailVerification();
+        return this.fireStore.collection('users').doc(result.user?.uid).set({
+          uid:result.user?.uid,
+          firstName: this.signupForm.get(['firstName'])?.value,
+          lastName: this.signupForm.get(['lastName'])?.value,
+          dateOfBirth: this.signupForm.get(['dateOfBirth'])?.value,
+          email: this.signupForm.get(['email'])?.value,
+          phoneNumber: this.signupForm.get(['phoneNumber'])?.value,
+          address: this.signupForm.get(['address'])?.value,
+          role: 'customer',
         });
-    }
+      }).then(() => {
+        this.signupForm.reset();
+      })
+      .catch(error => {
+        console.log('Auth Service: signup error', error);
+        if (error.code)
+          return {isValid: false, message: error.message};
+      });
+  }
 
+  onSubmit() {
+
+      this.signupUser().then(() => {
+        M.toast({html: `Sign up has been succesful!`});
+        this.router.navigate(['/login']);
+      });
+
+  }
 
   clear() {
     this.signupForm.reset();
