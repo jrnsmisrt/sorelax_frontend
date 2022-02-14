@@ -8,6 +8,7 @@ import {AuthService} from "../../services/auth.service";
 import {TimeSlot} from "../../model/TimeSlot";
 import {TimeslotService} from "../../services/timeslot.service";
 import {Observable, of} from "rxjs";
+import {where} from "@angular/fire/firestore";
 
 @Component({
   selector: 'app-booking',
@@ -74,14 +75,14 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   bookMassage() {
     this.bookingForm.patchValue({
-    //  date: $('.datepicker').val(),
-    //  time: $('.timepicker').val(),
+      //  date: $('.datepicker').val(),
+      //  time: $('.timepicker').val(),
       timeslot: $('#timeslotselector'.valueOf())
     })
 
     return this.fireStore.collection('bookings').doc().set({
       userUid: this.uid,
-      timeslot: this.bookingForm.get(['timeslot'])?.value,
+      requestedTimeslot: this.bookingForm.get(['timeslot'])?.value,
       date: this.bookingForm.get(['date'])?.value,
       time: this.bookingForm.get(['time'])?.value,
       massage: this.bookingForm.get(['massage'])?.value,
@@ -90,7 +91,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
       requestedOn: new Date(Date.now()),
       status: 'pending'
     }).then(() => {
-      this.fireStore.collection('timeslots').doc().set({
+      this.fireStore.collection('timeslots').doc(`${this.timeslot?.value.uid}`).set({
         customerid: this.uid,
         date: this.timeslot?.value.date,
         time: this.timeslot?.value.time

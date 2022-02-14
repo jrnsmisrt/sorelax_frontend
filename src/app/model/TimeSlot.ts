@@ -4,7 +4,7 @@ export class TimeSlot {
   private _customerId!: string;
   private _date!: string;
   private _time!: string;
-  private _isAvailable: boolean = false;
+  private _isAvailable: boolean = true;
   private _confirmed: boolean = false;
 
   constructor(date: string, time: string) {
@@ -13,10 +13,7 @@ export class TimeSlot {
   }
 
   confirmAvailability() {
-    if (this.isAvailable && !this._confirmed) {
-      this._isAvailable = true;
-    }
-    this._isAvailable = false;
+    this._isAvailable = !this._confirmed;
   }
 
 

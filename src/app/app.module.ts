@@ -23,6 +23,7 @@ import { AboutComponent } from './static-web-pages/about/about.component';
 import { MassageComponent } from './static-web-pages/massage/massage.component';
 import { ContactComponent } from './static-web-pages/contact/contact.component';
 import { UsersOverviewComponent } from './user/users-overview/users-overview.component';
+import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/booking-overview.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { UsersOverviewComponent } from './user/users-overview/users-overview.com
     AboutComponent,
     MassageComponent,
     ContactComponent,
-    UsersOverviewComponent
+    UsersOverviewComponent,
+    BookingOverviewComponent
 
 
   ],

@@ -1,0 +1,26 @@
+<div class="row"></div>
+<div class="row">
+  <div class="col s1"></div>
+  <div class="col s10">
+    <div class="row">
+      <div class="col">Massage</div>
+      <div class="col">Datum</div>
+      <div class="col">Tijdstip</div>
+      <div class="col">Duur</div>
+      <div class="col">Klant ID</div>
+      <div class="col">Persoonlijke boodschap</div>
+      <div class="col">Aangevraagd op</div>
+    </div>
+
+    <div class="row" *ngFor="let booking of bookings$ | async">
+      <div class="col">{{booking.massage}}</div>
+      <div class="col">{{booking.date}}</div>
+      <div class="col">{{booking.time}}</div>
+      <div class="col">{{booking.duration}}</div>
+      <div class="col"> {{booking.userUid}}</div>
+      <div class="col"> {{booking.personalMessage}}</div>
+      <div class="col"> {{booking.requestedOn}}</div>
+    </div>
+  </div>
+  <div class="col"></div>
+</div>
