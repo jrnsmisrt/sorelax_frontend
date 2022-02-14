@@ -74,8 +74,9 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   bookMassage() {
     this.bookingForm.patchValue({
-      date: $('.datepicker').val(),
-      time: $('.timepicker').val()
+    //  date: $('.datepicker').val(),
+    //  time: $('.timepicker').val(),
+      timeslot: $('#timeslotselector'.valueOf())
     })
 
     return this.fireStore.collection('bookings').doc().set({
@@ -89,6 +90,10 @@ export class BookingComponent implements OnInit, AfterViewInit {
       requestedOn: new Date(Date.now()),
       status: 'pending'
     }).then(() => {
+      this.fireStore.collection('timeslots').doc().set({
+        customerid: this.uid,
+        dateTime: this.timeslot,
+      })
       this.bookingForm.reset();
     }).catch(error => {
       console.log('booking form error', error);

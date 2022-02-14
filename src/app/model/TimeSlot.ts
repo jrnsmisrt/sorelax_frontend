@@ -1,19 +1,19 @@
-
 export class TimeSlot {
 
   private _id!: string;
   private _customerId!: string;
-  private _dateTime!: Date;
+  private _date!: string;
+  private _time!: string;
   private _isAvailable: boolean = false;
+  private _confirmed: boolean = false;
 
-  constructor(dateTime: Date) {
-
-    this._dateTime = dateTime;
-
+  constructor(date: string, time: string) {
+    this.date = date;
+    this.time = time;
   }
 
   confirmAvailability() {
-    if (this._dateTime.getDate() < Date.now()) {
+    if (this.isAvailable && !this._confirmed) {
       this._isAvailable = true;
     }
     this._isAvailable = false;
@@ -36,12 +36,20 @@ export class TimeSlot {
     this._customerId = value;
   }
 
-  get dateTime(): Date {
-    return this._dateTime;
+  get date(): string {
+    return this._date;
   }
 
-  set dateTime(value: Date) {
-    this._dateTime = value;
+  set date(value: string) {
+    this._date = value;
+  }
+
+  get time(): string {
+    return this._time;
+  }
+
+  set time(value: string) {
+    this._time = value;
   }
 
   get isAvailable(): boolean {
@@ -50,5 +58,14 @@ export class TimeSlot {
 
   set isAvailable(value: boolean) {
     this._isAvailable = value;
+  }
+
+
+  get confirmed(): boolean {
+    return this._confirmed;
+  }
+
+  set confirmed(value: boolean) {
+    this._confirmed = value;
   }
 }
