@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {User} from "../model/User";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {AuthService} from "./auth.service";
 import {
   AngularFirestore,
@@ -18,11 +18,10 @@ import firebase from "firebase/compat";
 export class UserService {
   userCollection!: AngularFirestoreCollection<User>;
   allUsers!: Observable<User[]>;
-  currentUser!: Observable<User>;
   userData!: DocumentData;
   userDoc!: AngularFirestoreDocument;
   user!: Observable<User>;
-
+  userRole!:string | undefined;
 
   constructor(private fireStore: AngularFirestore, private firestoreService: FirestoreService, private afAuth: AuthService) {
     this.userCollection = fireStore.collection<User>('users');
@@ -31,8 +30,12 @@ export class UserService {
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
     // @ts-ignore
     this.user = this.userDoc.valueChanges();
+    this.user.subscribe((user)=>{
+      this.userRole = user.role;
+    });
 
   }
+
 
   getAllUsers():Observable<User[]> {
    return this.userCollection.valueChanges();

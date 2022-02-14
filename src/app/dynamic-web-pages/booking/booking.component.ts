@@ -88,7 +88,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
       massage: this.bookingForm.get(['massage'])?.value,
       duration: this.bookingForm.get(['duration'])?.value,
       personalMessage: this.bookingForm.get(['message'])?.value,
-      requestedOn: new Date(Date.now()),
+      requestedOn: JSON.stringify(new Date(Date.now())),
       status: 'pending'
     }).then(() => {
       this.fireStore.collection('timeslots').doc(`${this.timeslot?.value.uid}`).set({

@@ -13,28 +13,39 @@ import {UserService} from "../../services/user.service";
 export class BookingOverviewComponent implements OnInit {
   bookingCollection!: AngularFirestoreCollection<Booking>;
   bookings$!: Observable<Booking[]>;
+
   isAdmin!: boolean;
+
 
   constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService) {
     this.bookingCollection = this.fireStore.collection('bookings');
     this.setAdmin();
-    this.getAllBookings();
-    this.fireStore.collection('bookings', ref => ref.where('uid', '==', this.auth.getUserUid())).valueChanges();
-
+    this.bookings$ = this.getAllBookings();
   }
 
   getAllBookings(): Observable<Booking[]> {
-    if (!this.isAdmin) {
-      return this.fireStore.collection<Booking>('bookings', ref => ref.where('uid', '==', this.auth.getUserUid())).valueChanges()
+    let userRole = this.userService.userRole;
+    if (userRole === 'admin') {
+       return this.fireStore.collection<Booking>('bookings').valueChanges();
+      }
+    else {
+      console.log(this.auth.getUserUid());
+      console.log(this.auth.user$.role);
+      return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())).valueChanges();
     }
-    return this.bookings$ = this.bookingCollection.valueChanges();
   }
 
 
   private setAdmin() {
-    this.userService.currentUser.subscribe((user) => {
-      this.isAdmin = user.role === 'admin';
-    })
+    this.userService.user.subscribe((user) => {
+      let userRole = user.role;
+      if (userRole === 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false;
+      }
+      console.log(this.isAdmin);
+    });
   }
 
   ngOnInit(): void {
