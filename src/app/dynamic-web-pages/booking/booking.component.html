@@ -20,8 +20,8 @@
             <label>Timeslot</label>
             <select formControlName="timeslot" class="select-dropdown validate">
               <option disabled>Selecteer een timeslot</option>
-              <option *ngFor="let timeslot of timeslots" [ngValue]="timeslot" (change)="changeTimeSlot($event)">
-                {{timeslot}}
+              <option *ngFor="let timeslot of timeslots$|async" [ngValue]="timeslot" (change)="changeTimeSlot($event)">
+                {{timeslot.dateTime}}
               </option>
             </select>
           </div>

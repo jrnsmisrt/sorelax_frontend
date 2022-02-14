@@ -7,7 +7,7 @@ import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 import {AuthService} from "../../services/auth.service";
 import {TimeSlot} from "../../model/TimeSlot";
 import {TimeslotService} from "../../services/timeslot.service";
-import {Observable, Subscription} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-booking',
@@ -20,8 +20,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
   massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
   durationMinutes: any = ['30', '60', '90'];
   timeslotCollection: AngularFirestoreCollection<TimeSlot>;
-  timeslots$!:Observable<TimeSlot[]>;
-  timeslots!:TimeSlot[];
+  timeslots$!: Observable<TimeSlot[]>;
 
   bookingForm = this.formBuilder.group({
     timeslot: new FormControl('', [Validators.required]),
@@ -37,15 +36,10 @@ export class BookingComponent implements OnInit, AfterViewInit {
               private initService: InitService,
               public afAuthService: AuthService,
               private timeSlotService: TimeslotService) {
-
-    this.timeslotCollection = fireStore.collection<TimeSlot>('timeslots');
-    this.timeslots$ = this.timeslotCollection.valueChanges();
-    this.timeslots$.forEach((timeslots)=>{
-      this.timeslots=timeslots;
-    })
-
-
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
+    this.timeslots$ = this.getTimeSlots();
   }
+
 
   ngOnInit(): void {
     this.initService.initSelect();
@@ -64,6 +58,13 @@ export class BookingComponent implements OnInit, AfterViewInit {
         this.uid = user.uid.toString();
       }
     });
+
+    this.timeslots$ = this.timeslotCollection.valueChanges();
+
+  }
+
+  getTimeSlots(): Observable<TimeSlot[]> {
+    return this.timeslotCollection.valueChanges();
   }
 
 
@@ -102,7 +103,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   changeTimeSlot(timeslot: any) {
     this.timeslot!.setValue(timeslot.target.value, {
-      onlySelf: true
+      onlySelf: true,
     })
   }
 
