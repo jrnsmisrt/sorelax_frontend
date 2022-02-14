@@ -92,7 +92,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
     }).then(() => {
       this.fireStore.collection('timeslots').doc().set({
         customerid: this.uid,
-        dateTime: this.timeslot,
+        date: this.timeslot?.value.date,
+        time: this.timeslot?.value.time
       })
       this.bookingForm.reset();
     }).catch(error => {

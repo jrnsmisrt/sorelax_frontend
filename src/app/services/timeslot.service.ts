@@ -19,16 +19,17 @@ export class TimeslotService {
   constructor(private fireStore: AngularFirestore) {
   }
 
-  createTimeSlot(date: Date): void {
-    let newTimeSlot: TimeSlot = new TimeSlot(date);
+  createTimeSlot(date: string, time: string): void {
+    let newTimeSlot: TimeSlot = new TimeSlot(date, time);
     this.timeSlots.push(newTimeSlot);
     this.fireStore.collection('timeslots').doc().set({
       id: newTimeSlot.id,
-      dateTime: newTimeSlot.dateTime,
-      customerId: newTimeSlot.customerId,
-      isAvailable: newTimeSlot.isAvailable
+      date: newTimeSlot.date,
+      time: newTimeSlot.time,
+      isAvailable: newTimeSlot.isAvailable,
+      confirmed: newTimeSlot.confirmed
     }).then(() => {
-      M.toast({html:`New timeslot has been created: ${newTimeSlot.dateTime.toString()}`});
+      M.toast({html:`New timeslot has been created: ${newTimeSlot.date} - ${newTimeSlot.time}`});
     });
   }
 
