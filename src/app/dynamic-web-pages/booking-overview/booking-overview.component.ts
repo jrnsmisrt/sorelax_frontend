@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Booking} from "../../model/Booking";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
@@ -13,6 +13,10 @@ import {UserService} from "../../services/user.service";
 export class BookingOverviewComponent implements OnInit {
   bookingCollection!: AngularFirestoreCollection<Booking>;
   bookings$!: Observable<Booking[]>;
+  booking$!: Observable<Booking|undefined>;
+
+  changeBookingStatusId: string|undefined;
+  changeBookingStatus: string|undefined;
 
   isAdmin!: boolean;
 
@@ -22,6 +26,13 @@ export class BookingOverviewComponent implements OnInit {
     this.setAdmin();
     this.bookings$ = this.getAllBookings();
   }
+  ngOnInit(): void {
+    $(document).ready(function(){
+      $('.modal').modal();
+    });
+  }
+
+
 
   getAllBookings(): Observable<Booking[]> {
     let userRole = this.userService.userRole;
@@ -33,6 +44,10 @@ export class BookingOverviewComponent implements OnInit {
       console.log(this.auth.user$.role);
       return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())).valueChanges();
     }
+  }
+
+  setBooking(bookingId:string){
+    this.booking$ =  this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
   }
 
 
@@ -48,7 +63,48 @@ export class BookingOverviewComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  getUserFullName(uid: string): Subscription | undefined {
+    return this.userService.getUser(uid).subscribe((user) => {
+      return `${user?.firstName} ${user?.lastName}`;
+    });
   }
 
+  confirmBooking(bookingId: string) {
+    let booking = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
+    booking.subscribe((b)=>{
+      if(b?.status!=='confirmed'){
+        this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
+          status: 'confirmed'
+        }).catch(error => {
+          console.log('confirm booking: ' + error);
+        })
+      }
+    })
+  }
+
+  cancelBooking(bookingId: string) {
+    let booking = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
+
+    booking.subscribe((b) => {
+      if (b?.status !== 'cancelled') {
+        this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
+          status: 'cancelled'
+        }).catch(error => {
+          console.log('confirm booking: ' + error);
+        })
+      }
+    })
+  }
+
+  inheritSelectedBookingProperties(bookingId:string, bookingStatus:string) {
+    console.log(bookingStatus); console.log(bookingId);
+    this.changeBookingStatusId = bookingId;
+    this.changeBookingStatus =  bookingStatus;
+    console.log(this.changeBookingStatusId); console.log(this.changeBookingStatus);
+    this.openBookingModal();
+  }
+
+  private openBookingModal() {
+    M.Modal.getInstance(document.getElementById('statusmodal')!).open();
+  }
 }

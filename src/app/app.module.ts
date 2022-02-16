@@ -18,7 +18,7 @@ import { DashboardComponent } from './dynamic-web-pages/dashboard/dashboard.comp
 import {ReactiveFormsModule} from "@angular/forms";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import {AngularFirestore, AngularFirestoreModule} from "@angular/fire/compat/firestore";
-import { BookingComponent } from './dynamic-web-pages/booking/booking.component';
+import { BookingComponent } from './dynamic-web-pages/booking-create/booking.component';
 import { AboutComponent } from './static-web-pages/about/about.component';
 import { MassageComponent } from './static-web-pages/massage/massage.component';
 import { ContactComponent } from './static-web-pages/contact/contact.component';

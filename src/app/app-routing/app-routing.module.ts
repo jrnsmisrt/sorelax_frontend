@@ -7,7 +7,7 @@ import {DashboardComponent} from "../dynamic-web-pages/dashboard/dashboard.compo
 
 import {AuthGuard} from "../services/auth.guard";
 import {UserProfileComponent} from "../user/user-profile/user-profile.component";
-import {BookingComponent} from "../dynamic-web-pages/booking/booking.component";
+import {BookingComponent} from "../dynamic-web-pages/booking-create/booking.component";
 import {AboutComponent} from "../static-web-pages/about/about.component";
 import {MassageComponent} from "../static-web-pages/massage/massage.component";
 import {UsersOverviewComponent} from "../user/users-overview/users-overview.component";
