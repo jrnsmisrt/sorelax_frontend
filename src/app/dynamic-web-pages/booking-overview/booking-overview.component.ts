@@ -4,6 +4,7 @@ import {Observable, Subscription} from "rxjs";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
+import {User} from "../../model/User";
 
 @Component({
   selector: 'app-booking-overview',
@@ -13,12 +14,13 @@ import {UserService} from "../../services/user.service";
 export class BookingOverviewComponent implements OnInit {
   bookingCollection!: AngularFirestoreCollection<Booking>;
   bookings$!: Observable<Booking[]>;
-  booking$!: Observable<Booking|undefined>;
+  booking$!: Observable<Booking | undefined>;
 
-  changeBookingStatusId: string|undefined;
-  changeBookingStatus: string|undefined;
+  changeBookingStatusId: string | undefined;
+  changeBookingStatus: string | undefined;
 
-  bookingUserFullName!:string;
+  bookingUserFullName!: string;
+  users$!:Observable<User[]>
 
   isAdmin!: boolean;
 
@@ -27,29 +29,29 @@ export class BookingOverviewComponent implements OnInit {
     this.bookingCollection = this.fireStore.collection('bookings');
     this.setAdmin();
     this.bookings$ = this.getAllBookings();
+    this.users$ = this.userService.allUsers;
   }
+
   ngOnInit(): void {
-    $(document).ready(function(){
+    $(document).ready(function () {
       $('.modal').modal();
     });
   }
 
 
-
   getAllBookings(): Observable<Booking[]> {
     let userRole = this.userService.userRole;
     if (userRole === 'admin') {
-       return this.fireStore.collection<Booking>('bookings').valueChanges();
-      }
-    else {
+      return this.fireStore.collection<Booking>('bookings').valueChanges();
+    } else {
       console.log(this.auth.getUserUid());
       console.log(this.auth.user$.role);
       return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())).valueChanges();
     }
   }
 
-  setBooking(bookingId:string){
-    this.booking$ =  this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
+  setBooking(bookingId: string) {
+    this.booking$ = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
   }
 
 
@@ -65,18 +67,18 @@ export class BookingOverviewComponent implements OnInit {
     });
   }
 
-  setUserName(uid: string){
-   this.userService.getUser(uid).subscribe((user)=>{
-     console.log(user?.firstName)
-     this.bookingUserFullName = user?.firstName+user?.lastName!;
-     console.log(this.bookingUserFullName);
-   });
+  setUserName(uid: string) {
+    this.userService.getUser(uid).subscribe((user) => {
+      console.log(user?.firstName)
+      this.bookingUserFullName = user?.firstName + ' ' + user?.lastName!;
+      console.log(this.bookingUserFullName);
+    });
   }
 
   confirmBooking(bookingId: string) {
     let booking = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
-    booking.subscribe((b)=>{
-      if(b?.status!=='confirmed'){
+    booking.subscribe((b) => {
+      if (b?.status !== 'confirmed') {
         this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
           status: 'confirmed'
         }).catch(error => {
@@ -100,16 +102,18 @@ export class BookingOverviewComponent implements OnInit {
     })
   }
 
-  inheritSelectedBookingProperties(bookingId:string, bookingStatus:string) {
-    console.log(bookingStatus); console.log(bookingId);
-    this.changeBookingStatus =  bookingStatus;
+  inheritSelectedBookingProperties(bookingId: string, bookingStatus: string) {
+    console.log(bookingStatus);
+    console.log(bookingId);
+    this.changeBookingStatus = bookingStatus;
     this.setBooking(bookingId);
     console.log(this.booking$);
-    console.log(this.changeBookingStatusId); console.log(this.changeBookingStatus);
-    this.openBookingModal();
+    console.log(this.changeBookingStatusId);
+    console.log(this.changeBookingStatus);
+    BookingOverviewComponent.openBookingModal();
   }
 
-  private openBookingModal() {
+  private static openBookingModal() {
     M.Modal.getInstance(document.getElementById('statusmodal')!).open();
   }
 }
