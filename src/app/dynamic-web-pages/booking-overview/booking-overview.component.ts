@@ -98,8 +98,9 @@ export class BookingOverviewComponent implements OnInit {
 
   inheritSelectedBookingProperties(bookingId:string, bookingStatus:string) {
     console.log(bookingStatus); console.log(bookingId);
-    this.changeBookingStatusId = bookingId;
     this.changeBookingStatus =  bookingStatus;
+    this.setBooking(bookingId);
+    console.log(this.booking$);
     console.log(this.changeBookingStatusId); console.log(this.changeBookingStatus);
     this.openBookingModal();
   }

@@ -9,6 +9,7 @@ import {TimeSlot} from "../../model/TimeSlot";
 import {TimeslotService} from "../../services/timeslot.service";
 import {Observable, of} from "rxjs";
 import {where} from "@angular/fire/firestore";
+import {Booking} from "../../model/Booking";
 
 @Component({
   selector: 'app-booking',
@@ -21,6 +22,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
   massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
   durationMinutes: any = ['30', '60', '90'];
   timeslotCollection: AngularFirestoreCollection<TimeSlot>;
+  bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
 
   bookingForm = this.formBuilder.group({
@@ -37,7 +39,9 @@ export class BookingComponent implements OnInit, AfterViewInit {
               private initService: InitService,
               public afAuthService: AuthService,
               private timeSlotService: TimeslotService) {
+    this.bookingCollection = this.fireStore.collection<Booking>('bookings');
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
+   ;
     this.timeslots$ = this.getTimeSlots();
   }
 
@@ -81,6 +85,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
     })
 
     return this.fireStore.collection('bookings').doc().set({
+      uid: this.bookingCollection.doc().get().subscribe((a)=>{return a.id}),
       userUid: this.uid,
       requestedTimeslot: this.bookingForm.get(['timeslot'])?.value,
       date: this.bookingForm.get(['date'])?.value,
