@@ -18,11 +18,11 @@
       <div class="col m1">{{booking.date}}</div>
       <div class="col m1">{{booking.time}}</div>
       <div class="col m1">{{booking.duration}}</div>
-      <div class="col m2"> {{booking.userUid}}</div>
+      <div class="col m2"> {{bookingUserFullName}}</div>
       <div class="col m2"> {{booking.personalMessage}}</div>
       <div class="col m2"> {{booking.requestedOn}}</div>
       <div class="col m1">
-        <button (click)="inheritSelectedBookingProperties(booking.uid, booking.status)"> {{booking.status}} </button>
+        <button (click)="inheritSelectedBookingProperties(booking.uid, booking.status); setUserName(booking.userUid)"> {{booking.status}} </button>
       </div>
     </div>
   </div>
@@ -30,15 +30,33 @@
 </div>
 <div id="statusmodal" class="modal">
   <div class="modal-content">
-    <div *ngIf="booking$ | async as booking">
-      {{booking.date}} {{booking.time}} {{booking.massage}} {{booking.duration}} {{booking.userUid}} {{booking.personalMessage}}
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col">Datum</div>
+          <div class="col">Tijdstip</div>
+          <div class="col">Massage</div>
+          <div class="col">Duur</div>
+          <div class="col">Klant</div>
+          <div class="col">Persoonlijke boodschap</div>
+        </div>
+        <div *ngIf="booking$ | async as booking" class="row">
+          <div class="col">{{booking.date}}</div>
+          <div class="col">{{booking.time}}</div>
+          <div class="col">{{booking.massage}}</div>
+          <div class="col">{{booking.duration}}</div>
+          <div class="col">{{bookingUserFullName}}</div>
+          <div class="col">{{booking.personalMessage}}</div>
+
+        </div>
+      </div>
     </div>
     <div *ngIf="changeBookingStatus!=='confirmed'">
-      Indien u zeker bent, Bevestig deze boeking.
+      Klik op bevestig Indien u deze boeking wilt bevestigen.
       <a class="btn-small waves-teal waves-effect" (click)="confirmBooking(changeBookingStatusId!)">Bevestig</a>
     </div>
     <div *ngIf="changeBookingStatus==='confirmed'">
-      Indien u zeker bent, Annuleer deze boeking.
+      Klik op annnuleer indien u deze boeking wilt annuleren.
       <a class="btn-small waves-teal waves-effect" (click)="cancelBooking(changeBookingStatusId!)">Annuleer</a>
     </div>
   </div>

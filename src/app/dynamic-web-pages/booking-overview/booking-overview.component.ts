@@ -18,6 +18,8 @@ export class BookingOverviewComponent implements OnInit {
   changeBookingStatusId: string|undefined;
   changeBookingStatus: string|undefined;
 
+  bookingUserFullName!:string;
+
   isAdmin!: boolean;
 
 
@@ -63,10 +65,12 @@ export class BookingOverviewComponent implements OnInit {
     });
   }
 
-  getUserFullName(uid: string): Subscription | undefined {
-    return this.userService.getUser(uid).subscribe((user) => {
-      return `${user?.firstName} ${user?.lastName}`;
-    });
+  setUserName(uid: string){
+   this.userService.getUser(uid).subscribe((user)=>{
+     console.log(user?.firstName)
+     this.bookingUserFullName = user?.firstName+user?.lastName!;
+     console.log(this.bookingUserFullName);
+   });
   }
 
   confirmBooking(bookingId: string) {
