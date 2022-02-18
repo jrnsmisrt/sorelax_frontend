@@ -1,5 +1,5 @@
-<nav class="teal lighten-3 hide-on-small-and-down">
-  <div class="row">
+<nav class="nav-extended teal lighten-3 hide-on-small-and-down">
+  <div class="nav-wrapper">
     <div class="col">
       <ul class="left">
         <li>
@@ -32,12 +32,11 @@
             Login
           </button>
         </li>
-        <li *ngIf="(afAuthService.userLoggedIn)">
+      <!--  <li *ngIf="(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn"  [routerLink]="['./','users',afAuthService.getUserUid(), 'dashboard']">
             Dashboard
           </button>
-        </li>
-        <li> &nbsp; </li>
+        </li>-->
         <li *ngIf="(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn"  (click)="logout()">
             Log out
@@ -45,9 +44,21 @@
         </li>
       </ul>
     </div>
-
+  </div>
+  <div class="nav-content" *ngIf="afAuthService.userLoggedIn">
+    <ul class="tabs tabs-transparent">
+      <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
+      <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a></li>
+      <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a></li>
+    </ul>
   </div>
 </nav>
+<!-- dropdown navbar -->
+<ul id='dropdown1' class='dropdown-content teal lighten-4 text-lighten-5'>
+  <li><a [routerLink]="['./','users,',afAuthService.getUserUid(),'profile']" >Profile</a></li>
+  <li><a [routerLink]="['/','users',afAuthService.getUserUid(),'bookmassage']">Book a massage</a></li>
+  <li><a [routerLink]="['/','users',afAuthService.getUserUid(),'booking-overview']">view all bookings</a></li>
+</ul>
 
 <!-- mobile navbar -->
 <div class="hide-on-med-and-up">

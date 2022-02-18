@@ -24,6 +24,7 @@ export class HeaderComponent implements OnInit {
     })
   }
 
+
   logout(): void {
     this.afAuthService.signOut().then(() => {
       if (!this.afAuthService.isUserSignedIn()) {
