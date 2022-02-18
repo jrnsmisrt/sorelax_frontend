@@ -2,18 +2,18 @@
 <div class="row">
   <div class="col s1"></div>
   <div class="col s10">
-    <div class="row">
-      <div class="col m1">Massage</div>
-      <div class="col m1">Datum</div>
-      <div class="col m1">Tijdstip</div>
-      <div class="col m1">Duur</div>
-      <div class="col m2">Klant</div>
-      <div class="col m2">Persoonlijke boodschap</div>
-      <div class="col m2">Aangevraagd op</div>
-      <div class="col m1">Status</div>
+    <div class="row teal white-text text center">
+      <div class="col m1"><strong>Massage</strong></div>
+      <div class="col m1"><strong>Datum</strong></div>
+      <div class="col m1"><strong>Tijdstip</strong></div>
+      <div class="col m1"><strong>Duur</strong></div>
+      <div class="col m2"><strong>Klant</strong></div>
+      <div class="col m2"><strong>Boodschap</strong></div>
+      <div class="col m2"><strong>Aangevraagd op</strong></div>
+      <div class="col m1"><strong>Status</strong></div>
     </div>
 
-    <div class="row" *ngFor="let booking of bookings$ | async">
+    <div class="row center" *ngFor="let booking of bookings$ | async">
       <div class="col m1">{{booking.massage}}</div>
       <div class="col m1">{{booking.date}}</div>
       <div class="col m1">{{booking.time}}</div>
@@ -27,47 +27,55 @@
       <div class="col m2"> {{booking.personalMessage}}</div>
       <div class="col m2"> {{booking.requestedOn}}</div>
       <div class="col m1">
-        <button
-          (click)="inheritSelectedBookingProperties(booking.uid, booking.status); setUserName(booking.userUid)"> {{booking.status}} </button>
+        <button class="waves-effect waves-teal"
+                (click)="inheritSelectedBookingProperties(booking.uid); setUserName(booking.userUid)"> {{booking.status}} </button>
       </div>
 
     </div>
     <div class="col"></div>
   </div>
+  <!-- Modal -->
   <div id="statusmodal" class="modal">
     <div class="modal-content">
-      <div class="row">
-        <div class="col">
-          <div class="row">
-            <div class="col">Datum</div>
-            <div class="col">Tijdstip</div>
-            <div class="col">Massage</div>
-            <div class="col">Duur</div>
-            <div class="col">Klant</div>
-            <div class="col">Persoonlijke boodschap</div>
-          </div>
-          <div *ngIf="booking$ | async as booking" class="row">
-            <div class="col">{{booking.date}}</div>
-            <div class="col">{{booking.time}}</div>
-            <div class="col">{{booking.massage}}</div>
-            <div class="col">{{booking.duration}}</div>
-            <div class="col">{{bookingUserFullName}}</div>
-            <div class="col">{{booking.personalMessage}}</div>
+      <div class="row teal white-text text">
+        <div class="col m2"><strong>Datum</strong></div>
+        <div class="col m1"><strong>Tijd</strong></div>
+        <div class="col m2"><strong>Massage</strong></div>
+        <div class="col m1"><strong>Duur</strong></div>
+        <div class="col m3"><strong>Klant</strong></div>
+        <div class="col m3"><strong>Boodschap</strong></div>
+      </div>
+      <div *ngIf="booking$ | async as booking" class="row">
+        <div class="col m2">{{booking.date}}</div>
+        <div class="col m1">{{booking.time}}</div>
+        <div class="col m2">{{booking.massage}}</div>
+        <div class="col m1">{{booking.duration}}</div>
+        <div class="col m3">{{bookingUserFullName}}</div>
+        <div class="col m3">{{booking.personalMessage}}</div>
 
-          </div>
+      </div>
+
+      <div class="row" *ngIf="changeBookingStatus!=='confirmed'">
+        <div class="row center">
+          Klik op "Bevestig" Indien u deze boeking wilt bevestigen.
+        </div>
+        <div class="row center">
+          <div><a class="btn-small waves-teal waves-effect"
+                  (click)="confirmBooking(changeBookingStatusId!)">Bevestig</a></div>
         </div>
       </div>
-      <div *ngIf="changeBookingStatus!=='confirmed'">
-        Klik op bevestig Indien u deze boeking wilt bevestigen.
-        <a class="btn-small waves-teal waves-effect" (click)="confirmBooking(changeBookingStatusId!)">Bevestig</a>
-      </div>
-      <div *ngIf="changeBookingStatus==='confirmed'">
-        Klik op annnuleer indien u deze boeking wilt annuleren.
-        <a class="btn-small waves-teal waves-effect" (click)="cancelBooking(changeBookingStatusId!)">Annuleer</a>
+      <div class="row" *ngIf="changeBookingStatus==='confirmed'">
+        <div class="row center">
+          Klik op "Annnuleer" indien u deze boeking wilt annuleren.
+        </div>
+        <div class="row center">
+          <a class="btn-small waves-teal waves-effect" (click)="cancelBooking(changeBookingStatusId!)">Annuleer</a>
+        </div>
       </div>
     </div>
     <div class="modal-footer">
-
     </div>
   </div>
+  <!-- end of modal -->
+
 </div>

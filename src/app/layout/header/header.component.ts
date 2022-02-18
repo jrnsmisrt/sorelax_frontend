@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../model/User";
+import {UserService} from "../../services/user.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-header',
@@ -9,13 +11,17 @@ import {User} from "../../model/User";
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  user!: User;
-
-  constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth) {
+  user!: Observable<User | any>;
+  user$ : Observable<User | undefined>
+  constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth, private userService: UserService) {
     this.user = afAuthService.user$;
+    this.user$ = userService.user;
   }
 
   ngOnInit(): void {
+    $( document ).ready(function(){
+    $(".dropdown-trigger").dropdown();
+    })
   }
 
   logout(): void {

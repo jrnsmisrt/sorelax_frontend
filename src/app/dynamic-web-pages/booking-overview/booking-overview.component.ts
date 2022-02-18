@@ -44,8 +44,6 @@ export class BookingOverviewComponent implements OnInit {
     if (userRole === 'admin') {
       return this.fireStore.collection<Booking>('bookings').valueChanges();
     } else {
-      console.log(this.auth.getUserUid());
-      console.log(this.auth.user$.role);
       return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())).valueChanges();
     }
   }
@@ -63,15 +61,12 @@ export class BookingOverviewComponent implements OnInit {
       } else {
         this.isAdmin = false;
       }
-      console.log(this.isAdmin);
     });
   }
 
   setUserName(uid: string) {
     this.userService.getUser(uid).subscribe((user) => {
-      console.log(user?.firstName)
       this.bookingUserFullName = user?.firstName + ' ' + user?.lastName!;
-      console.log(this.bookingUserFullName);
     });
   }
 
@@ -102,15 +97,12 @@ export class BookingOverviewComponent implements OnInit {
     })
   }
 
-  inheritSelectedBookingProperties(bookingId: string, bookingStatus: string) {
-    console.log(bookingStatus);
-    console.log(bookingId);
-    this.changeBookingStatus = bookingStatus;
+  inheritSelectedBookingProperties(bookingId: string) {
+    console.log("starting inherit");
     this.setBooking(bookingId);
     console.log(this.booking$);
-    console.log(this.changeBookingStatusId);
-    console.log(this.changeBookingStatus);
     BookingOverviewComponent.openBookingModal();
+    console.log("ending inherit");
   }
 
   private static openBookingModal() {
