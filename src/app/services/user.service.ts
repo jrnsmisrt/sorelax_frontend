@@ -29,9 +29,6 @@ export class UserService {
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
     // @ts-ignore
     this.user = this.userDoc.valueChanges();
-    this.user.subscribe((user) => {
-      this.userRole = user.role;
-    });
 
   }
 

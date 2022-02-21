@@ -6,10 +6,9 @@ import {InitService} from "../../materialize/init.service";
 import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 import {AuthService} from "../../services/auth.service";
 import {TimeSlot} from "../../model/TimeSlot";
-import {TimeslotService} from "../../services/timeslot.service";
-import {Observable, of} from "rxjs";
-import {where} from "@angular/fire/firestore";
+import {Observable, of, Subscription} from "rxjs";
 import {Booking} from "../../model/Booking";
+import {Time} from "@angular/common";
 
 @Component({
   selector: 'app-booking',
@@ -21,14 +20,14 @@ export class BookingComponent implements OnInit, AfterViewInit {
   uid!: string;
   massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
   durationMinutes: any = ['30', '60', '90'];
-  timeslotCollection: AngularFirestoreCollection<TimeSlot>;
+  timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
+  timeslots!: TimeSlot[];
+  selectedTimeslot!:TimeSlot;
 
   bookingForm = this.formBuilder.group({
     timeslot: new FormControl('', [Validators.required]),
-    date: new FormControl('', [Validators.required]),
-    time: new FormControl('', [Validators.required]),
     massage: new FormControl('', [Validators.required]),
     duration: new FormControl('', [Validators.required]),
     message: new FormControl('', [Validators.required])
@@ -37,25 +36,24 @@ export class BookingComponent implements OnInit, AfterViewInit {
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
               private formBuilder: FormBuilder,
               private initService: InitService,
-              public afAuthService: AuthService,
-              private timeSlotService: TimeslotService) {
-    this.bookingCollection = this.fireStore.collection<Booking>('bookings');
-    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
-   ;
-    this.timeslots$ = this.getTimeSlots();
+              public afAuthService: AuthService) {
+
   }
 
 
   ngOnInit(): void {
+    this.bookingCollection = this.fireStore.collection<Booking>('bookings');
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
+    // @ts-ignore
+    this.timeslots$ = this.getTimeslots();
+    this.setTimeslotArray();
+
     this.initService.initSelect();
     this.initService.initDatePicker();
     this.initService.initTimePicker();
 
-    document.addEventListener('DOMContentLoaded', function () {
-      let elems = document.querySelectorAll('.modal');
-      let instances = M.Modal.init(elems, {
-        dismissible: true,
-      });
+    $(document).ready(function () {
+      $('.modal').modal();
     });
 
     onAuthStateChanged(this.auth, (user) => {
@@ -68,38 +66,26 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   }
 
-  getTimeSlots(): Observable<TimeSlot[]> {
-    return this.timeslotCollection.valueChanges();
-  }
-
-
   ngAfterViewInit(): void {
     this.initService.initParallax();
   }
 
   bookMassage() {
-    this.bookingForm.patchValue({
-      //  date: $('.datepicker').val(),
-      //  time: $('.timepicker').val(),
-      timeslot: $('#timeslotselector'.valueOf())
-    })
-
     return this.fireStore.collection('bookings').doc().set({
-      uid: this.bookingCollection.doc().get().subscribe((a)=>{return a.id}),
       userUid: this.uid,
-      requestedTimeslot: this.bookingForm.get(['timeslot'])?.value,
-      date: this.bookingForm.get(['date'])?.value,
-      time: this.bookingForm.get(['time'])?.value,
+      timeslot: this.selectedTimeslot.id,
+      date: this.selectedTimeslot.date,
+      time: this.selectedTimeslot.time,
       massage: this.bookingForm.get(['massage'])?.value,
       duration: this.bookingForm.get(['duration'])?.value,
       personalMessage: this.bookingForm.get(['message'])?.value,
       requestedOn: JSON.stringify(new Date(Date.now())),
       status: 'pending'
     }).then(() => {
-      this.fireStore.collection('timeslots').doc(`${this.timeslot?.value.uid}`).set({
+      this.fireStore.collection('timeslots').doc(`${this.selectedTimeslot.id}`).update({
         customerid: this.uid,
-        date: this.timeslot?.value.date,
-        time: this.timeslot?.value.time
+        test: "test",
+        isAvailable: false
       })
       this.bookingForm.reset();
     }).catch(error => {
@@ -111,12 +97,6 @@ export class BookingComponent implements OnInit, AfterViewInit {
     this.massage!.setValue(typeOfMassage.target.value, {
       onlySelf: true
     });
-  }
-
-  changeTimeSlot(timeslot: any) {
-    this.timeslot!.setValue(timeslot.target.value, {
-      onlySelf: true,
-    })
   }
 
   changeDuration(minutes: any) {
@@ -135,6 +115,10 @@ export class BookingComponent implements OnInit, AfterViewInit {
     M.toast({html: 'form has been cleared'});
   }
 
+  getTimeslots():Observable<TimeSlot[]>{
+    return this.timeslotCollection.valueChanges();
+  }
+
   get massage() {
     return this.bookingForm.get(['massage']);
   }
@@ -145,5 +129,17 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   get timeslot() {
     return this.bookingForm.get(['timeslot']);
+  }
+
+  selectTimeslotChange(timeslot: any) {
+    this.selectedTimeslot = timeslot;
+    console.log(this.selectedTimeslot.date+' '+this.selectedTimeslot.time);
+  }
+
+  private setTimeslotArray() {
+    this.timeslots$.subscribe((t)=>{
+      this.timeslots = t;
+    })
+    console.log(this.timeslots);
   }
 }

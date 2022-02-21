@@ -3,9 +3,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {environment} from "../environments/environment";
 import {AngularFireModule} from "@angular/fire/compat";
-import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import {provideAuth, getAuth} from '@angular/fire/auth';
-import {provideDatabase, getDatabase} from '@angular/fire/database';
 import {AngularFireDatabaseModule} from "@angular/fire/compat/database";
 import {AppRoutingModule} from "./app-routing/app-routing.module";
 import {RouterModule} from "@angular/router";
@@ -15,7 +13,7 @@ import {HomeComponent} from "./static-web-pages/home/home.component";
 import { SignupComponent } from './dynamic-web-pages/signup/signup.component';
 import { LoginComponent } from './dynamic-web-pages/login/login.component';
 import { DashboardComponent } from './dynamic-web-pages/dashboard/dashboard.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { UserProfileComponent } from './user/user-profile/user-profile.component';
 import {AngularFirestore, AngularFirestoreModule} from "@angular/fire/compat/firestore";
 import { BookingComponent } from './dynamic-web-pages/booking-create/booking.component';
@@ -39,22 +37,23 @@ import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/b
     MassageComponent,
     ContactComponent,
     UsersOverviewComponent,
-    BookingOverviewComponent
+    BookingOverviewComponent,
 
 
   ],
-  imports: [
-    BrowserModule,
-    LayoutModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireDatabaseModule,
-    AngularFirestoreModule,
-    provideAuth(() => getAuth()),
-    AppRoutingModule,
-    RouterModule.forRoot([]),
-    HttpClientModule,
-    ReactiveFormsModule,
-  ],
+    imports: [
+        BrowserModule,
+        LayoutModule,
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireDatabaseModule,
+        AngularFirestoreModule,
+        provideAuth(() => getAuth()),
+        AppRoutingModule,
+        RouterModule.forRoot([]),
+        HttpClientModule,
+        ReactiveFormsModule,
+        FormsModule,
+    ],
   providers: [AngularFirestore],
 
   bootstrap: [

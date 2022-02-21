@@ -6,37 +6,39 @@
       <div class="row">
         <div class="col s6">
           <label>Massage</label>
-          <select formControlName="massage" class="select-dropdown validate">
-            <option disabled>Selecteer een massage</option>
-            <option *ngFor="let massage of massages" [ngValue]="massage" (change)="changeMassage($event)">
-              {{massage}}
-            </option>
-          </select>
+          <div class="input-field">
+            <select formControlName="massage" class="select-dropdown validate">
+              <option disabled>Selecteer een massage</option>
+              <option *ngFor="let massage of massages" [ngValue]="massage" (change)="changeMassage($event)">
+                {{massage}}
+              </option>
+            </select></div>
         </div>
       </div>
 
       <div class="row">
         <div class="col s6">
           <label>Timeslot</label>
-          <select id="timeslotselector" formControlName="timeslot" class="select-dropdown validate">
-            <option disabled>Selecteer een timeslot</option>
-            <option *ngFor="let timeslot of timeslots$|async" [ngValue]="timeslot" (change)="changeTimeSlot($event)">
-              <ng-template *ngIf="timeslot.isAvailable">
-                {{timeslot.date}} {{timeslot.time}}
-              </ng-template>
-            </option>
-          </select>
+          <div class="input-field">
+            <div *ngFor="let tee of timeslots$|async">
+              <button class="btn-block" (click)=selectTimeslotChange(tee)> {{tee.date}} {{tee.time}}</button>
+            </div>
+            <div *ngIf="selectedTimeslot">
+              <br>selected: {{selectedTimeslot.date}} {{selectedTimeslot.time}}
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col s2">
           <label>tijdsduur</label>
-          <select formControlName="duration" class="select-dropdown validate">
-            <option *ngFor="let duration of durationMinutes" [ngValue]="duration" (change)="changeDuration($event)">
-              {{duration}}
-            </option>
-          </select>
+          <div class="input-field">
+            <select formControlName="duration" class="select-dropdown validate">
+              <option *ngFor="let duration of durationMinutes" [ngValue]="duration" (change)="changeDuration($event)">
+                {{duration}}
+              </option>
+            </select></div>
         </div>
       </div>
 
@@ -49,7 +51,7 @@
 
       <div class="row">
         <div class="col-2">
-          <a class="btn-large waves-effect waves-teal" (click)="bookMassage()">Boek Massage</a>
+          <a class="btn-large waves-effect waves-teal" (click)="openModalBookingConfirmation()">Boek Massage</a>
         </div>
         <div class="col-2">
 
@@ -59,7 +61,6 @@
     </form>
   </div>
   <div class="col l3">
-
   </div>
 
   <div id="bookingModal" class="modal">

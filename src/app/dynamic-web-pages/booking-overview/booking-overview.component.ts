@@ -22,12 +22,8 @@ export class BookingOverviewComponent implements OnInit {
   bookingUserFullName!: string;
   users$!:Observable<User[]>
 
-  isAdmin!: boolean;
-
-
   constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService) {
     this.bookingCollection = this.fireStore.collection('bookings');
-    this.setAdmin();
     this.bookings$ = this.getAllBookings();
     this.users$ = this.userService.allUsers;
   }
@@ -40,29 +36,13 @@ export class BookingOverviewComponent implements OnInit {
 
 
   getAllBookings(): Observable<Booking[]> {
-    let userRole = this.userService.userRole;
-    if (userRole === 'admin') {
-      return this.fireStore.collection<Booking>('bookings').valueChanges();
-    } else {
       return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())).valueChanges();
-    }
   }
 
   setBooking(bookingId: string) {
     this.booking$ = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
   }
 
-
-  private setAdmin() {
-    this.userService.user.subscribe((user) => {
-      let userRole = user.role;
-      if (userRole === 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false;
-      }
-    });
-  }
 
   setUserName(uid: string) {
     this.userService.getUser(uid).subscribe((user) => {
