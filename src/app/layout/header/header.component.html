@@ -50,15 +50,10 @@
       <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
       <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a></li>
       <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a></li>
+      <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create a Timeslot</a></li>
     </ul>
   </div>
 </nav>
-<!-- dropdown navbar -->
-<ul id='dropdown1' class='dropdown-content teal lighten-4 text-lighten-5'>
-  <li><a [routerLink]="['./','users,',afAuthService.getUserUid(),'profile']" >Profile</a></li>
-  <li><a [routerLink]="['/','users',afAuthService.getUserUid(),'bookmassage']">Book a massage</a></li>
-  <li><a [routerLink]="['/','users',afAuthService.getUserUid(),'booking-overview']">view all bookings</a></li>
-</ul>
 
 <!-- mobile navbar -->
 <div class="hide-on-med-and-up">

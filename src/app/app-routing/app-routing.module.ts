@@ -12,6 +12,7 @@ import {AboutComponent} from "../static-web-pages/about/about.component";
 import {MassageComponent} from "../static-web-pages/massage/massage.component";
 import {UsersOverviewComponent} from "../user/users-overview/users-overview.component";
 import {BookingOverviewComponent} from "../dynamic-web-pages/booking-overview/booking-overview.component";
+import {CreateTimeslotComponent} from "../dynamic-web-pages/create-timeslot/create-timeslot.component";
 
 const routes:Routes = [
   {path:'', redirectTo: 'home', pathMatch:'full'},
@@ -25,6 +26,7 @@ const routes:Routes = [
   {path:'users/:id/profile', component: UserProfileComponent, canActivate:[AuthGuard]},
   {path:'users/:id/dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path:'users/:id/booking-overview', component: BookingOverviewComponent},
+  {path:'users/:id/create-timeslot', component: CreateTimeslotComponent},
   {path:'**', component: HomeComponent}
 ]
 

@@ -19,12 +19,13 @@
       <div class="row">
         <div class="col s6">
           <label>Timeslot</label>
-          <div class="input-field">
-            <div *ngFor="let tee of timeslots$|async">
-              <button class="btn-block" (click)=selectTimeslotChange(tee)> {{tee.date}} {{tee.time}}</button>
-            </div>
-            <div *ngIf="selectedTimeslot">
-              <br>selected: {{selectedTimeslot.date}} {{selectedTimeslot.time}}
+          <div class="row">
+            <div class="col input-field">
+              <button class="btn-small waves-effect waves-teal" (click)="openModalTimeslotSelection()">Select Timeslot
+              </button>
+              <div class="col teal-text" *ngIf="confirmedTimeslot">
+                <br>You selected: {{confirmedTimeslot.date}} {{confirmedTimeslot.time}}
+              </div>
             </div>
           </div>
         </div>
@@ -54,7 +55,6 @@
           <a class="btn-large waves-effect waves-teal" (click)="openModalBookingConfirmation()">Boek Massage</a>
         </div>
         <div class="col-2">
-
         </div>
       </div>
 
@@ -72,5 +72,38 @@
       <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-flat">Confirm</a>
     </div>
   </div>
-</div>
+  <div id="timeslotModal" class="modal">
+    <div class="modal-content">
+      <h4>Timeslots</h4>
+      <p>Select a Timeslot</p>
+      <div>
+        <div class="row">
+          <div class="col">Date</div>
+          <div class="col">Time</div>
+          <div class="col">Select</div>
+        </div>
 
+        <div class="row" *ngFor="let timeslot of timeslots$ | async">
+          <div *ngIf="timeslot.isAvailable">
+            <div class="col">{{timeslot.date}}</div>
+            <div class="col">{{timeslot.time}}</div>
+            <div class="col">
+              <button (click)="selectTimeslot(timeslot)" class="waves-effect waves-teal btn-small">
+                Select
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div *ngIf="selectedTimeslot as t">
+          <p>You selected: {{t.date}} {{t.time}}</p>
+          <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

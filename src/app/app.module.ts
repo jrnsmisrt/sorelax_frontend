@@ -22,6 +22,7 @@ import { MassageComponent } from './static-web-pages/massage/massage.component';
 import { ContactComponent } from './static-web-pages/contact/contact.component';
 import { UsersOverviewComponent } from './user/users-overview/users-overview.component';
 import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/booking-overview.component';
+import { CreateTimeslotComponent } from './dynamic-web-pages/create-timeslot/create-timeslot.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/b
     ContactComponent,
     UsersOverviewComponent,
     BookingOverviewComponent,
+    CreateTimeslotComponent,
 
 
   ],

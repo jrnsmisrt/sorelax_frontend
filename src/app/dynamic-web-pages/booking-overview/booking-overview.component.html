@@ -27,14 +27,16 @@
       <div class="col m2"> {{booking.personalMessage}}</div>
       <div class="col m2"> {{booking.requestedOn}}</div>
       <div class="col m1">
-        <button class="waves-effect waves-teal"
+      <!--  <button class="waves-effect waves-teal"
                 (click)="inheritSelectedBookingProperties(booking.uid); setUserName(booking.userUid)"> {{booking.status}} </button>
-      </div>
+      -->
+      {{booking.status}}</div>
 
     </div>
     <div class="col"></div>
   </div>
   <!-- Modal -->
+  <!--
   <div id="statusmodal" class="modal">
     <div class="modal-content">
       <div class="row teal white-text text">
@@ -75,7 +77,7 @@
     </div>
     <div class="modal-footer">
     </div>
-  </div>
+  </div>-->
   <!-- end of modal -->
 
 </div>

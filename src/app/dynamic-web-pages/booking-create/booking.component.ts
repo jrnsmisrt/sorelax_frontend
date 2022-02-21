@@ -6,9 +6,9 @@ import {InitService} from "../../materialize/init.service";
 import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 import {AuthService} from "../../services/auth.service";
 import {TimeSlot} from "../../model/TimeSlot";
-import {Observable, of, Subscription} from "rxjs";
+import {Observable} from "rxjs";
 import {Booking} from "../../model/Booking";
-import {Time} from "@angular/common";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-booking',
@@ -25,6 +25,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
   timeslots$!: Observable<TimeSlot[]>;
   timeslots!: TimeSlot[];
   selectedTimeslot!:TimeSlot;
+  confirmedTimeslot!:TimeSlot;
 
   bookingForm = this.formBuilder.group({
     timeslot: new FormControl('', [Validators.required]),
@@ -36,7 +37,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
               private formBuilder: FormBuilder,
               private initService: InitService,
-              public afAuthService: AuthService) {
+              public afAuthService: AuthService,
+              private router: Router) {
 
   }
 
@@ -46,15 +48,10 @@ export class BookingComponent implements OnInit, AfterViewInit {
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
-    this.setTimeslotArray();
 
     this.initService.initSelect();
     this.initService.initDatePicker();
     this.initService.initTimePicker();
-
-    $(document).ready(function () {
-      $('.modal').modal();
-    });
 
     onAuthStateChanged(this.auth, (user) => {
       if (user) {
@@ -68,26 +65,33 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initService.initParallax();
+    $(document).ready(function(){
+      $('select').formSelect();
+    });
+    $(document).ready(function () {
+      $('.modal').modal();
+    });
+
   }
 
   bookMassage() {
     return this.fireStore.collection('bookings').doc().set({
       userUid: this.uid,
-      timeslot: this.selectedTimeslot.id,
-      date: this.selectedTimeslot.date,
-      time: this.selectedTimeslot.time,
+      timeslot: this.confirmedTimeslot.id,
+      date: this.confirmedTimeslot.date,
+      time: this.confirmedTimeslot.time,
       massage: this.bookingForm.get(['massage'])?.value,
       duration: this.bookingForm.get(['duration'])?.value,
       personalMessage: this.bookingForm.get(['message'])?.value,
       requestedOn: JSON.stringify(new Date(Date.now())),
       status: 'pending'
     }).then(() => {
-      this.fireStore.collection('timeslots').doc(`${this.selectedTimeslot.id}`).update({
+      this.fireStore.collection('timeslots').doc(`${this.confirmedTimeslot.id}`).update({
         customerid: this.uid,
         test: "test",
         isAvailable: false
-      })
-      this.bookingForm.reset();
+      });
+      this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
     }).catch(error => {
       console.log('booking form error', error);
     })
@@ -109,14 +113,22 @@ export class BookingComponent implements OnInit, AfterViewInit {
     let bookingModal = M.Modal.getInstance(document.querySelector('#bookingModal')!);
     bookingModal.open();
   }
-
+  openModalTimeslotSelection(){
+    let timeslotModal = M.Modal.getInstance(document.querySelector('#timeslotModal')!);
+    timeslotModal.open();
+  }
+  getTimeslots():Observable<TimeSlot[]>{
+    return this.timeslotCollection.valueChanges();
+  }
+  confirmTimeslot() {
+    this.confirmedTimeslot = this.selectedTimeslot;
+  }
+  selectTimeslot(timeslot: any) {
+    this.selectedTimeslot = timeslot;
+  }
   clear() {
     this.bookingForm.reset();
     M.toast({html: 'form has been cleared'});
-  }
-
-  getTimeslots():Observable<TimeSlot[]>{
-    return this.timeslotCollection.valueChanges();
   }
 
   get massage() {
@@ -131,15 +143,4 @@ export class BookingComponent implements OnInit, AfterViewInit {
     return this.bookingForm.get(['timeslot']);
   }
 
-  selectTimeslotChange(timeslot: any) {
-    this.selectedTimeslot = timeslot;
-    console.log(this.selectedTimeslot.date+' '+this.selectedTimeslot.time);
-  }
-
-  private setTimeslotArray() {
-    this.timeslots$.subscribe((t)=>{
-      this.timeslots = t;
-    })
-    console.log(this.timeslots);
-  }
 }

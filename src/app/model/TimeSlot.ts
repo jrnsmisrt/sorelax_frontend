@@ -5,6 +5,5 @@ export interface TimeSlot {
   date: string,
   time: string,
   isAvailable: boolean,
-  confirmed: false
 
 }
