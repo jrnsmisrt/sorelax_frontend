@@ -12,7 +12,7 @@ import {UserService} from "../../services/user.service";
 export class UsersOverviewComponent implements OnInit {
   db = getFirestore();
   colRef = collection(this.db, 'users');
-  users: Observable<User[]> = this.userService.allUsers;
+  users: Observable<User[]> = this.userService.getAllUsers();
 
 
   constructor(private userService: UserService) {

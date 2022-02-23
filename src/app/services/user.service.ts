@@ -23,7 +23,9 @@ export class UserService {
   userRole!: string | undefined;
 
   constructor(private fireStore: AngularFirestore, private firestoreService: FirestoreService, private afAuth: AuthService) {
-    this.userCollection = fireStore.collection<User>('users');
+    this.userCollection = fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc')
+                                                        .orderBy('firstName','asc')
+                                                        .orderBy('dateOfBirth','asc'));
     this.allUsers = this.userCollection.valueChanges({idField: 'uid'});
 
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);

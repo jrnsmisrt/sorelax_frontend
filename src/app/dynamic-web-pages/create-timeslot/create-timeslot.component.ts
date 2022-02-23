@@ -34,7 +34,9 @@ export class CreateTimeslotComponent implements OnInit {
       });
     });
     $(document).ready(function () {
-      $('.modal').modal();
+      $('.modal').modal({
+        preventScrolling: true,
+      });
     });
   }
 
@@ -43,17 +45,20 @@ export class CreateTimeslotComponent implements OnInit {
       date: this.date,
       time: this.time
     })
-    console.log(this.timeslotForm.get(['date'])?.value);
-    console.log();
-    console.log(this.time);
-    return this.fireStore.collection('timeslots').doc().set({
-      date: this.date,
-      time: this.time,
-      isAvailable: true,
-      confirmed: false
-    }).catch(error => {
-      console.log('timeslot form error', error);
-    })
+    if (this.timeslotForm.invalid) {
+      this.timeslotForm.markAllAsTouched();
+    } else {
+      return this.fireStore.collection('timeslots').doc().set({
+        date: this.date,
+        time: this.time,
+        isAvailable: true,
+        confirmed: false
+      }).then(() => {
+        this.timeslotForm.reset();
+      }).catch(error => {
+        console.log('timeslot form error', error);
+      })
+    }
   }
 
   openTimeslotModal() {
@@ -76,5 +81,6 @@ export class CreateTimeslotComponent implements OnInit {
     this.time = $('.timepicker').val();
     this.timeslotForm.patchValue({
       time: this.time
-    });  }
+    });
+  }
 }

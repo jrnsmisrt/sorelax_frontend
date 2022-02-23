@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col s1"></div>
   <div class="col s10">
-    <div class="row teal white-text text center">
+    <div class="row teal lighten-3 white-text text center overviewheadrow">
       <div class="col m1"><strong>Massage</strong></div>
       <div class="col m1"><strong>Datum</strong></div>
       <div class="col m1"><strong>Tijdstip</strong></div>
@@ -13,71 +13,70 @@
       <div class="col m1"><strong>Status</strong></div>
     </div>
 
-    <div class="row center" *ngFor="let booking of bookings$ | async">
-      <div class="col m1">{{booking.massage}}</div>
-      <div class="col m1">{{booking.date}}</div>
-      <div class="col m1">{{booking.time}}</div>
-      <div class="col m1">{{booking.duration}}</div>
-      <div class="col m2">
+    <div class="row center overviewrow" *ngFor="let booking of bookings$ | async">
+      <div class="col m1 overviewcol">{{booking.massage}}</div>
+      <div class="col m1 overviewcol">{{booking.date}}</div>
+      <div class="col m1 overviewcol">{{booking.time}}</div>
+      <div class="col m1 overviewcol">{{booking.duration}}</div>
+      <div class="col m2 overviewcol">
         <div *ngFor="let user of users$|async">
           <strong *ngIf="user.uid===booking.userUid">
             {{user.firstName + ' ' + user.lastName}}
           </strong></div>
       </div>
-      <div class="col m2"> {{booking.personalMessage}}</div>
-      <div class="col m2"> {{booking.requestedOn}}</div>
-      <div class="col m1">
-      <!--  <button class="waves-effect waves-teal"
-                (click)="inheritSelectedBookingProperties(booking.uid); setUserName(booking.userUid)"> {{booking.status}} </button>
-      -->
-      {{booking.status}}</div>
+      <div class="col m2 overviewcol"> {{booking.personalMessage}}</div>
+      <div class="col m2 overviewcol"> {{booking.requestedOn}}</div>
+      <div class="col m1 overviewcol">
+        <!--  <button class="waves-effect waves-teal"
+                  (click)="inheritSelectedBookingProperties(booking.uid); setUserName(booking.userUid)"> {{booking.status}} </button>
+        -->
+        {{booking.status}}
+      </div>
+      <div class="col m1 overviewcol" *ngIf="booking.status!='cancelled'">
+        <button class="btn-small waves-teal waves-effect"
+           (click)="inheritSelectedBookingProperties(booking.id)">Annuleer
+        </button></div>
 
     </div>
+
     <div class="col"></div>
   </div>
   <!-- Modal -->
-  <!--
-  <div id="statusmodal" class="modal">
-    <div class="modal-content">
-      <div class="row teal white-text text">
-        <div class="col m2"><strong>Datum</strong></div>
-        <div class="col m1"><strong>Tijd</strong></div>
-        <div class="col m2"><strong>Massage</strong></div>
-        <div class="col m1"><strong>Duur</strong></div>
-        <div class="col m3"><strong>Klant</strong></div>
-        <div class="col m3"><strong>Boodschap</strong></div>
-      </div>
-      <div *ngIf="booking$ | async as booking" class="row">
-        <div class="col m2">{{booking.date}}</div>
-        <div class="col m1">{{booking.time}}</div>
-        <div class="col m2">{{booking.massage}}</div>
-        <div class="col m1">{{booking.duration}}</div>
-        <div class="col m3">{{bookingUserFullName}}</div>
-        <div class="col m3">{{booking.personalMessage}}</div>
 
-      </div>
-
-      <div class="row" *ngIf="changeBookingStatus!=='confirmed'">
-        <div class="row center">
-          Klik op "Bevestig" Indien u deze boeking wilt bevestigen.
+  <div id="cancelModal" class="modal">
+    <div *ngIf="booking$ | async as booking">
+      <div class="modal-content">
+        <div class="row teal white-text overviewheadrow">
+          <div class="col m2"><strong>Datum</strong></div>
+          <div class="col m1"><strong>Tijd</strong></div>
+          <div class="col m2"><strong>Massage</strong></div>
+          <div class="col m1"><strong>Duur</strong></div>
+          <div class="col m3"><strong>Klant</strong></div>
+          <div class="col m3"><strong>Boodschap</strong></div>
         </div>
+        <div class="row overviewrow">
+          <div class="col m2 overviewcol">{{booking.date}}</div>
+          <div class="col m1 overviewcol">{{booking.time}}</div>
+          <div class="col m2 overviewcol">{{booking.massage}}</div>
+          <div class="col m1  overviewcol">{{booking.duration}}</div>
+          <div class="col m3 overviewcol">{{bookingUserFullName}}</div>
+          <div class="col m3 overviewcol">{{booking.personalMessage}}</div>
+        </div>
+        <div class="row">
+          <div class="row center">
+            Klik op "Annuleer" Indien u deze boeking wilt annuleren.
+            Deze aanvraag is onomkeerbaar, u zult nadien een nieuwe boeking moeten aanvragen.
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
         <div class="row center">
           <div><a class="btn-small waves-teal waves-effect"
-                  (click)="confirmBooking(changeBookingStatusId!)">Bevestig</a></div>
-        </div>
-      </div>
-      <div class="row" *ngIf="changeBookingStatus==='confirmed'">
-        <div class="row center">
-          Klik op "Annnuleer" indien u deze boeking wilt annuleren.
-        </div>
-        <div class="row center">
-          <a class="btn-small waves-teal waves-effect" (click)="cancelBooking(changeBookingStatusId!)">Annuleer</a>
+                  (click)="cancelBooking(booking.id)">Annuleer</a>
+          </div>
         </div>
       </div>
     </div>
-    <div class="modal-footer">
-    </div>
-  </div>-->
-  <!-- end of modal -->
-
+  </div>
 </div>

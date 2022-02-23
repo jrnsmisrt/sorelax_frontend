@@ -24,8 +24,10 @@ export class BookingComponent implements OnInit, AfterViewInit {
   bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
   timeslots!: TimeSlot[];
-  selectedTimeslot!:TimeSlot;
-  confirmedTimeslot!:TimeSlot;
+  selectedTimeslot!: TimeSlot;
+  confirmedTimeslot!: TimeSlot;
+  formValid = false;
+
 
   bookingForm = this.formBuilder.group({
     timeslot: new FormControl('', [Validators.required]),
@@ -65,7 +67,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initService.initParallax();
-    $(document).ready(function(){
+    $(document).ready(function () {
       $('select').formSelect();
     });
     $(document).ready(function () {
@@ -111,21 +113,31 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   openModalBookingConfirmation() {
     let bookingModal = M.Modal.getInstance(document.querySelector('#bookingModal')!);
-    bookingModal.open();
+    this.formIsValid();
+    if (!this.formValid) {
+      return M.toast({html: 'Form has not been filled in properly'});
+    } else {
+      bookingModal.open();
+    }
   }
-  openModalTimeslotSelection(){
+
+  openModalTimeslotSelection() {
     let timeslotModal = M.Modal.getInstance(document.querySelector('#timeslotModal')!);
     timeslotModal.open();
   }
-  getTimeslots():Observable<TimeSlot[]>{
+
+  getTimeslots(): Observable<TimeSlot[]> {
     return this.timeslotCollection.valueChanges();
   }
+
   confirmTimeslot() {
     this.confirmedTimeslot = this.selectedTimeslot;
   }
+
   selectTimeslot(timeslot: any) {
     this.selectedTimeslot = timeslot;
   }
+
   clear() {
     this.bookingForm.reset();
     M.toast({html: 'form has been cleared'});
@@ -143,4 +155,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
     return this.bookingForm.get(['timeslot']);
   }
 
+  formIsValid() {
+    this.formValid = !(this.confirmedTimeslot === null || this.duration === null || this.massage === null || this.massages === undefined);
+  }
 }

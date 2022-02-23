@@ -1,20 +1,38 @@
-<form [formGroup]="timeslotForm" (ngSubmit)="openTimeslotModal()">
-  <label>Date</label><input formControlName="date" type="text" class="datepicker" [value]="date" (change)="setDate()">
-  <label>Time</label>
-  <input formControlName="time" type="text" class="timepicker" [value]="time" (change)="setTime()">
-  <button class="btn-large waves-teal waves-effect">submit</button>
-</form>
-
+<div class="row"></div>
+<div class="row">
+  <div class="col l3"></div>
+  <div class="col">
+    <form [formGroup]="timeslotForm" (ngSubmit)="openTimeslotModal()">
+      <label>Date</label>
+      <input formControlName="date" type="text" class="datepicker validate" [value]="date"
+                                (change)="setDate()">
+      <label>Time</label>
+      <input formControlName="time" type="text" class="timepicker validate" [value]="time" (change)="setTime()">
+      <button class="btn-large waves-teal waves-effect">submit</button>
+    </form>
+  </div>
+  <div class="col l3"></div>
+</div>
 <div id="timeslotModal" class="modal">
   <div class="modal-content">
-    <h4>Create Timeslot</h4>
-    <p>Please confirm your created Timeslot</p>
-
-
-  </div>
-  <div class="modal-footer">
-    <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
-      Confirm
-    </button>
+    <div class="row">
+      <div class="col l3"></div>
+      <div class="col l6 center center-block">
+        <h4>Create Timeslot</h4>
+        <p>Please confirm this Timeslot</p><br>
+        <div class="col l3"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col l3"></div>
+      <div class="col l6 center-block center">
+        <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
+          Confirm
+        </button>
+        <div class="col l3"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
   </div>
 </div>

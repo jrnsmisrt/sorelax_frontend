@@ -1,5 +1,5 @@
 export interface Booking{
-  uid: string,
+  id: string,
   userUid: string,
   date: string,
   time: string,

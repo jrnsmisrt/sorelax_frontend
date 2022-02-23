@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Booking} from "../../model/Booking";
-import {Observable, Subscription} from "rxjs";
+import {Observable} from "rxjs";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
@@ -36,7 +36,8 @@ export class BookingOverviewComponent implements OnInit {
 
 
   getAllBookings(): Observable<Booking[]> {
-      return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())).valueChanges();
+      return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())
+        .orderBy('date', 'asc').orderBy('time', 'asc').orderBy('requestedOn', 'asc' )).valueChanges();
   }
 
   setBooking(bookingId: string) {
@@ -64,17 +65,11 @@ export class BookingOverviewComponent implements OnInit {
   }
 
   cancelBooking(bookingId: string) {
-    let booking = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
-
-    booking.subscribe((b) => {
-      if (b?.status !== 'cancelled') {
-        this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
-          status: 'cancelled'
-        }).catch(error => {
-          console.log('confirm booking: ' + error);
-        })
-      }
-    })
+    this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
+      status: 'cancelled',
+    }).catch(error=>{
+      console.log('cancel booking: '+error);
+    });
   }
 
   inheritSelectedBookingProperties(bookingId: string) {
@@ -86,6 +81,6 @@ export class BookingOverviewComponent implements OnInit {
   }
 
   private static openBookingModal() {
-    M.Modal.getInstance(document.getElementById('statusmodal')!).open();
+    M.Modal.getInstance(document.getElementById('cancelModal')!).open();
   }
 }
