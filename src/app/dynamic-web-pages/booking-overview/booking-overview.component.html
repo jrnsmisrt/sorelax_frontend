@@ -19,24 +19,19 @@
       <div class="col m1 overviewcol">{{booking.time}}</div>
       <div class="col m1 overviewcol">{{booking.duration}}</div>
       <div class="col m2 overviewcol">
-        <div *ngFor="let user of users$|async">
-          <strong *ngIf="user.uid===booking.userUid">
+        <div>
+          <strong *ngIf="user$ | async as user">
             {{user.firstName + ' ' + user.lastName}}
           </strong></div>
       </div>
       <div class="col m2 overviewcol"> {{booking.personalMessage}}</div>
       <div class="col m2 overviewcol"> {{booking.requestedOn}}</div>
-      <div class="col m1 overviewcol">
-        <!--  <button class="waves-effect waves-teal"
-                  (click)="inheritSelectedBookingProperties(booking.uid); setUserName(booking.userUid)"> {{booking.status}} </button>
-        -->
-        {{booking.status}}
-      </div>
+      <div class="col m1 overviewcol">{{booking.status}}</div>
       <div class="col m1 overviewcol" *ngIf="booking.status!='cancelled'">
         <button class="btn-small waves-teal waves-effect"
-           (click)="inheritSelectedBookingProperties(booking.id)">Annuleer
-        </button></div>
-
+                (click)="openModal(booking.id)">Annuleer
+        </button>
+      </div>
     </div>
 
     <div class="col"></div>
@@ -44,7 +39,7 @@
   <!-- Modal -->
 
   <div id="cancelModal" class="modal">
-    <div *ngIf="booking$ | async as booking">
+    <div>
       <div class="modal-content">
         <div class="row teal white-text overviewheadrow">
           <div class="col m2"><strong>Datum</strong></div>
@@ -54,7 +49,7 @@
           <div class="col m3"><strong>Klant</strong></div>
           <div class="col m3"><strong>Boodschap</strong></div>
         </div>
-        <div class="row overviewrow">
+        <div class="row overviewrow" *ngIf="booking$|async as booking">
           <div class="col m2 overviewcol">{{booking.date}}</div>
           <div class="col m1 overviewcol">{{booking.time}}</div>
           <div class="col m2 overviewcol">{{booking.massage}}</div>
@@ -72,7 +67,7 @@
       </div>
       <div class="modal-footer">
         <div class="row center">
-          <div><a class="btn-small waves-teal waves-effect"
+          <div><a class="btn-small waves-teal waves-effect" *ngIf="booking$|async as booking"
                   (click)="cancelBooking(booking.id)">Annuleer</a>
           </div>
         </div>

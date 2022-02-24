@@ -3,12 +3,13 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {InitService} from "../../materialize/init.service";
-import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 import {AuthService} from "../../services/auth.service";
 import {TimeSlot} from "../../model/TimeSlot";
 import {Observable} from "rxjs";
 import {Booking} from "../../model/Booking";
 import {Router} from "@angular/router";
+import firebase from "firebase/compat/app";
+import {collection, doc, setDoc} from "@angular/fire/firestore";
 
 @Component({
   selector: 'app-booking',
@@ -16,7 +17,6 @@ import {Router} from "@angular/router";
   styleUrls: ['./booking.component.css']
 })
 export class BookingComponent implements OnInit, AfterViewInit {
-  auth = getAuth();
   uid!: string;
   massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
   durationMinutes: any = ['30', '60', '90'];
@@ -55,12 +55,6 @@ export class BookingComponent implements OnInit, AfterViewInit {
     this.initService.initDatePicker();
     this.initService.initTimePicker();
 
-    onAuthStateChanged(this.auth, (user) => {
-      if (user) {
-        this.uid = user.uid.toString();
-      }
-    });
-
     this.timeslots$ = this.timeslotCollection.valueChanges();
 
   }
@@ -78,7 +72,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   bookMassage() {
     return this.fireStore.collection('bookings').doc().set({
-      userUid: this.uid,
+      userUid: firebase.auth().currentUser?.uid,
       timeslot: this.confirmedTimeslot.id,
       date: this.confirmedTimeslot.date,
       time: this.confirmedTimeslot.time,
@@ -93,6 +87,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
         test: "test",
         isAvailable: false
       });
+
       this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
     }).catch(error => {
       console.log('booking form error', error);
@@ -113,13 +108,9 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   openModalBookingConfirmation() {
     let bookingModal = M.Modal.getInstance(document.querySelector('#bookingModal')!);
-    this.formIsValid();
-    if (!this.formValid) {
-      return M.toast({html: 'Form has not been filled in properly'});
-    } else {
-      bookingModal.open();
-    }
+    bookingModal.open();
   }
+
 
   openModalTimeslotSelection() {
     let timeslotModal = M.Modal.getInstance(document.querySelector('#timeslotModal')!);

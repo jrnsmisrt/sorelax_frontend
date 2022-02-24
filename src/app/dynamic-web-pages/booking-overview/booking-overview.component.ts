@@ -5,6 +5,7 @@ import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
 import {User} from "../../model/User";
+import firebase from "firebase/compat/app";
 
 @Component({
   selector: 'app-booking-overview',
@@ -20,12 +21,15 @@ export class BookingOverviewComponent implements OnInit {
   changeBookingStatus: string | undefined;
 
   bookingUserFullName!: string;
-  users$!:Observable<User[]>
+  users$!: Observable<User[]>;
+
+  user$!: Observable<User | undefined>;
 
   constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService) {
     this.bookingCollection = this.fireStore.collection('bookings');
     this.bookings$ = this.getAllBookings();
     this.users$ = this.userService.allUsers;
+    this.user$ = this.fireStore.collection<User>('users').doc(`${firebase.auth().currentUser?.uid}`).valueChanges();
   }
 
   ngOnInit(): void {
@@ -36,8 +40,8 @@ export class BookingOverviewComponent implements OnInit {
 
 
   getAllBookings(): Observable<Booking[]> {
-      return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', this.auth.getUserUid())
-        .orderBy('date', 'asc').orderBy('time', 'asc').orderBy('requestedOn', 'asc' )).valueChanges();
+    return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', firebase.auth().currentUser?.uid)
+      .orderBy('date', 'asc').orderBy('time', 'asc').orderBy('requestedOn', 'asc')).valueChanges();
   }
 
   setBooking(bookingId: string) {
@@ -67,20 +71,17 @@ export class BookingOverviewComponent implements OnInit {
   cancelBooking(bookingId: string) {
     this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
       status: 'cancelled',
-    }).catch(error=>{
-      console.log('cancel booking: '+error);
+    }).catch(error => {
+      console.log('cancel booking: ' + error);
     });
   }
 
-  inheritSelectedBookingProperties(bookingId: string) {
-    console.log("starting inherit");
-    this.setBooking(bookingId);
-    console.log(this.booking$);
-    BookingOverviewComponent.openBookingModal();
-    console.log("ending inherit");
-  }
-
-  private static openBookingModal() {
+  openModal(bookingId: string) {
+    console.log(bookingId);
+    this.booking$ = this.fireStore.collection<Booking>('bookings').doc(`${bookingId}`).valueChanges();
+    this.booking$.subscribe((p)=>{
+      console.log(p?.id);
+    })
     M.Modal.getInstance(document.getElementById('cancelModal')!).open();
   }
 }
