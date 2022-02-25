@@ -7,8 +7,8 @@
         <div class="col s6">
           <label>Massage</label>
           <div class="input-field">
-            <select formControlName="massage" class="select-dropdown validate">
-              <option *ngFor="let massage of massages" [ngValue]="massage" (change)="changeMassage($event)">
+            <select formControlName="massage" class="select-dropdown validate" [value]="massage" (change)="changeMassage($event, massage)">
+              <option *ngFor="let massage of dbMassages|async">
                 {{massage}}
               </option>
             </select></div>
@@ -20,16 +20,7 @@
       </div>
 
       <div class="row">
-        <div class="col s2">
-          <label>tijdsduur</label>
-          <div class="input-field">
-            <select formControlName="duration" class="select-dropdown validate">
-              <option *ngFor="let duration of durationMinutes" [ngValue]="duration" (change)="changeDuration($event)">
-                {{duration}}
-              </option>
-            </select></div>
-        </div>
-        <div class="col s6">
+        <div class="col s3">
           <label>Timeslot</label>
           <div class="row">
             <div class="col input-field">
@@ -39,6 +30,18 @@
               <div class="col teal-text" *ngIf="confirmedTimeslot">
                 <br>You selected: {{confirmedTimeslot.date}} {{confirmedTimeslot.time}}
               </div>
+            </div>
+          </div>
+        </div>
+        <div class="col s2">
+          <label>tijdsduur</label>
+          <div class="input-field">
+            <div *ngIf="dbMassages|async as massages$">
+              <select formControlName="duration" class="select-dropdown validate"[value]="duration" (change)="changeDuration($event)">
+                <option *ngFor="let duration of massages$.values()">
+                  {{duration}}
+                </option>
+              </select>
             </div>
           </div>
         </div>

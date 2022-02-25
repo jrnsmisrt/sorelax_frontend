@@ -10,6 +10,7 @@ import {Booking} from "../../model/Booking";
 import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
 import {collection, doc, setDoc} from "@angular/fire/firestore";
+import {newArray} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-booking',
@@ -19,7 +20,12 @@ import {collection, doc, setDoc} from "@angular/fire/firestore";
 export class BookingComponent implements OnInit, AfterViewInit {
   uid!: string;
   massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
-  durationMinutes: any = ['30', '60', '90'];
+  durationMinutes!: string[];
+  ontspanningDuration = ['30', '60', '90'];
+  boostDuration = ['15', '30'];
+  sportDuration = ['15', '30'];
+  antiStressDuration = ['15', '30'];
+  scrubDuration = ['15', '30', '60', '90'];
   timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
@@ -27,6 +33,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
   selectedTimeslot!: TimeSlot;
   confirmedTimeslot!: TimeSlot;
   formValid = false;
+
+  dbMassages = this.fireStore.collection('massages').valueChanges();
 
 
   bookingForm = this.formBuilder.group({
@@ -41,7 +49,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
               private initService: InitService,
               public afAuthService: AuthService,
               private router: Router) {
-
+   this.setDuration(this.massage?.value)
   }
 
 
@@ -84,7 +92,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
     }).then((docRef) => {
       this.fireStore.collection('bookings').doc(docRef.id).update({
         id: docRef.id
-      }).then(()=>{
+      }).then(() => {
         console.log(this.confirmedTimeslot.id);
         this.fireStore.collection('timeslots').doc(this.confirmedTimeslot.id).update({
           customerid: firebase.auth().currentUser?.uid,
@@ -98,7 +106,19 @@ export class BookingComponent implements OnInit, AfterViewInit {
     })
   }
 
-  changeMassage(typeOfMassage: any) {
+  setDuration(massage: string | undefined) {
+    if(massage==='Ontspanning') this.durationMinutes = this.ontspanningDuration;
+    if(massage==='Boost')this.durationMinutes = this.boostDuration;
+    if(massage==='Sport')this.durationMinutes = this.sportDuration;
+    if(massage==='Anti-stress')this.durationMinutes = this.antiStressDuration;
+    if(massage==='Scrub')this.durationMinutes = this.scrubDuration;
+
+
+  }
+
+  changeMassage(typeOfMassage: any, massage: any) {
+    console.log('changemassage');
+    this.setDuration(typeOfMassage.target.value);
     this.massage!.setValue(typeOfMassage.target.value, {
       onlySelf: true
     });
