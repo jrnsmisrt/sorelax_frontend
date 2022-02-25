@@ -49,8 +49,8 @@ export class BookingOverviewComponent implements OnInit {
   }
 
 
-  setUserName(uid: string) {
-    this.userService.getUser(uid).subscribe((user) => {
+  setUserName(userId: string|undefined) {
+    this.userService.getUser(userId).subscribe((user) => {
       this.bookingUserFullName = user?.firstName + ' ' + user?.lastName!;
     });
   }
@@ -76,12 +76,10 @@ export class BookingOverviewComponent implements OnInit {
     });
   }
 
-  openModal(bookingId: string) {
+  openModal(bookingId: string|undefined, customerId: string|undefined) {
     console.log(bookingId);
     this.booking$ = this.fireStore.collection<Booking>('bookings').doc(`${bookingId}`).valueChanges();
-    this.booking$.subscribe((p)=>{
-      console.log(p?.id);
-    })
+    this.setUserName(customerId);
     M.Modal.getInstance(document.getElementById('cancelModal')!).open();
   }
 }

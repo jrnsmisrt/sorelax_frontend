@@ -29,7 +29,7 @@
       <div class="col m1 overviewcol">{{booking.status}}</div>
       <div class="col m1 overviewcol" *ngIf="booking.status!='cancelled'">
         <button class="btn-small waves-teal waves-effect"
-                (click)="openModal(booking.id)">Annuleer
+                (click)="openModal(booking.id, booking.userUid)">Annuleer
         </button>
       </div>
     </div>

@@ -39,7 +39,7 @@ export class UserService {
     return this.userCollection.valueChanges();
   }
 
-  getUser(uid: string): Observable<User | undefined> {
+  getUser(uid: string|undefined): Observable<User | undefined> {
     let getUserDoc = this.fireStore.doc<User>(`users/${uid}`);
     return getUserDoc.valueChanges();
   }
