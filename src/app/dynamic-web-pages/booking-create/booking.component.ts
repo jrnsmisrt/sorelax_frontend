@@ -19,13 +19,13 @@ import {newArray} from "@angular/compiler/src/util";
 })
 export class BookingComponent implements OnInit, AfterViewInit {
   uid!: string;
-  massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
-  durationMinutes!: string[];
-  ontspanningDuration = ['30', '60', '90'];
-  boostDuration = ['15', '30'];
-  sportDuration = ['15', '30'];
-  antiStressDuration = ['15', '30'];
-  scrubDuration = ['15', '30', '60', '90'];
+  // massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
+  // durationMinutes!: string[];
+  // ontspanningDuration = ['30', '60', '90'];
+  // boostDuration = ['15', '30'];
+  // sportDuration = ['15', '30'];
+  // antiStressDuration = ['15', '30'];
+  // scrubDuration = ['15', '30', '60', '90'];
   timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
@@ -50,7 +50,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
               private initService: InitService,
               public afAuthService: AuthService,
               private router: Router) {
-   this.setDuration(this.massage?.value)
+   // this.setDuration(this.massage?.value)
   }
 
 
@@ -107,19 +107,19 @@ export class BookingComponent implements OnInit, AfterViewInit {
     })
   }
 
-  setDuration(massage: string | undefined) {
-    if(massage==='Ontspanning') this.durationMinutes = this.ontspanningDuration;
-    if(massage==='Boost')this.durationMinutes = this.boostDuration;
-    if(massage==='Sport')this.durationMinutes = this.sportDuration;
-    if(massage==='Anti-stress')this.durationMinutes = this.antiStressDuration;
-    if(massage==='Scrub')this.durationMinutes = this.scrubDuration;
-
-
-  }
+  // setDuration(massage: string | undefined) {
+  //   if(massage==='Ontspanning') this.durationMinutes = this.ontspanningDuration;
+  //   if(massage==='Boost')this.durationMinutes = this.boostDuration;
+  //   if(massage==='Sport')this.durationMinutes = this.sportDuration;
+  //   if(massage==='Anti-stress')this.durationMinutes = this.antiStressDuration;
+  //   if(massage==='Scrub')this.durationMinutes = this.scrubDuration;
+  //
+  //
+  // }
 
   changeMassage(typeOfMassage: any, massage: any) {
     this.dbMassage = this.getDbMassage(typeOfMassage.target.value);
-    this.setDuration(typeOfMassage.target.value);
+    // this.setDuration(typeOfMassage.target.value);
     this.massage!.setValue(typeOfMassage.target.value, {
       onlySelf: true
     });
@@ -169,10 +169,6 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   get timeslot() {
     return this.bookingForm.get(['timeslot']);
-  }
-
-  formIsValid() {
-    this.formValid = !(this.confirmedTimeslot === null || this.duration === null || this.massage === null || this.massages === undefined);
   }
 
   private getDbMassage(massage: string) {
