@@ -84,39 +84,18 @@ export class BookingComponent implements OnInit, AfterViewInit {
     }).then((docRef) => {
       this.fireStore.collection('bookings').doc(docRef.id).update({
         id: docRef.id
+      }).then(()=>{
+        console.log(this.confirmedTimeslot.id);
+        this.fireStore.collection('timeslots').doc(this.confirmedTimeslot.id).update({
+          customerid: firebase.auth().currentUser?.uid,
+          test: "test",
+          isAvailable: false
+        });
+        this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
       })
-    }).then(() => {
-      this.fireStore.collection('timeslots').doc(`${this.confirmedTimeslot.id}`).update({
-        customerid: this.uid,
-        test: "test",
-        isAvailable: false
-      });
-      this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
     }).catch(error => {
       console.log('booking form error', error);
     })
-
-    /*return this.fireStore.collection('bookings').doc().set({
-      userUid: firebase.auth().currentUser?.uid,
-      timeslot: this.confirmedTimeslot.id,
-      date: this.confirmedTimeslot.date,
-      time: this.confirmedTimeslot.time,
-      massage: this.bookingForm.get(['massage'])?.value,
-      duration: this.bookingForm.get(['duration'])?.value,
-      personalMessage: this.bookingForm.get(['message'])?.value,
-      requestedOn: JSON.stringify(new Date(Date.now())),
-      status: 'pending'
-    }).then(() => {
-      this.fireStore.collection('timeslots').doc(`${this.confirmedTimeslot.id}`).update({
-        customerid: this.uid,
-        test: "test",
-        isAvailable: false
-      });
-
-      this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
-    }).catch(error => {
-      console.log('booking form error', error);
-    })*/
   }
 
   changeMassage(typeOfMassage: any) {

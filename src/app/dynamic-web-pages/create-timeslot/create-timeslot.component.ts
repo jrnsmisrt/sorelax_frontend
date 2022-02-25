@@ -44,7 +44,19 @@ export class CreateTimeslotComponent implements OnInit {
     this.timeslotForm.patchValue({
       date: this.date,
       time: this.time
+    });
+    this.fireStore.collection('timeslots').add({
+      date: this.date,
+      time: this.time,
+      isAvailable: true,
+      confirmed: false
+    }).then((docRef)=>{
+      this.fireStore.collection('timeslots').doc(docRef.id).update({
+        id: docRef.id
+      })
     })
+
+    /*
     if (this.timeslotForm.invalid) {
       this.timeslotForm.markAllAsTouched();
     } else {
@@ -58,7 +70,7 @@ export class CreateTimeslotComponent implements OnInit {
       }).catch(error => {
         console.log('timeslot form error', error);
       })
-    }
+    }*/
   }
 
   openTimeslotModal() {
