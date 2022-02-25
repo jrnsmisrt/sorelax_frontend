@@ -1,7 +1,7 @@
 <div class="row"></div>
 <div class="row">
-  <div class="col l3"></div>
-  <div class="col">
+  <div class="col l3 s2"></div>
+  <div class="col l6 s8">
     <form [formGroup]="timeslotForm" (ngSubmit)="openTimeslotModal()">
       <label>Date</label>
       <input formControlName="date" type="text" class="datepicker validate" [value]="date"
@@ -11,7 +11,7 @@
       <button class="btn-large waves-teal waves-effect">submit</button>
     </form>
   </div>
-  <div class="col l3"></div>
+  <div class="col l3 s2"></div>
 </div>
 <div id="timeslotModal" class="modal">
   <div class="modal-content">
@@ -25,7 +25,7 @@
     </div>
     <div class="row">
       <div class="col l3"></div>
-      <div class="col l6 center-block center">
+      <div class="col l6 center">
         <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
           Confirm
         </button>

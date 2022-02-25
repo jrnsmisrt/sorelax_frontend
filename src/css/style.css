@@ -1,3 +1,7 @@
+html,body{
+  height: 100%;
+  min-height: 100%;
+}
 nav ul a,
 nav .brand-logo {
   color: #444;
@@ -76,4 +80,15 @@ footer.page-footer {
 }
 .overviewcol{
   word-break: break-word;
+}
+.mobile-user-nav{
+  background-color: #f7fffd;
+  color : #0dbdbd;
+  border: 1px solid #ffffff;
+  width: 90%;
+  height: 90%;
+  margin-left: 5%;
+}
+a.mobile-user-nav-link{
+  color: #0dbdbd;
 }

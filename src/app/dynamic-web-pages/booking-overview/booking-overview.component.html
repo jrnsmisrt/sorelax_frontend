@@ -1,8 +1,8 @@
 <div class="row"></div>
 <div class="row">
-  <div class="col s1"></div>
-  <div class="col s10">
-    <div class="row teal lighten-3 white-text text center overviewheadrow">
+  <div class="col l1"></div>
+  <div class="col l10">
+    <!-- <div class="row teal lighten-3 white-text text center overviewheadrow">
       <div class="col m1"><strong>Massage</strong></div>
       <div class="col m1"><strong>Datum</strong></div>
       <div class="col m1"><strong>Tijdstip</strong></div>
@@ -34,7 +34,41 @@
       </div>
     </div>
 
-    <div class="col"></div>
+    <div class="col"></div>-->
+    <div *ngFor="let booking of bookings$ | async">
+      <div class="col s3 teal lighten-3 white-text text center overviewheadrow">
+        <div class="row"><strong>Massage</strong></div>
+        <div class="row "><strong>Datum</strong></div>
+        <div class="row "><strong>Tijdstip</strong></div>
+        <div class="row"><strong>Duur</strong></div>
+        <div class="row"><strong>Klant</strong></div>
+        <div class="row"><strong>Boodschap</strong></div>
+        <div class="row"><strong>Aangevraagd op</strong></div>
+        <div class="row"><strong>Status</strong></div>
+      </div>
+
+      <div class="col s6 center overviewrow">
+        <div class="row overviewcol">{{booking.massage}}</div>
+        <div class="row overviewcol">{{booking.date}}</div>
+        <div class="row overviewcol">{{booking.time}}</div>
+        <div class="row overviewcol">{{booking.duration}}</div>
+        <div class="row overviewcol">
+          <div>
+            <strong *ngIf="user$ | async as user">
+              {{user.firstName + ' ' + user.lastName}}
+            </strong></div>
+        </div>
+        <div class="row overviewcol"> {{booking.personalMessage}}</div>
+        <div class="row overviewcol"> {{booking.requestedOn}}</div>
+        <div class="row overviewcol">{{booking.status}}</div>
+        <div class="row overviewcol" *ngIf="booking.status!='cancelled'">
+          <button class="btn-small waves-teal waves-effect"
+                  (click)="openModal(booking.id, booking.userUid)">Annuleer
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <!-- Modal -->
 

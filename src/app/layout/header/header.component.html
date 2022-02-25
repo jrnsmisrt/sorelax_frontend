@@ -75,33 +75,35 @@
     <li>
       <a href="#"> Book a Massage</a>
     </li>
+    <li>
+      <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
+        <ul>
+          <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
+          <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a></li>
+          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a></li>
+          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create a Timeslot</a></li>
+        </ul>
+      </div>
+    </li>
     <li *ngIf="!(afAuthService.userLoggedIn)">
-
       <a routerLink="/signup">
         Signup
       </a>
-
     </li>
     <li *ngIf="!(afAuthService.userLoggedIn)">
-
       <a routerLink="/login">
         Login
       </a>
     </li>
-
     <li *ngIf="(afAuthService.userLoggedIn)">
-
       <a [routerLink]="['./','users',afAuthService.getUserUid(), 'dashboard']">
         Dashboard
       </a>
-
     </li>
     <li *ngIf="(afAuthService.userLoggedIn)">
-
       <a (click)="logout()">
         Log out
       </a>
-
     </li>
   </ul>
 </div>

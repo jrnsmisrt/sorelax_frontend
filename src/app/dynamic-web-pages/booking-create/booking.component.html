@@ -1,10 +1,10 @@
 <div class="row"></div>
 <div class="row">
-  <div class="col l3"></div>
-  <div class="col l6">
+  <div class="col l3 s2"></div>
+  <div class="col l6 s8">
     <form [formGroup]="bookingForm">
       <div class="row">
-        <div class="col s6">
+        <div class="col l6 s12">
           <label>Massage</label>
           <div class="input-field">
             <select formControlName="massage" class="select-dropdown validate" [value]="massage" (change)="changeMassage($event, massage)">
@@ -20,7 +20,7 @@
       </div>
 
       <div class="row">
-        <div class="col s3">
+        <div class="col l3">
           <label>Timeslot</label>
           <div class="row">
             <div class="col input-field">
@@ -33,7 +33,7 @@
             </div>
           </div>
         </div>
-        <div class="col s2">
+        <div class="col l2">
           <label>tijdsduur</label>
           <div class="input-field">
             <div *ngIf="dbMassages|async as massages$">
@@ -47,21 +47,21 @@
         </div>
       </div>
       <div class="row">
-        <div class="col s6">
+        <div class="col l6">
           <label>Nuttige informatie / toevoegingen</label>
           <textarea formControlName="message" class="materialize-textarea validate"></textarea>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-6">
+        <div class="col l6">
           <a class="btn-large waves-effect waves-teal" (click)="openModalBookingConfirmation()">Boek Massage</a>
         </div>
       </div>
 
     </form>
   </div>
-  <div class="col l3">
+  <div class="col l3 s2">
   </div>
 
   <div id="bookingModal" class="modal">
