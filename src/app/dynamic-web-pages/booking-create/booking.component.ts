@@ -35,6 +35,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
   formValid = false;
 
   dbMassages = this.fireStore.collection('massages').valueChanges();
+  dbMassage: Observable<any>|undefined;
 
 
   bookingForm = this.formBuilder.group({
@@ -117,7 +118,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
   }
 
   changeMassage(typeOfMassage: any, massage: any) {
-    console.log('changemassage');
+    this.dbMassage = this.getDbMassage(typeOfMassage.target.value);
     this.setDuration(typeOfMassage.target.value);
     this.massage!.setValue(typeOfMassage.target.value, {
       onlySelf: true
@@ -172,5 +173,9 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   formIsValid() {
     this.formValid = !(this.confirmedTimeslot === null || this.duration === null || this.massage === null || this.massages === undefined);
+  }
+
+  private getDbMassage(massage: string) {
+    return this.fireStore.collection('massages').doc(massage).valueChanges();
   }
 }

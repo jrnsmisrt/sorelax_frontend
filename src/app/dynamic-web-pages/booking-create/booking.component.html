@@ -37,8 +37,8 @@
           <label>tijdsduur</label>
           <div class="input-field">
             <div *ngIf="dbMassages|async as massages$">
-              <select formControlName="duration" class="select-dropdown validate"[value]="duration" (change)="changeDuration($event)">
-                <option *ngFor="let duration of massages$.values()">
+              <select formControlName="duration" class="select-dropdown validate" [value]="duration" (change)="changeDuration($event)">
+                <option *ngFor="let duration of dbMassage|async">
                   {{duration}}
                 </option>
               </select>
