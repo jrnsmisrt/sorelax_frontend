@@ -1,6 +1,6 @@
 export interface Booking{
   id: string,
-  userUid: string,
+  userUid?: string,
   date: string,
   time: string,
   massage: string,
