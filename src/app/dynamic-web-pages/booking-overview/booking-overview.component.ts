@@ -6,6 +6,7 @@ import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
 import {User} from "../../model/User";
 import firebase from "firebase/compat/app";
+import {InitService} from "../../materialize/init.service";
 
 @Component({
   selector: 'app-booking-overview',
@@ -25,7 +26,7 @@ export class BookingOverviewComponent implements OnInit {
 
   user$!: Observable<User | undefined>;
 
-  constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService) {
+  constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService, private init: InitService) {
     this.bookingCollection = this.fireStore.collection('bookings');
     this.bookings$ = this.getAllBookings();
     this.users$ = this.userService.allUsers;
@@ -35,6 +36,7 @@ export class BookingOverviewComponent implements OnInit {
   ngOnInit(): void {
     $(document).ready(function () {
       $('.modal').modal();
+      console.log('init modal')
     });
   }
 

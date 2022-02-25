@@ -1,74 +1,59 @@
 <div class="row"></div>
 <div class="row">
-  <div class="col l1"></div>
-  <div class="col l10">
-    <!-- <div class="row teal lighten-3 white-text text center overviewheadrow">
-      <div class="col m1"><strong>Massage</strong></div>
-      <div class="col m1"><strong>Datum</strong></div>
-      <div class="col m1"><strong>Tijdstip</strong></div>
-      <div class="col m1"><strong>Duur</strong></div>
-      <div class="col m2"><strong>Klant</strong></div>
-      <div class="col m2"><strong>Boodschap</strong></div>
-      <div class="col m2"><strong>Aangevraagd op</strong></div>
-      <div class="col m1"><strong>Status</strong></div>
-    </div>
-
-    <div class="row center overviewrow" *ngFor="let booking of bookings$ | async">
-      <div class="col m1 overviewcol">{{booking.massage}}</div>
-      <div class="col m1 overviewcol">{{booking.date}}</div>
-      <div class="col m1 overviewcol">{{booking.time}}</div>
-      <div class="col m1 overviewcol">{{booking.duration}}</div>
-      <div class="col m2 overviewcol">
-        <div>
-          <strong *ngIf="user$ | async as user">
-            {{user.firstName + ' ' + user.lastName}}
-          </strong></div>
-      </div>
-      <div class="col m2 overviewcol"> {{booking.personalMessage}}</div>
-      <div class="col m2 overviewcol"> {{booking.requestedOn}}</div>
-      <div class="col m1 overviewcol">{{booking.status}}</div>
-      <div class="col m1 overviewcol" *ngIf="booking.status!='cancelled'">
-        <button class="btn-small waves-teal waves-effect"
-                (click)="openModal(booking.id, booking.userUid)">Annuleer
-        </button>
-      </div>
-    </div>
-
-    <div class="col"></div>-->
-    <div *ngFor="let booking of bookings$ | async">
-      <div class="col s3 teal lighten-3 white-text text center overviewheadrow">
-        <div class="row"><strong>Massage</strong></div>
-        <div class="row "><strong>Datum</strong></div>
-        <div class="row "><strong>Tijdstip</strong></div>
-        <div class="row"><strong>Duur</strong></div>
-        <div class="row"><strong>Klant</strong></div>
-        <div class="row"><strong>Boodschap</strong></div>
-        <div class="row"><strong>Aangevraagd op</strong></div>
-        <div class="row"><strong>Status</strong></div>
-      </div>
-
-      <div class="col s6 center overviewrow">
-        <div class="row overviewcol">{{booking.massage}}</div>
-        <div class="row overviewcol">{{booking.date}}</div>
-        <div class="row overviewcol">{{booking.time}}</div>
-        <div class="row overviewcol">{{booking.duration}}</div>
-        <div class="row overviewcol">
-          <div>
-            <strong *ngIf="user$ | async as user">
-              {{user.firstName + ' ' + user.lastName}}
-            </strong></div>
-        </div>
-        <div class="row overviewcol"> {{booking.personalMessage}}</div>
-        <div class="row overviewcol"> {{booking.requestedOn}}</div>
-        <div class="row overviewcol">{{booking.status}}</div>
-        <div class="row overviewcol" *ngIf="booking.status!='cancelled'">
-          <button class="btn-small waves-teal waves-effect"
-                  (click)="openModal(booking.id, booking.userUid)">Annuleer
-          </button>
+  <div class="col l3 s12" *ngFor="let booking of bookings$ | async">
+    <a [routerLink]="" (click)="openModal(booking.id, booking.userUid)">
+      <div class="row ">
+        <div class="col">
+          <div class="col z-depth-4 overviewrow">
+            <div class="row">
+              <div class="col teal lighten-3 white-text l6 overviewheadrow">
+                <strong>Massage</strong>
+              </div>
+              <div class="col l6 overviewcol">
+                {{booking.massage}}
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col  teal lighten-3 white-text overviewheadrow l6">
+                <strong>Datum</strong>
+              </div>
+              <div class="col l6 overviewcol">{{booking.date}}</div>
+            </div>
+            <div class="row ">
+              <div class="col  teal lighten-3 white-text  l6 overviewheadrow">
+                <strong>Tijdstip</strong>
+              </div>
+              <div class="col l6 overviewcol">{{booking.time}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col  teal lighten-3 white-text overviewheadrow l6">
+                <strong>Duur</strong>
+              </div>
+              <div class="col l6 overviewcol">
+                {{booking.duration}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col  teal lighten-3 white-text  l6 overviewheadrow">
+                <strong>Boodschap</strong>
+              </div>
+              <div class="col l6">{{booking.personalMessage}}</div>
+            </div>
+            <div class="row">
+              <div class="col  teal lighten-3 white-text  l6 overviewheadrow">
+                <strong>Aangevraagd op</strong>
+              </div>
+              <div class="col l6 overviewcol">{{booking.requestedOn}}</div>
+            </div>
+            <div class="row">
+              <div class="col  teal lighten-3 white-text  l6 overviewheadrow"><strong>Status</strong></div>
+              <div class="col l6 overviewcol">{{booking.status}}</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-
+    </a>
   </div>
   <!-- Modal -->
 
