@@ -33,7 +33,7 @@ export class UserProfileComponent implements OnInit {
 
   setUser(){
     this.user.subscribe((user)=>{
-      this.userId=user!.uid;
+      this.userId=this.route.snapshot.paramMap.get('id');
       this.userFirstName=user!.firstName;
       this.userLastName=user!.lastName;
       this.userEmail=user!.email;

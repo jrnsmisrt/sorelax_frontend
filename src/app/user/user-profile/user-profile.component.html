@@ -1,42 +1,42 @@
 <div class="row"></div>
-<div class="row">
+<div class="row" *ngIf="user|async as user">
 
   <div class="col s3"></div>
   <div class="col s6">
     <div class="row">
-      <div class="col s3"><label>Firstname</label></div>
-      <div class="col s3"><label>Lastname</label></div>
+      <div class="col l6"><label>Firstname</label></div>
+      <div class="col l6"><label>Lastname</label></div>
+    </div>
+    <div class="row ">
+      <div class="col l6"><strong>{{user.firstName}}</strong></div>
+      <div class="col l6"><strong>{{user.lastName}}</strong></div>
     </div>
     <div class="row">
-      <div class="col s3"><strong>{{userFirstName}}</strong></div>
-      <div class="col s3"><strong>{{userLastName}}</strong></div>
+      <div class="col l6"><label>Date of Birth</label></div>
     </div>
     <div class="row">
-      <div class="col s3"><label>Date of Birth</label></div>
+      <div class="col l6">{{user.dateOfBirth}}</div>
     </div>
     <div class="row">
-      <div class="col s3">{{userDateOfBirth}}</div>
-    </div>
-    <div class="row">
-      <div class="col s3"><label>User ID</label></div>
-      <div class="col s3"><label>Role</label></div>
+      <div class="col l6"><label>User ID</label></div>
+      <div class="col l6"><label>Role</label></div>
     </div>
 
     <div class="row">
-      <div class="col s3">{{userId}}</div>
-      <div class="col s3">{{userRole}}</div>
+      <div class="col l6">{{user.id}}</div>
+      <div class="col l6">{{user.role}}</div>
     </div>
     <div class="row">
-      <div class="col s3">
+      <div class="col l6">
         <label>E-mail</label></div>
-      <div class="col s3">
+      <div class="col l6">
         <label>Phonenumber</label></div>
     </div>
     <div class="row">
-      <div class="col s3">
-        {{userEmail}}</div>
-      <div class="col s3">
-        {{userPhoneNumber}}
+      <div class="col l6">
+        {{user.email}}</div>
+      <div class="col l6">
+        {{user.phoneNumber}}
       </div>
     </div>
     <div class="row">
@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col s3">
+      <div class="col l6">
         <label>Street</label>
       </div>
       <div class="col s2">
@@ -56,37 +56,37 @@
       </div>
     </div>
     <div class="row">
-      <div class="col s3">
-        {{userAddress.street}}
+      <div class="col l6">
+        {{user.address.street}}
       </div>
-      <div class="col s3">
-        {{userAddress.houseNumber}}
+      <div class="col l6">
+        {{user.address.houseNumber}}
       </div>
-      <div class="col s3">
-        {{userAddress.postBox}}
+      <div class="col l6">
+        {{user.address.postBox}}
       </div>
     </div>
     <div class="row">
-      <div class="col s3">
+      <div class="col l6">
         <label>Postal code</label>
       </div>
-      <div class="col s3">
+      <div class="col l6">
         <label>City</label>
       </div>
-      <div class="col s3">
+      <div class="col l6">
         <label>Country</label>
       </div>
     </div>
     <div class="row">
-      <div class="col s3">
-        {{userAddress.postalCode}}
+      <div class="col l6">
+        {{user.address.postalCode}}
       </div>
-      <div class="col s3">
-        {{userAddress.city}}
+      <div class="col l6">
+        {{user.address.city}}
       </div>
-      <div class="col s3">{{userAddress.country}}
+      <div class="col l6">{{user.address.country}}
       </div>
     </div>
   </div>
-  <div class="col s3"></div>
+  <div class="col l6"></div>
 </div>
