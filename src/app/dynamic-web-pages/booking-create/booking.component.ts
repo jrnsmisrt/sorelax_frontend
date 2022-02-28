@@ -30,7 +30,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   dbMassages = this.fireStore.collection<Massage>('massages').valueChanges();
   dbMassage: Observable<any>|undefined;
-  selectedMassage!: string;
+  dbMassageDurations!: string[]
+  selectedMassage!: Massage;
   confirmedMassage!: string;
   selectedDuration!: string;
   confirmedDuration!: string
@@ -138,16 +139,21 @@ export class BookingComponent implements OnInit, AfterViewInit {
     this.selectedTimeslot = timeslot;
   }
 
-  selectMassage(massage:string){
+  selectMassage(massage:Massage){
     this.selectedMassage = massage;
+    this.setDurationArray(massage);
   }
 
   selectDuration(duration: string){
     this.selectedDuration = duration;
   }
 
+  private setDurationArray(massage:Massage){
+    this.dbMassageDurations = massage.duration;
+  }
+
   confirmMassage(){
-    this.confirmedMassage = this.selectedMassage;
+    this.confirmedMassage = this.selectedMassage.type;
     this.confirmedDuration = this.selectedDuration;
     this.bookingForm.patchValue({
       massage: this.selectedMassage,
