@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
 import {collection, doc, setDoc} from "@angular/fire/firestore";
 import {newArray} from "@angular/compiler/src/util";
+import {Massage} from "../../model/Massage";
 
 @Component({
   selector: 'app-booking',
@@ -19,13 +20,6 @@ import {newArray} from "@angular/compiler/src/util";
 })
 export class BookingComponent implements OnInit, AfterViewInit {
   uid!: string;
-  // massages: any = ['Ontspanning', 'Boost', 'Sport', 'Anti-stress', 'Scrub'];
-  // durationMinutes!: string[];
-  // ontspanningDuration = ['30', '60', '90'];
-  // boostDuration = ['15', '30'];
-  // sportDuration = ['15', '30'];
-  // antiStressDuration = ['15', '30'];
-  // scrubDuration = ['15', '30', '60', '90'];
   timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
@@ -34,9 +28,12 @@ export class BookingComponent implements OnInit, AfterViewInit {
   confirmedTimeslot!: TimeSlot;
   formValid = false;
 
-  dbMassages = this.fireStore.collection('massages').valueChanges();
+  dbMassages = this.fireStore.collection<Massage>('massages').valueChanges();
   dbMassage: Observable<any>|undefined;
-
+  selectedMassage!: string;
+  confirmedMassage!: string;
+  selectedDuration!: string;
+  confirmedDuration!: string
 
   bookingForm = this.formBuilder.group({
     timeslot: new FormControl('', [Validators.required]),
@@ -45,12 +42,13 @@ export class BookingComponent implements OnInit, AfterViewInit {
     message: new FormControl('', [Validators.required])
   })
 
+
+
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
               private formBuilder: FormBuilder,
               private initService: InitService,
               public afAuthService: AuthService,
               private router: Router) {
-   // this.setDuration(this.massage?.value)
   }
 
 
@@ -59,23 +57,16 @@ export class BookingComponent implements OnInit, AfterViewInit {
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
-
-    this.initService.initSelect();
-    this.initService.initDatePicker();
-    this.initService.initTimePicker();
-
     this.timeslots$ = this.timeslotCollection.valueChanges();
 
   }
 
   ngAfterViewInit(): void {
-    this.initService.initParallax();
-    $(document).ready(function () {
-      $('select').formSelect();
-    });
     $(document).ready(function () {
       $('.modal').modal();
     });
+    this.initService.initSelect();
+
 
   }
 
@@ -85,8 +76,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
       timeslot: this.confirmedTimeslot.id,
       date: this.confirmedTimeslot.date,
       time: this.confirmedTimeslot.time,
-      massage: this.bookingForm.get(['massage'])?.value,
-      duration: this.bookingForm.get(['duration'])?.value,
+      massage: this.confirmedMassage,
+      duration: this.confirmedDuration,
       personalMessage: this.bookingForm.get(['message'])?.value,
       requestedOn: JSON.stringify(new Date(Date.now())),
       status: 'pending'
@@ -107,19 +98,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
     })
   }
 
-  // setDuration(massage: string | undefined) {
-  //   if(massage==='Ontspanning') this.durationMinutes = this.ontspanningDuration;
-  //   if(massage==='Boost')this.durationMinutes = this.boostDuration;
-  //   if(massage==='Sport')this.durationMinutes = this.sportDuration;
-  //   if(massage==='Anti-stress')this.durationMinutes = this.antiStressDuration;
-  //   if(massage==='Scrub')this.durationMinutes = this.scrubDuration;
-  //
-  //
-  // }
-
   changeMassage(typeOfMassage: any, massage: any) {
     this.dbMassage = this.getDbMassage(typeOfMassage.target.value);
-    // this.setDuration(typeOfMassage.target.value);
     this.massage!.setValue(typeOfMassage.target.value, {
       onlySelf: true
     });
@@ -136,6 +116,10 @@ export class BookingComponent implements OnInit, AfterViewInit {
     bookingModal.open();
   }
 
+  openModalMassageSelection(){
+    let massageModal = M.Modal.getInstance(document.querySelector('#massageModal')!);
+    massageModal.open();
+  }
 
   openModalTimeslotSelection() {
     let timeslotModal = M.Modal.getInstance(document.querySelector('#timeslotModal')!);
@@ -152,6 +136,23 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   selectTimeslot(timeslot: any) {
     this.selectedTimeslot = timeslot;
+  }
+
+  selectMassage(massage:string){
+    this.selectedMassage = massage;
+  }
+
+  selectDuration(duration: string){
+    this.selectedDuration = duration;
+  }
+
+  confirmMassage(){
+    this.confirmedMassage = this.selectedMassage;
+    this.confirmedDuration = this.selectedDuration;
+    this.bookingForm.patchValue({
+      massage: this.selectedMassage,
+      duration: this.selectedDuration
+    });
   }
 
   clear() {

@@ -65,4 +65,11 @@ export class InitService {
     });
   }
 
+  initCollapsible(){
+    $(document).ready(function(){
+      $('.collapsible').collapsible();
+      console.log("init collapsible");
+    });
+  }
+
 }

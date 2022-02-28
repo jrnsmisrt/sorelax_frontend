@@ -4,14 +4,19 @@
   <div class="col l6 s8">
     <form [formGroup]="bookingForm">
       <div class="row">
+        <div *ngFor="let m of dbMassages | async">
+          {{m.type}} {{m.duration}}
+        </div>
         <div class="col l6 s12">
           <label>Massage</label>
           <div class="input-field">
-            <select formControlName="massage" class="select-dropdown validate" [value]="massage" (change)="changeMassage($event, massage)">
-              <option *ngFor="let massage of dbMassages|async">
-                {{massage}}
+            <button (click)="openModalMassageSelection()">select massage</button>
+            <select formControlName="massage" (change)="changeMassage($event, massage)">
+              <option *ngFor="let massage of dbMassages | async">
+                {{massage.type}}
               </option>
-            </select></div>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -37,7 +42,8 @@
           <label>tijdsduur</label>
           <div class="input-field">
             <div *ngIf="dbMassages|async as massages$">
-              <select formControlName="duration" class="select-dropdown validate" [value]="duration" (change)="changeDuration($event)">
+              <select formControlName="duration" class="select-dropdown validate" [value]="duration"
+                      (change)="changeDuration($event)">
                 <option *ngFor="let duration of dbMassage|async">
                   {{duration}}
                 </option>
@@ -102,6 +108,41 @@
           <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
             Confirm
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="massageModal" class="modal">
+    <div class="modal-content">
+      <h4>Massages</h4>
+      <p>Select a massage</p>
+      <div>
+        <div class="row center">
+          <div class="col l6"><strong>Massage</strong></div>
+          <div class="col l6"><strong>Available durations</strong></div>
+
+        </div>
+
+        <div class="row center" *ngFor="let massage of dbMassages | async">
+
+          <div class="col l6 overviewcol"><button (click)="selectMassage(massage.type)">{{massage.type}}</button></div>
+          <div class="col l6 overviewcol">
+            <button (click)="selectDuration(massage.duration.toString())">{{massage.duration}}</button>
+          </div>
+
+
+        </div>
+        <div class="modal-footer">
+          <div *ngIf="selectedMassage as m">
+            <div *ngIf="selectedDuration as d">
+              <p>You selected: {{m}} {{d}}</p>
+              <button (click)="confirmMassage()" class="modal-close waves-effect waves-teal btn-large">
+                Confirm
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
