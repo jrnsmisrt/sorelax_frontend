@@ -57,7 +57,7 @@
           <a [routerLink]="['/', 'users', 'overview']">View All User</a>
         </li>
         <li class="tab">
-          <a>View All Massages</a>
+          <a [routerLink]="['/','bookings','overview']">View All Bookings</a>
         </li>
         <li class="tab">
           <a>View Timeslots</a>
@@ -71,7 +71,6 @@
         <li class="tab">
           <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create Timeslot</a>
         </li>
-
       </ul>
     </div>
   </div>

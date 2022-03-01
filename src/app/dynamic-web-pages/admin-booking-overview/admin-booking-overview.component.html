@@ -1,0 +1,30 @@
+<div class="row"></div>
+<div class="row">
+  <div class="col l3"></div>
+  <div class="col">
+    <div class="row">
+      <div class="row">
+        <div class="col">Datum</div>
+        <div class="col">Tijd</div>
+        <div class="col">Massage</div>
+        <div class="col">Duur</div>
+        <div class="col">Klant</div>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngFor="let booking of bookings$|async">
+        <div *ngFor="let user of users$|async">
+          <div class="row" *ngIf="user.id == booking.userUid">
+            <div class="col"> {{booking.date}}</div>
+            <div class="col"> {{booking.time}}</div>
+            <div class="col"> {{booking.massage}}</div>
+            <div class="col"> {{booking.duration}}</div>
+            <div class="col">{{user?.firstName}} {{user?.lastName}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col l3"></div>
+
+</div>

@@ -23,6 +23,7 @@ import { ContactComponent } from './static-web-pages/contact/contact.component';
 import { UsersOverviewComponent } from './user/users-overview/users-overview.component';
 import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/booking-overview.component';
 import { CreateTimeslotComponent } from './dynamic-web-pages/create-timeslot/create-timeslot.component';
+import { AdminBookingOverviewComponent } from './dynamic-web-pages/admin-booking-overview/admin-booking-overview.component';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { CreateTimeslotComponent } from './dynamic-web-pages/create-timeslot/cre
     UsersOverviewComponent,
     BookingOverviewComponent,
     CreateTimeslotComponent,
+    AdminBookingOverviewComponent,
 
 
   ],
