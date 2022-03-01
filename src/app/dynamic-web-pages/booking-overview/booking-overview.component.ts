@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Booking} from "../../model/Booking";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
@@ -21,10 +21,13 @@ export class BookingOverviewComponent implements OnInit {
   changeBookingStatusId: string | undefined;
   changeBookingStatus: string | undefined;
 
+  cancelBookingId!: string;
+
   bookingUserFullName!: string;
   users$!: Observable<User[]>;
 
   user$!: Observable<User | undefined>;
+
 
   constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService, private init: InitService) {
     this.bookingCollection = this.fireStore.collection('bookings');
@@ -57,6 +60,12 @@ export class BookingOverviewComponent implements OnInit {
     });
   }
 
+  getUserName(id:string){
+    this.fireStore.collection<User>('users').doc(id).valueChanges().subscribe((user) => {
+      console.log(user?.firstName);
+      this.bookingUserFullName += user?.firstName + ' ' + user?.lastName
+    })
+  }
   confirmBooking(bookingId: string) {
     let booking = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
     booking.subscribe((b) => {
@@ -73,15 +82,23 @@ export class BookingOverviewComponent implements OnInit {
   cancelBooking(bookingId: string) {
     this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
       status: 'cancelled',
+    }).then(()=>{
+      M.toast({html:'Boeking werd geannuleerd'});
     }).catch(error => {
       console.log('cancel booking: ' + error);
     });
   }
 
+  openConfirmCancelBooking(id: string) {
+    this.cancelBookingId = id;
+    M.Modal.getInstance(document.getElementById('confirmCancelBooking')!).open();
+  }
+
   openModal(bookingId: string|undefined, customerId: string|undefined) {
-    console.log(bookingId);
     this.booking$ = this.fireStore.collection<Booking>('bookings').doc(`${bookingId}`).valueChanges();
     this.setUserName(customerId);
     M.Modal.getInstance(document.getElementById('cancelModal')!).open();
   }
+
+
 }
