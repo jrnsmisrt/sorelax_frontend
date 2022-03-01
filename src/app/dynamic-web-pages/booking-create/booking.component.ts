@@ -93,6 +93,8 @@ export class BookingComponent implements OnInit, AfterViewInit {
           isAvailable: false
         });
         this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
+      }).then(()=>{
+        M.toast({html:'Uw boeking werd geplaatst'})
       })
     }).catch(error => {
       console.log('booking form error', error);

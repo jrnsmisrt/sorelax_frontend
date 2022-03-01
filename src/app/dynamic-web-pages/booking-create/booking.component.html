@@ -4,7 +4,8 @@
   <div class="col l6 s8">
     <form [formGroup]="bookingForm">
       <div class="row">
-        <div class="col s12">
+        <div class="col  teal-text lighten-3"><h5>( 1 )</h5></div>
+        <div class="col s6">
           <label>Massage</label>
           <div class="input-field">
             <button class="btn-small waves-effect waves-teal" (click)="openModalMassageSelection()">select massage
@@ -16,6 +17,7 @@
         </div>
       </div>
       <div class="row">
+        <div class="col  teal-text lighten-3"><h5>( 2 )</h5></div>
         <div class="col l3">
           <label>Timeslot</label>
           <div class="row">
@@ -32,12 +34,14 @@
         </div>
       </div>
       <div class="row">
+        <div class="col  teal-text lighten-3"><h5>( 3 )</h5></div>
         <div class="col l6">
           <label>Nuttige informatie / toevoegingen</label>
           <textarea formControlName="message" class="materialize-textarea validate"></textarea>
         </div>
       </div>
       <div class="row">
+        <div class="col teal-text lighten-3"><h5>( 4 )</h5></div>
         <div class="col l6">
           <a class="btn-large waves-effect waves-teal" (click)="openModalBookingConfirmation()">Boek Massage</a>
         </div>
