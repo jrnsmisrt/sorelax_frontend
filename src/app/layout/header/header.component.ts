@@ -13,17 +13,29 @@ import {Observable} from "rxjs";
 export class HeaderComponent implements OnInit {
   user!: Observable<User | any>;
   user$ : Observable<User | undefined>
+  isAdmin!: boolean;
+
   constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth, private userService: UserService) {
-    this.user = afAuthService.user$;
-    this.user$ = userService.user;
+    this.user = this.afAuthService.user$;
+    this.user$ = this.userService.user;
+    this.setAdmin();
   }
 
   ngOnInit(): void {
     $( document ).ready(function(){
     $(".dropdown-trigger").dropdown();
+    });
+  }
+  private setAdmin() {
+    this.user.subscribe((user) => {
+      if (user?.role === 'admin') {
+        this.isAdmin = true;
+        console.log(this.isAdmin);
+      }else{
+        this.isAdmin=false;
+      }
     })
   }
-
 
   logout(): void {
     this.afAuthService.signOut().then(() => {

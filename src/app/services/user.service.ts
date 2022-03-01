@@ -22,6 +22,7 @@ export class UserService {
   user!: Observable<User>;
   userRole!: string | undefined;
 
+
   constructor(private fireStore: AngularFirestore, private firestoreService: FirestoreService, private afAuth: AuthService) {
     this.userCollection = fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc')
                                                         .orderBy('firstName','asc')
@@ -31,7 +32,6 @@ export class UserService {
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
     // @ts-ignore
     this.user = this.userDoc.valueChanges();
-
   }
 
 

@@ -15,7 +15,7 @@
           <a href="#">Contact</a>
         </li>
         <li>
-          <a > Book a Massage</a>
+          <a> Book a Massage</a>
         </li>
       </ul>
     </div>
@@ -26,39 +26,61 @@
             Signup
           </button>
         </li>
-        <li> &nbsp; </li>
+        <li> &nbsp;</li>
         <li *ngIf="!(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn" routerLink="/login">
             Login
           </button>
         </li>
-      <!--  <li *ngIf="(afAuthService.userLoggedIn)">
-          <button class="waves-teal waves-effect btn"  [routerLink]="['./','users',afAuthService.getUserUid(), 'dashboard']">
-            Dashboard
-          </button>
-        </li>-->
         <li *ngIf="(afAuthService.userLoggedIn)">
-          <button class="waves-teal waves-effect btn"  (click)="logout()">
+          <button class="waves-teal waves-effect btn" (click)="logout()">
             Log out
           </button>
         </li>
       </ul>
     </div>
   </div>
-  <div class="nav-content" *ngIf="afAuthService.userLoggedIn">
-    <ul class="tabs tabs-transparent">
-      <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
-      <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a></li>
-      <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a></li>
-      <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create a Timeslot</a></li>
-    </ul>
+  <div *ngIf="afAuthService.userLoggedIn">
+    <div class="nav-content">
+      <ul class="tabs tabs-transparent">
+        <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
+        <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a>
+        </li>
+        <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a>
+        </li>
+      </ul>
+    </div>
+    <div class="nav-content" *ngIf="isAdmin">
+      <ul class="tabs tabs-transparent">
+        <li class="tab">Admin panel:</li>
+        <li class="tab">
+          <a [routerLink]="['/', 'users', 'overview']">View All User</a>
+        </li>
+        <li class="tab">
+          <a>View All Massages</a>
+        </li>
+        <li class="tab">
+          <a>View Timeslots</a>
+        </li>
+        <li class="tab">
+          <a>Create User</a>
+        </li>
+        <li class="tab">
+          <a>Create Massage</a>
+        </li>
+        <li class="tab">
+          <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create Timeslot</a>
+        </li>
+
+      </ul>
+    </div>
   </div>
 </nav>
 
 <!-- mobile navbar -->
 <div class="hide-on-med-and-up">
 
-    <a href="#" data-target="sidenav" class="sidenav-trigger"><i class="medium material-icons">menu</i></a>
+  <a href="#" data-target="sidenav" class="sidenav-trigger"><i class="medium material-icons">menu</i></a>
   <ul id="sidenav" class="sidenav teal lighten-5 ">
     <li>
       <a href="#"> Home </a>
@@ -78,10 +100,14 @@
     <li>
       <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
         <ul>
-          <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
-          <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a></li>
-          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a></li>
-          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create a Timeslot</a></li>
+          <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My
+            Profile</a></li>
+          <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My
+            Bookings</a></li>
+          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a>
+          </li>
+          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create a
+            Timeslot</a></li>
         </ul>
       </div>
     </li>
