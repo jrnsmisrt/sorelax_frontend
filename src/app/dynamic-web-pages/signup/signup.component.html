@@ -6,23 +6,45 @@
         <div class="col s6">
           <label>Firstname</label>
           <input class="validate" autocomplete="on" formControlName="firstName" type="text" placeholder="Firstname">
+          <div *ngIf="firstName!.invalid && (firstName!.dirty || firstName!.touched)">
+            <div *ngIf="firstName!.errors?.['required']" class="text-error red-text">
+              <small>First name is required.</small>
+            </div>
+          </div>
         </div>
         <div class="col s6">
           <label>LastName</label>
           <input class="validate" autocomplete="on" formControlName="lastName" type="text" placeholder="Lastname">
+          <div *ngIf="lastName!.invalid && (lastName!.dirty || lastName!.touched)">
+            <div *ngIf="lastName!.errors?.['required']" class="text-error red-text">
+              <small>Last name is required.</small>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col s6">
           <label>Date Of Birth</label>
-          <input class="validate" autocomplete="on" formControlName="dateOfBirth" type="text"
+          <input class="datepicker validate" formControlName="dateOfBirth" type="text"
                  placeholder="Date of birth">
+          <!-- <input class="validate" autocomplete="on" formControlName="dateOfBirth" type="text"
+                  placeholder="Date of birth">-->
+          <div *ngIf="dateOfBirth!.invalid && (dateOfBirth!.dirty || dateOfBirth!.touched)">
+            <div *ngIf="dateOfBirth!.errors?.['required']" class="text-error red-text">
+              <small>Date of Birth is required.</small>
+            </div>
+          </div>
         </div>
         <div class="col s6">
           <label>Phone number</label>
           <input class="validate" autocomplete="on" formControlName="phoneNumber" type="text"
                  placeholder="Phone number">
+          <div *ngIf="phoneNumber!.invalid && (phoneNumber!.dirty || phoneNumber!.touched)">
+            <div *ngIf="phoneNumber!.errors?.['required']" class="text-error red-text">
+              <small>Phonenumber is required.</small>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -32,43 +54,80 @@
       </div>
       <div class="row">
         <div class="col">
-        <div formGroupName="address">
-          <div class="row">
-            <div class="col s12">
-              <input class="validate" autocomplete="on" formControlName="street" type="text" placeholder="Street">
-            </div>
-            <div class="col s3"><input class="validate" autocomplete="on" formControlName="houseNumber" type="text"
-                                       placeholder="Nr"></div>
+          <div formGroupName="address">
+            <div class="row">
+              <div class="col s12">
+                <input class="validate" autocomplete="on" formControlName="street" type="text" placeholder="Street">
+                <div *ngIf="street!.invalid && (street!.dirty || street!.touched)">
+                  <div *ngIf="street!.errors?.['required']" class="text-error red-text">
+                    <small>Street is required.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col s3"><input class="validate" autocomplete="on" formControlName="houseNumber" type="text"
+                                         placeholder="Nr">
+                <div *ngIf="houseNr!.invalid && (houseNr!.dirty || houseNr!.touched)">
+                  <div *ngIf="houseNr!.errors?.['required']" class="text-error red-text">
+                    <small>House number is required.</small>
+                  </div>
+                </div>
+              </div>
 
-            <div class="col s3"><input class="validate" autocomplete="on" formControlName="postBox" type="text"
-                                       placeholder="Box">
+              <div class="col s3"><input class="validate" autocomplete="on" formControlName="postBox" type="text"
+                                         placeholder="Box">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s3">
+                <input class="validate" autocomplete="on" formControlName="postalCode" type="text"
+                       placeholder="Postal Code">
+                <div *ngIf="postalCode!.invalid && (postalCode!.dirty || postalCode!.touched)">
+                  <div *ngIf="postalCode!.errors?.['required']" class="text-error red-text">
+                    <small>Postalcode is required.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col s9"><input class="validate" autocomplete="on" formControlName="city" type="text"
+                                         placeholder="City">
+                <div *ngIf="city!.invalid && (city!.dirty || city!.touched)">
+                  <div *ngIf="city!.errors?.['required']" class="text-error red-text">
+                    <small>City is required.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12">
+                <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Country">
+                <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
+                  <div *ngIf="country!.errors?.['required']" class="text-error red-text">
+                    <small>Country is required.</small>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col s3">
-              <input class="validate" autocomplete="on" formControlName="postalCode" type="text"
-                     placeholder="Postal Code">
-            </div>
-            <div class="col s9"><input class="validate" autocomplete="on" formControlName="city" type="text"
-                                       placeholder="City">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s12">
-              <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Country">
-            </div>
-          </div>
-        </div>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <label>Email</label>
+          <label>E-mail</label>
           <input class="validate" autocomplete="on" formControlName="email" type="email" placeholder="Email">
+          <div *ngIf="email!.invalid && (email!.dirty || email!.touched)">
+            <div *ngIf="email!.errors?.['required']" class="text-error red-text">
+              <small>E-mail is required.</small>
+            </div>
+          </div>
         </div>
         <div class="col">
           <label>Password</label>
-          <input class="validate" autocomplete="off" formControlName="password" type="password" placeholder="Password">
+          <input class="validate" autocomplete="off" formControlName="password" type="password"
+                 placeholder="Password">
+          <div *ngIf="passWord!.invalid && (passWord!.dirty || passWord!.touched)">
+            <div *ngIf="passWord!.errors?.['required']" class="text-error red-text">
+              <small>Password is required.</small>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">

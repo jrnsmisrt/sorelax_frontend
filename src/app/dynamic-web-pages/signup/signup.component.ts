@@ -18,16 +18,16 @@ export class SignupComponent implements OnInit {
     'firstName': new FormControl('', [Validators.required]),
     'lastName': new FormControl('', [Validators.required]),
     'dateOfBirth': new FormControl('', [Validators.required]),
-    'phoneNumber': new FormControl('', [Validators.required]),
+    'phoneNumber': new FormControl('', [Validators.required, Validators.min(0), Validators.maxLength(16)]),
     'address': this.formBuilder.group({
       'street': new FormControl('', [Validators.required]),
-      'houseNumber': new FormControl('', [Validators.required]),
+      'houseNumber': new FormControl('', [Validators.required, Validators.min(1)]),
       'postBox': new FormControl(''),
-      'postalCode': new FormControl('', [Validators.required]),
-      'city': new FormControl('', [Validators.required]),
-      'country': new FormControl('', [Validators.required])
+      'postalCode': new FormControl('', [Validators.required, Validators.min(0), Validators.maxLength(6)]),
+      'city': new FormControl('', [Validators.required, Validators.pattern("/^s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+.?s*$/"), Validators.maxLength(30)]),
+      'country': new FormControl('', [Validators.required, Validators.pattern("/^s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+.?s*$/"), Validators.maxLength(30)])
     }),
-    'role': new FormControl('', [Validators.required])
+    'role': new FormControl('')
   });
 
   firebaseErrorMessage: string;
@@ -46,6 +46,20 @@ export class SignupComponent implements OnInit {
       });
     });
 
+    $(document).ready(() => {
+      $('.datepicker').datepicker({
+        format: "dd/mm/yyyy",
+        yearRange: [1900, new Date().getFullYear() - 18],
+        defaultDate: new Date(1989, new Date().getMonth(), new Date().getDay()),
+        maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDay() - 1),
+        onSelect: () => {
+          this.signupForm.patchValue({
+            dateOfBirth: this
+          })
+        }
+      });
+    });
+
   }
 
   signupUser() {
@@ -54,7 +68,7 @@ export class SignupComponent implements OnInit {
       .then((result) => {
         result.user!.sendEmailVerification();
         return this.fireStore.collection('users').doc(result.user?.uid).set({
-          uid:result.user?.uid,
+          uid: result.user?.uid,
           firstName: this.signupForm.get(['firstName'])?.value,
           lastName: this.signupForm.get(['lastName'])?.value,
           dateOfBirth: this.signupForm.get(['dateOfBirth'])?.value,
@@ -71,19 +85,71 @@ export class SignupComponent implements OnInit {
         if (error.code)
           return {isValid: false, message: error.message};
       });
+
+
   }
 
   onSubmit() {
+    this.signupForm.markAllAsTouched();
 
-      this.signupUser().then(() => {
-        M.toast({html: `Sign up has been succesful!`});
+    if (this.signupForm.invalid) {
+      M.toast({html: 'Oops! Think you forgot a field or did not use valid input', classes: 'rounded'});
+    } else {
+
+      this.signupUser()!.then(() => {
+        M.toast({html: `Sign up has been succesful!`, classes: 'rounded'});
         this.router.navigate(['/login']);
       });
-
+    }
   }
 
   clear() {
     this.signupForm.reset();
-    M.toast({html: 'form has been cleared'});
+    M.toast({html: 'form has been cleared', classes: 'rounded'});
+  }
+
+
+  get firstName() {
+    return this.signupForm.get('firstName');
+  }
+
+  get lastName() {
+    return this.signupForm.get('lastName');
+  }
+
+  get dateOfBirth() {
+    return this.signupForm.get('dateOfBirth');
+  }
+
+  get phoneNumber() {
+    return this.signupForm.get('phoneNumber');
+  }
+
+  get street() {
+    return this.signupForm.get('address.street');
+  }
+
+  get houseNr() {
+    return this.signupForm.get('address.houseNumber');
+  }
+
+  get postalCode() {
+    return this.signupForm.get('address.postalCode');
+  }
+
+  get city() {
+    return this.signupForm.get('address.city');
+  }
+
+  get country() {
+    return this.signupForm.get('address.country');
+  }
+
+  get email() {
+    return this.signupForm.get('email');
+  }
+
+  get passWord() {
+    return this.signupForm.get('password');
   }
 }
