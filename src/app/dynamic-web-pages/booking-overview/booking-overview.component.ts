@@ -39,7 +39,6 @@ export class BookingOverviewComponent implements OnInit {
   ngOnInit(): void {
     $(document).ready(function () {
       $('.modal').modal();
-      console.log('init modal')
     });
   }
 

@@ -12,10 +12,10 @@
           <a routerLink="/massages">Massages</a>
         </li>
         <li>
-          <a href="#">Contact</a>
+          <a href="/home">Contact</a>
         </li>
         <li>
-          <a> Book a Massage</a>
+          <a routerLink="/login"> Book a Massage</a>
         </li>
       </ul>
     </div>
@@ -94,7 +94,7 @@
       <a href="#">Contact</a>
     </li>
     <li>
-      <a href="#"> Book a Massage</a>
+      <a routerLink="/login"> Book a Massage</a>
     </li>
     <li>
       <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
@@ -108,6 +108,29 @@
           <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'create-timeslot']">Create a
             Timeslot</a></li>
         </ul>
+        <div *ngIf="isAdmin">
+          <ul class="tabs tabs-transparent">
+            <li class="tab">Admin panel:</li>
+            <li class="tab">
+              <a [routerLink]="['/', 'users', 'overview']">View All User</a>
+            </li>
+            <li class="tab">
+              <a [routerLink]="['/','bookings','overview']">View All Bookings</a>
+            </li>
+            <li class="tab">
+              <a>View Timeslots</a>
+            </li>
+            <li class="tab">
+              <a>Create User</a>
+            </li>
+            <li class="tab">
+              <a>Create Massage</a>
+            </li>
+            <li class="tab">
+              <a [routerLink]="['/', 'timeslots', 'create-timeslot']">Create Timeslot</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </li>
     <li *ngIf="!(afAuthService.userLoggedIn)">

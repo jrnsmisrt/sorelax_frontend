@@ -28,7 +28,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.profileId);
   }
 
   setUser(){

@@ -11,14 +11,12 @@ export class InitService {
 
   initParallax() {
     setTimeout(() => {
-      console.log('init parallax');
       M.Parallax.init(document.querySelectorAll('.parallax'));
     }, 1);
   }
 
   initSideNav():any{
     $(document).ready(function(){
-      console.log('init sidenav')
       $('.sidenav').sidenav();
     });
   }
@@ -68,7 +66,6 @@ export class InitService {
   initCollapsible(){
     $(document).ready(function(){
       $('.collapsible').collapsible();
-      console.log("init collapsible");
     });
   }
 

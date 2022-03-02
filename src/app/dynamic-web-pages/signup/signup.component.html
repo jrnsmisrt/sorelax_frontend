@@ -1,80 +1,91 @@
 <div class="row"></div>
-<form [formGroup]="signupForm">
-  <div class="row">
-    <div class="col s6">
-      <label>Firstname</label>
-      <input class="validate" autocomplete="on" formControlName="firstName" type="text" placeholder="Firstname">
-    </div>
-    <div class="col s6">
-      <label>LastName</label>
-      <input class="validate" autocomplete="on" formControlName="lastName" type="text" placeholder="Lastname">
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col s2">
-      <label>Date Of Birth</label>
-      <input class="validate" autocomplete="on" formControlName="dateOfBirth" type="text" placeholder="Date of birth">
-    </div>
-    <div class="col push-s4">
-      <label>Phone number</label>
-      <input class="validate" autocomplete="on" formControlName="phoneNumber" type="text" placeholder="Phone number">
-    </div>
-  </div>
-  <div class="row">
-    <label>Address</label></div>
-  <div class="row">
-    <div formGroupName="address">
+<div class="row">
+  <div class="col l6 s10 push-l3 pull-l3 push-s1 pull-s1">
+    <form [formGroup]="signupForm">
       <div class="row">
         <div class="col s6">
-          <input class="validate" autocomplete="on" formControlName="street" type="text" placeholder="Street">
+          <label>Firstname</label>
+          <input class="validate" autocomplete="on" formControlName="firstName" type="text" placeholder="Firstname">
         </div>
-        <div class="col s1"><input class="validate" autocomplete="on" formControlName="houseNumber" type="text"
-                                   placeholder="Nr"></div>
+        <div class="col s6">
+          <label>LastName</label>
+          <input class="validate" autocomplete="on" formControlName="lastName" type="text" placeholder="Lastname">
+        </div>
+      </div>
 
-        <div class="col s1"><input class="validate" autocomplete="on" formControlName="postBox" type="text"
-                                   placeholder="Box">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s2">
-          <input class="validate" autocomplete="on" formControlName="postalCode" type="text"
-                 placeholder="Postal Code">
-        </div>
-        <div class="col s4"><input class="validate" autocomplete="on" formControlName="city" type="text"
-                                   placeholder="City">
-        </div>
-      </div>
       <div class="row">
         <div class="col s6">
-          <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Country">
+          <label>Date Of Birth</label>
+          <input class="validate" autocomplete="on" formControlName="dateOfBirth" type="text"
+                 placeholder="Date of birth">
+        </div>
+        <div class="col s6">
+          <label>Phone number</label>
+          <input class="validate" autocomplete="on" formControlName="phoneNumber" type="text"
+                 placeholder="Phone number">
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <label>Email</label>
-      <input class="validate" autocomplete="on" formControlName="email" type="email" placeholder="Email">
-    </div>
-    <div class="col">
-      <label>Password</label>
-      <input class="validate" autocomplete="off" formControlName="password" type="password" placeholder="Password">
-    </div>
-  </div>
-  <div class="row">
-    <div class="col s12">
-      <div *ngIf="firebaseErrorMessage != ''" class="error-style">
-        <span>{{ firebaseErrorMessage }}</span>
+      <div class="row">
+        <div class="col s12">
+          <label>Address</label>
+        </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="col">
+        <div formGroupName="address">
+          <div class="row">
+            <div class="col s12">
+              <input class="validate" autocomplete="on" formControlName="street" type="text" placeholder="Street">
+            </div>
+            <div class="col s3"><input class="validate" autocomplete="on" formControlName="houseNumber" type="text"
+                                       placeholder="Nr"></div>
+
+            <div class="col s3"><input class="validate" autocomplete="on" formControlName="postBox" type="text"
+                                       placeholder="Box">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s3">
+              <input class="validate" autocomplete="on" formControlName="postalCode" type="text"
+                     placeholder="Postal Code">
+            </div>
+            <div class="col s9"><input class="validate" autocomplete="on" formControlName="city" type="text"
+                                       placeholder="City">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Country">
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label>Email</label>
+          <input class="validate" autocomplete="on" formControlName="email" type="email" placeholder="Email">
+        </div>
+        <div class="col">
+          <label>Password</label>
+          <input class="validate" autocomplete="off" formControlName="password" type="password" placeholder="Password">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <div *ngIf="firebaseErrorMessage != ''" class="error-style">
+            <span>{{ firebaseErrorMessage }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6 push-l1 push-s3">
+          <button class="btn-small" (click)="onSubmit()">Signup</button>
+        </div>
+        <div class="col s6 pull-l3">
+          <button class="btn-small" (click)="clear()">Clear</button>
+        </div>
+      </div>
+    </form>
   </div>
-  <div class="row">
-    <div class="col s6">
-      <button class="btn-large left" (click)="onSubmit()">Signup</button>
-    </div>
-    <div class="col s6">
-      <button class="btn-small right" (click)="clear()">Clear</button>
-    </div>
-  </div>
-</form>
+</div>
