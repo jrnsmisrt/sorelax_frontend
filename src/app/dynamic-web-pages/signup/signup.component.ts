@@ -93,11 +93,11 @@ export class SignupComponent implements OnInit {
     this.signupForm.markAllAsTouched();
 
     if (this.signupForm.invalid) {
-      M.toast({html: 'Oops! Think you forgot a field or did not use valid input', classes: 'rounded'});
+      M.toast({html: 'Oops! Think you forgot a field or did not use valid input', classes: 'rounded custom-toast'});
     } else {
 
       this.signupUser()!.then(() => {
-        M.toast({html: `Sign up has been succesful!`, classes: 'rounded'});
+        M.toast({html: `Sign up has been succesful!`, classes: 'rounded  custom-toast'});
         this.router.navigate(['/login']);
       });
     }
@@ -105,7 +105,7 @@ export class SignupComponent implements OnInit {
 
   clear() {
     this.signupForm.reset();
-    M.toast({html: 'form has been cleared', classes: 'rounded'});
+    M.toast({html: 'form has been cleared', classes: 'rounded  custom-toast'});
   }
 
 

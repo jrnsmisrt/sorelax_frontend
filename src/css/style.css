@@ -92,3 +92,13 @@ footer.page-footer {
 a.mobile-user-nav-link{
   color: #0dbdbd;
 }
+#toast-container {
+  top: 10%;
+  right: 50%;
+}
+.custom-toast{
+  background-color: #3cabab;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
