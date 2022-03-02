@@ -12,7 +12,7 @@
     </div>
     <div *ngIf="users">
       <div *ngFor="let user of users|async">
-        <a [routerLink]="['../',user.id,'profile']">
+        <a (click)="openUserOverViewModal(user.id)">
           <div class="row center overviewrow">
             <div class="col s3 overviewcol">{{user.firstName}}</div>
             <div class="col s3 overviewcol">{{user.lastName}}</div>
@@ -27,3 +27,97 @@
   </div>
 </div>
 
+<div class="modal" id="userOverViewModal">
+  <div class="modal-content">
+    <div class="row" *ngIf="user|async as user">
+      <div class="col push-l1">
+
+      <div class="row">
+        <div class="col l4"><label>Firstname</label></div>
+        <div class="col l4"><label>Lastname</label></div>
+      </div>
+      <div class="row ">
+        <div class="col l4"><strong>{{user.firstName}}</strong></div>
+        <div class="col l4"><strong>{{user.lastName}}</strong></div>
+      </div>
+      <div class="row">
+        <div class="col l6"><label>Date of Birth</label></div>
+      </div>
+      <div class="row">
+        <div class="col l6">{{user.dateOfBirth}}</div>
+      </div>
+      <div class="row">
+        <div class="col l6"><label>User ID</label></div>
+        <div class="col l6"><label>Role</label></div>
+      </div>
+
+      <div class="row">
+        <div class="col l6">{{user.id}}</div>
+        <div class="col l6">{{user.role}}</div>
+      </div>
+      <div class="row">
+        <div class="col l6">
+          <label>E-mail</label></div>
+        <div class="col l6">
+          <label>Phonenumber</label></div>
+      </div>
+      <div class="row">
+        <div class="col l6">
+          {{user.email}}</div>
+        <div class="col l6">
+          {{user.phoneNumber}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          Address
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l6">
+          <label>Street</label>
+        </div>
+        <div class="col s2">
+          <label>House Nr.</label>
+        </div>
+        <div class="col s2">
+          <label>Postbox</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l6">
+          {{user.address.street}}
+        </div>
+        <div class="col l6">
+          {{user.address.houseNumber}}
+        </div>
+        <div class="col l6">
+          {{user.address.postBox}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l6">
+          <label>Postal code</label>
+        </div>
+        <div class="col l6">
+          <label>City</label>
+        </div>
+        <div class="col l6">
+          <label>Country</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col l6">
+          {{user.address.postalCode}}
+        </div>
+        <div class="col l6">
+          {{user.address.city}}
+        </div>
+        <div class="col l6">{{user.address.country}}
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="modal-footer"></div>
+</div>

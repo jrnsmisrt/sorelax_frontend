@@ -24,7 +24,7 @@ export class RoleGuard implements CanActivate {
     if(this.role!=='admin') {
       console.log(this.role);
 
-      M.toast({html:'Access Denied, You are not an administrator!'})
+      M.toast({html:'Access Denied, You are not an administrator!', classes:'rounded custom-toast'})
       this.router.navigate(['login']);
     }
     return true;

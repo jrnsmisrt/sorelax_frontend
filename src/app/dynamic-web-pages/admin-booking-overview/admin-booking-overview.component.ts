@@ -25,7 +25,6 @@ export class AdminBookingOverviewComponent implements OnInit {
   ngOnInit(): void {
     $(document).ready(function () {
       $('.modal').modal();
-      console.log('init modal')
     });
   }
 
@@ -45,7 +44,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'confirmed'
     }).then(() => {
-      M.toast({html: 'Booking confirmed'});
+      M.toast({html: 'Booking confirmed', classes:'rounded custom-toast'});
     }).catch(error => {
       console.log(error);
     })
@@ -55,7 +54,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'cancelled'
     }).then(() => {
-      M.toast({html: 'Booking cancelled'});
+      M.toast({html: 'Booking cancelled', classes:'rounded custom-toast'});
     }).catch(error => {
       console.log(error);
     })
@@ -65,7 +64,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'DELETED'
     }).then(()=>{
-      M.toast({html:'Booking deleted'});
+      M.toast({html:'Booking deleted', classes:'rounded custom-toast'});
     }).catch(error=>{
       console.log(error);
     })

@@ -12,6 +12,7 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
 })
 export class UsersOverviewComponent implements OnInit {
   users!: Observable<User[]>;
+  user!: Observable<User | undefined>;
 
 
   constructor(private userService: UserService, private fireStore:AngularFirestore) {
@@ -19,8 +20,15 @@ export class UsersOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    $(document).ready(function () {
+      $('.modal').modal();
+    });
   }
 
+  openUserOverViewModal(userId: string){
+    this.user = this.fireStore.collection<User>('users').doc(userId).valueChanges()
+    M.Modal.getInstance(document.getElementById('userOverViewModal')!).open();
+  }
 
 
 }

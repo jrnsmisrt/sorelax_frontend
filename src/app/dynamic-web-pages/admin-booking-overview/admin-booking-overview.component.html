@@ -9,24 +9,18 @@
         <div class="col l2"><strong>Massage</strong></div>
         <div class="col l1"><strong>Duur</strong></div>
         <div class="col l3"><strong>Klant</strong></div>
-        <div class="col l3"></div>
       </div>
     </div>
     <div class="row">
       <div *ngFor="let booking of bookings$|async">
         <div *ngFor="let user of users$|async">
-          <a routerLink="" (click)="openViewBookingModal(booking.id!, user.id!)">
+          <a  (click)="openViewBookingModal(booking.id!, user.id!)">
             <div class="row overviewrow center" *ngIf="user.id == booking.userUid">
               <div class="col l2"> {{booking.date}}</div>
               <div class="col l1"> {{booking.time}}</div>
               <div class="col l2"> {{booking.massage}}</div>
               <div class="col l1"> {{booking.duration}}</div>
               <div class="col l3">{{user?.firstName}} {{user?.lastName}}</div>
-              <div class="col l3 center">
-                <a class="btn-small waves-teal waves-effect" (click)="openViewBookingModal(booking.id!, user.id!)">
-                  view
-                </a>
-              </div>
             </div>
           </a>
         </div>
@@ -41,10 +35,10 @@
     <div class="row">
       <div *ngIf="selectedBooking as booking">
         <div *ngIf="selectedUser as user">
-          <div class="row overviewrow">
+          <div class="row teal lighten-3 white-text overviewheadrow">
             <div class="col m12 overviewcol center"><strong>{{user.firstName}} {{user.lastName}}</strong></div>
           </div>
-          <div class="row overviewheadrow">
+          <div class="row teal lighten-3 white-text overviewheadrow">
             <div class="col m2"><strong>Datum</strong></div>
             <div class="col m2"><strong>Tijd</strong></div>
             <div class="col m3"><strong>Massage</strong></div>
@@ -58,7 +52,7 @@
             <div class="col m2  overviewcol">{{booking.duration}}</div>
             <div class="col m3  overviewcol">{{booking.status}}</div>
           </div>
-          <div class="row">
+          <div class="row teal lighten-3 white-text overviewheadrow">
             <div class="col m12 center"><strong>Boodschap</strong></div>
           </div>
           <div class="row overviewrow">
