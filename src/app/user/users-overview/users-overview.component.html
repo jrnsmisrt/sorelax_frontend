@@ -10,18 +10,18 @@
       <div class="col s3">ID</div>
       <div class="col s3">Role</div>
     </div>
-
-    <div *ngFor="let user of users|async">
-      <a [routerLink]="['../',user.id,'profile']">
-        <div class="row center overviewrow">
-          <div class="col s3 overviewcol">{{user.firstName}}</div>
-          <div class="col s3 overviewcol">{{user.lastName}}</div>
-          <div class="col s3 overviewcol">{{user.id}}</div>
-          <div class="col s3 overviewcol">{{user.role}}</div>
-        </div>
-      </a>
+    <div *ngIf="users">
+      <div *ngFor="let user of users|async">
+        <a [routerLink]="['../',user.id,'profile']">
+          <div class="row center overviewrow">
+            <div class="col s3 overviewcol">{{user.firstName}}</div>
+            <div class="col s3 overviewcol">{{user.lastName}}</div>
+            <div class="col s3 overviewcol">{{user.id}}</div>
+            <div class="col s3 overviewcol">{{user.role}}</div>
+          </div>
+        </a>
+      </div>
     </div>
-
 
     <div class="col s3"></div>
   </div>

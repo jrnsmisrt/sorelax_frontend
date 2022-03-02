@@ -3,6 +3,7 @@ import {collection, Firestore, getFirestore, getDocs, orderBy, query, onSnapshot
 import {Observable} from "rxjs";
 import {User} from "../../model/User";
 import {UserService} from "../../services/user.service";
+import {AngularFirestore} from "@angular/fire/compat/firestore";
 
 @Component({
   selector: 'app-users-overview',
@@ -10,12 +11,11 @@ import {UserService} from "../../services/user.service";
   styleUrls: ['./users-overview.component.css']
 })
 export class UsersOverviewComponent implements OnInit {
-  db = getFirestore();
-  colRef = collection(this.db, 'users');
-  users: Observable<User[]> = this.userService.getAllUsers();
+  users!: Observable<User[]>;
 
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private fireStore:AngularFirestore) {
+    this.users = this.fireStore.collection<User>('users').valueChanges();
   }
 
   ngOnInit(): void {
