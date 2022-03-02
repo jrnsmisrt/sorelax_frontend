@@ -66,6 +66,7 @@ export class BookingOverviewComponent implements OnInit {
       this.bookingUserFullName += user?.firstName + ' ' + user?.lastName
     })
   }
+
   confirmBooking(bookingId: string) {
     let booking = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
     booking.subscribe((b) => {
