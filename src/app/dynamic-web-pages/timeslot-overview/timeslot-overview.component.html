@@ -1,3 +1,18 @@
-<div *ngFor="let timeslot of timeslots|async">
-  {{timeslot.date}} {{timeslot.time}} {{timeslot.isAvailable|availability}} {{timeslot.customerId}}
+<div class="row teal-text center"><h4>Timeslots Overview</h4></div>
+<div class="row">
+  <div class="col l4"></div>
+  <div class="col l4">
+    <div class="row center overviewheadrow teal lighten-3 white-text">
+      <div class="col l4"><strong>Datum</strong></div>
+      <div class="col l4"><strong>Tijd</strong></div>
+      <div class="col l4"><strong>Beschikbaarheid</strong></div>
+    </div>
+    <div class="row center overviewrow" *ngFor="let timeslot of timeslots|async">
+        <div class="col l4">{{timeslot.date}}</div>
+        <div class="col l4">{{timeslot.time}}</div>
+        <div class="col l4">{{timeslot.isAvailable|availability}}</div>
+    </div>
+  </div>
+  <div class="col l4"></div>
 </div>
+
