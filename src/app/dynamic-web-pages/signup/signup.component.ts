@@ -18,14 +18,14 @@ export class SignupComponent implements OnInit {
     'firstName': new FormControl('', [Validators.required]),
     'lastName': new FormControl('', [Validators.required]),
     'dateOfBirth': new FormControl('', [Validators.required]),
-    'phoneNumber': new FormControl('', [Validators.required, Validators.min(0), Validators.maxLength(16)]),
+    'phoneNumber': new FormControl('', [Validators.required]),
     'address': this.formBuilder.group({
       'street': new FormControl('', [Validators.required]),
       'houseNumber': new FormControl('', [Validators.required, Validators.min(1)]),
       'postBox': new FormControl(''),
-      'postalCode': new FormControl('', [Validators.required, Validators.min(0), Validators.maxLength(6)]),
-      'city': new FormControl('', [Validators.required, Validators.pattern("/^s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+.?s*$/"), Validators.maxLength(30)]),
-      'country': new FormControl('', [Validators.required, Validators.pattern("/^s*([A-Za-z]{1,}([.,] |[-']| ))+[A-Za-z]+.?s*$/"), Validators.maxLength(30)])
+      'postalCode': new FormControl('', [Validators.required]),
+      'city': new FormControl('', [Validators.required, Validators.maxLength(30)]),
+      'country': new FormControl('', [Validators.required, Validators.maxLength(30)])
     }),
     'role': new FormControl('')
   });
@@ -68,7 +68,7 @@ export class SignupComponent implements OnInit {
       .then((result) => {
         result.user!.sendEmailVerification();
         return this.fireStore.collection('users').doc(result.user?.uid).set({
-          uid: result.user?.uid,
+          id: result.user?.uid,
           firstName: this.signupForm.get(['firstName'])?.value,
           lastName: this.signupForm.get(['lastName'])?.value,
           dateOfBirth: this.signupForm.get(['dateOfBirth'])?.value,
@@ -90,6 +90,11 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log('click submit');
+    this.signupForm.patchValue({
+      dateOfBirth: $('.datepicker').val()
+    })
+    console.log(this.signupForm.get('dateOfBirth')?.value);
     this.signupForm.markAllAsTouched();
 
     if (this.signupForm.invalid) {

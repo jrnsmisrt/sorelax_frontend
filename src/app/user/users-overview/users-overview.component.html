@@ -29,84 +29,87 @@
 
 <div class="modal" id="userOverViewModal">
   <div class="modal-content">
-    <div class="row" *ngIf="user|async as user">
-      <div class="col push-l1">
-
-      <div class="row">
-        <div class="col l4"><label>Firstname</label></div>
-        <div class="col l4"><label>Lastname</label></div>
+    <div class="row">
+      <div class="col s6"><a><i class="teal-text material-icons">edit</i></a></div>
+      <div class="col push-s5 s6">
+        <a><i class="red-text material-icons">delete</i></a></div>
+    </div>
+    <div *ngIf="user|async as user">
+      <div class="row teal lighten-3 white-text overviewheadrow">
+        <div class="col l4">Firstname</div>
+        <div class="col l4">Lastname</div>
       </div>
-      <div class="row ">
+      <div class="row overviewrow">
         <div class="col l4"><strong>{{user.firstName}}</strong></div>
         <div class="col l4"><strong>{{user.lastName}}</strong></div>
       </div>
-      <div class="row">
-        <div class="col l6"><label>Date of Birth</label></div>
+      <div class="row  teal lighten-3 white-text overviewheadrow">
+        <div class="col l6">Date of Birth</div>
       </div>
-      <div class="row">
+      <div class="row overviewrow">
         <div class="col l6">{{user.dateOfBirth}}</div>
       </div>
-      <div class="row">
-        <div class="col l6"><label>User ID</label></div>
-        <div class="col l6"><label>Role</label></div>
+      <div class="row  teal lighten-3 white-text overviewheadrow">
+        <div class="col l6">User ID</div>
+        <div class="col l6">Role</div>
       </div>
 
-      <div class="row">
+      <div class="row overviewrow">
         <div class="col l6">{{user.id}}</div>
         <div class="col l6">{{user.role}}</div>
       </div>
-      <div class="row">
+      <div class="row  teal lighten-3 white-text overviewheadrow">
         <div class="col l6">
-          <label>E-mail</label></div>
+          E-mail</div>
         <div class="col l6">
-          <label>Phonenumber</label></div>
+          Phonenumber</div>
       </div>
-      <div class="row">
+      <div class="row overviewrow">
         <div class="col l6">
           {{user.email}}</div>
         <div class="col l6">
           {{user.phoneNumber}}
         </div>
       </div>
-      <div class="row">
+      <div class="row  teal lighten-4 white-text overviewheadrow">
         <div class="col">
           Address
         </div>
       </div>
-      <div class="row">
+      <div class="row teal lighten-3 white-text overviewheadrow">
         <div class="col l6">
-          <label>Street</label>
+          Street
         </div>
         <div class="col s2">
-          <label>House Nr.</label>
+          House Nr.
         </div>
         <div class="col s2">
-          <label>Postbox</label>
+          Postbox
         </div>
       </div>
-      <div class="row">
+      <div class="row overviewrow">
         <div class="col l6">
           {{user.address.street}}
         </div>
-        <div class="col l6">
+        <div class="col l2">
           {{user.address.houseNumber}}
         </div>
-        <div class="col l6">
+        <div class="col l2">
           {{user.address.postBox}}
         </div>
       </div>
-      <div class="row">
+      <div class="row  teal lighten-3 white-text overviewheadrow">
         <div class="col l6">
-          <label>Postal code</label>
+          Postal code
         </div>
         <div class="col l6">
-          <label>City</label>
+          City
         </div>
         <div class="col l6">
-          <label>Country</label>
+          Country
         </div>
       </div>
-      <div class="row">
+      <div class="row overviewrow">
         <div class="col l6">
           {{user.address.postalCode}}
         </div>
@@ -116,7 +119,6 @@
         <div class="col l6">{{user.address.country}}
         </div>
       </div>
-    </div>
     </div>
   </div>
   <div class="modal-footer"></div>

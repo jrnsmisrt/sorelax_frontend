@@ -1,92 +1,96 @@
-<div class="row"></div>
+<div class="row">
+  <div class="col s3"></div>
+  <div class="col s6 center teal-text"><h3>My profile</h3></div>
+  <div class="col s3"></div>
+</div>
 <div class="row" *ngIf="user|async as user">
 
   <div class="col s3"></div>
   <div class="col s6">
-    <div class="row">
-      <div class="col l6"><label>Firstname</label></div>
-      <div class="col l6"><label>Lastname</label></div>
+    <div class="row overviewheadrow teal lighten-3 white-text">
+      <div class="col l6"><strong>Firstname</strong></div>
+      <div class="col l6"><strong>Lastname</strong></div>
     </div>
-    <div class="row ">
-      <div class="col l6"><strong>{{user.firstName}}</strong></div>
-      <div class="col l6"><strong>{{user.lastName}}</strong></div>
+    <div class="row overviewrow">
+      <div class="col l6">{{user.firstName}}</div>
+      <div class="col l6">{{user.lastName}}</div>
     </div>
-    <div class="row">
-      <div class="col l6"><label>Date of Birth</label></div>
+    <div class="row  overviewheadrow teal lighten-3  white-text">
+      <div class="col l6"><strong>Date of Birth</strong></div>
     </div>
-    <div class="row">
+    <div class="row  overviewrow">
       <div class="col l6">{{user.dateOfBirth}}</div>
     </div>
-    <div class="row">
-      <div class="col l6"><label>User ID</label></div>
-      <div class="col l6"><label>Role</label></div>
+    <div class="row  overviewheadrow teal lighten-3  white-text">
+      <div class="col l6"><strong>User ID</strong></div>
+      <div class="col l6"><strong>Role</strong></div>
     </div>
 
-    <div class="row">
+    <div class="row  overviewrow">
       <div class="col l6">{{user.id}}</div>
       <div class="col l6">{{user.role}}</div>
     </div>
-    <div class="row">
+    <div class="row  overviewheadrow teal lighten-3  white-text">
       <div class="col l6">
-        <label>E-mail</label></div>
+        <strong>E-mail</strong></div>
       <div class="col l6">
-        <label>Phonenumber</label></div>
+        <strong>Phonenumber</strong></div>
     </div>
-    <div class="row">
+    <div class="row  overviewrow">
       <div class="col l6">
         {{user.email}}</div>
       <div class="col l6">
         {{user.phoneNumber}}
       </div>
     </div>
-    <div class="row">
+    <div class="row  overviewheadrow teal lighten-4  white-text">
       <div class="col">
-      Address
+        <strong>Address</strong>
       </div>
     </div>
-    <div class="row">
+    <div class="row overviewheadrow teal lighten-3  white-text">
       <div class="col l6">
-        <label>Street</label>
+        <strong>Street</strong>
       </div>
       <div class="col s2">
-        <label>House Nr.</label>
+        <strong>House Nr.</strong>
       </div>
       <div class="col s2">
-        <label>Postbox</label>
+        <strong> Postbox</strong>
       </div>
     </div>
-    <div class="row">
+    <div class="row  overviewrow">
       <div class="col l6">
         {{user.address.street}}
       </div>
-      <div class="col l6">
+      <div class="col l2">
         {{user.address.houseNumber}}
       </div>
-      <div class="col l6">
+      <div class="col l2 ">
         {{user.address.postBox}}
       </div>
     </div>
-    <div class="row">
-      <div class="col l6">
-        <label>Postal code</label>
+    <div class="row  overviewheadrow teal lighten-3  white-text">
+      <div class="col l3">
+        <strong>Postal code</strong>
+      </div>
+      <div class="col l3">
+        <strong>City</strong>
       </div>
       <div class="col l6">
-        <label>City</label>
-      </div>
-      <div class="col l6">
-        <label>Country</label>
+        <strong> Country</strong>
       </div>
     </div>
-    <div class="row">
-      <div class="col l6">
+    <div class="row overviewrow">
+      <div class="col l3">
         {{user.address.postalCode}}
       </div>
-      <div class="col l6">
+      <div class="col l3">
         {{user.address.city}}
       </div>
       <div class="col l6">{{user.address.country}}
       </div>
     </div>
   </div>
-  <div class="col l6"></div>
+  <div class="col l3"></div>
 </div>
