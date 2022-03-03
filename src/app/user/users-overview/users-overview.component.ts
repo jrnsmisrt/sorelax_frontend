@@ -16,7 +16,7 @@ export class UsersOverviewComponent implements OnInit {
 
 
   constructor(private userService: UserService, private fireStore:AngularFirestore) {
-    this.users = this.fireStore.collection<User>('users').valueChanges();
+    this.users = this.fireStore.collection<User>('users',ref => ref.orderBy('lastName','asc').orderBy('firstName', 'asc')).valueChanges();
   }
 
   ngOnInit(): void {

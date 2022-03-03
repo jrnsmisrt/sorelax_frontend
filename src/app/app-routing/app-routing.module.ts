@@ -17,6 +17,7 @@ import {
   AdminBookingOverviewComponent
 } from "../dynamic-web-pages/admin-booking-overview/admin-booking-overview.component";
 import {RoleGuard} from "../services/role.guard";
+import {TimeslotOverviewComponent} from "../dynamic-web-pages/timeslot-overview/timeslot-overview.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path: 'users/:id/dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'users/:id/booking-overview', component: BookingOverviewComponent, canActivate: [AuthGuard]},
   {path: 'timeslots/create-timeslot', component: CreateTimeslotComponent, canActivate: [/*RoleGuard*/ AuthGuard]},
+  {path: 'timeslots/overview', component: TimeslotOverviewComponent, canActivate: [/*RoleGuard*/ AuthGuard]},
   {path: 'bookings/overview', component: AdminBookingOverviewComponent, canActivate: [/*RoleGuard*/ AuthGuard]},
   {path: '**', component: HomeComponent}
 ]

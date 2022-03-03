@@ -24,6 +24,8 @@ import { UsersOverviewComponent } from './user/users-overview/users-overview.com
 import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/booking-overview.component';
 import { CreateTimeslotComponent } from './dynamic-web-pages/create-timeslot/create-timeslot.component';
 import { AdminBookingOverviewComponent } from './dynamic-web-pages/admin-booking-overview/admin-booking-overview.component';
+import { TimeslotOverviewComponent } from './dynamic-web-pages/timeslot-overview/timeslot-overview.component';
+import {BooleanPipe} from "./pipes/Boolean-Pipe.pipe";
 
 
 @NgModule({
@@ -42,6 +44,8 @@ import { AdminBookingOverviewComponent } from './dynamic-web-pages/admin-booking
     BookingOverviewComponent,
     CreateTimeslotComponent,
     AdminBookingOverviewComponent,
+    TimeslotOverviewComponent,
+    BooleanPipe
 
 
   ],
@@ -58,7 +62,7 @@ import { AdminBookingOverviewComponent } from './dynamic-web-pages/admin-booking
         ReactiveFormsModule,
         FormsModule,
     ],
-  providers: [AngularFirestore],
+  providers: [AngularFirestore, BooleanPipe],
 
   bootstrap: [
     AppComponent]
