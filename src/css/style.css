@@ -64,12 +64,15 @@ footer.page-footer {
 .overviewheadrow{
   border-radius : 6px;
   padding: 2px;
+  margin-bottom: 1%;
+  font-size: larger;
 }
 .overviewrow{
   color: #000000;
   border: 1px solid teal;
   border-radius : 6px;
-  padding: 2px;
+  padding: 1px;
+  margin-bottom: 1%;
   transition-property: background-color;
   transition-duration: 1s;
 
