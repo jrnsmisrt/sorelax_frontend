@@ -1,0 +1,3 @@
+<div *ngFor="let timeslot of timeslots|async">
+  {{timeslot.date}} {{timeslot.time}} {{timeslot.isAvailable|availability}} {{timeslot.customerId}}
+</div>
