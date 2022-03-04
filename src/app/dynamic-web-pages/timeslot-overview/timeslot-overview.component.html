@@ -3,14 +3,27 @@
   <div class="col l4"></div>
   <div class="col l4">
     <div class="row center overviewheadrow teal lighten-3 white-text">
-      <div class="col l4"><strong>Datum</strong></div>
-      <div class="col l4"><strong>Tijd</strong></div>
-      <div class="col l4"><strong>Beschikbaarheid</strong></div>
+      <div class="col l3"><strong>Datum</strong></div>
+      <div class="col l3"><strong>Tijd</strong></div>
+      <div class="col l3"><strong>Beschikbaarheid</strong></div>
+      <div class="col l3"><strong>Klant</strong></div>
     </div>
-    <div class="row center overviewrow" *ngFor="let timeslot of timeslots|async">
-        <div class="col l4">{{timeslot.date}}</div>
-        <div class="col l4">{{timeslot.time}}</div>
-        <div class="col l4">{{timeslot.isAvailable|availability}}</div>
+    <div *ngFor="let timeslot of timeslots|async">
+      <div *ngFor="let user of users | async">
+        <div class="row center overviewrow" *ngIf="user.id == timeslot.customerId">
+          <div class="col l3">{{timeslot.date}}</div>
+          <div class="col l3">{{timeslot.time}}</div>
+          <div class="col l3">{{timeslot.isAvailable|availability}}</div>
+          <div class="col l3">{{user.firstName}} {{user.lastName}}</div>
+        </div>
+      </div>
+      <div class="row center overviewrow" *ngIf="timeslot.customerId==null">
+        <div class="col l3">{{timeslot.date}}</div>
+        <div class="col l3">{{timeslot.time}}</div>
+        <div class="col l3">{{timeslot.isAvailable|availability}}</div>
+        <div class="col l3"><strong><small>No client assigned</small></strong></div>
+      </div>
+
     </div>
   </div>
   <div class="col l4"></div>

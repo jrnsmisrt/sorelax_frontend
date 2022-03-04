@@ -25,7 +25,7 @@ import { BookingOverviewComponent } from './dynamic-web-pages/booking-overview/b
 import { CreateTimeslotComponent } from './dynamic-web-pages/create-timeslot/create-timeslot.component';
 import { AdminBookingOverviewComponent } from './dynamic-web-pages/admin-booking-overview/admin-booking-overview.component';
 import { TimeslotOverviewComponent } from './dynamic-web-pages/timeslot-overview/timeslot-overview.component';
-import {AvailabilityPipe} from "./pipes/Boolean-Pipe.pipe";
+import {AvailabilityPipe} from "./pipes/AvailabilityPipe";
 
 
 @NgModule({
@@ -45,7 +45,7 @@ import {AvailabilityPipe} from "./pipes/Boolean-Pipe.pipe";
     CreateTimeslotComponent,
     AdminBookingOverviewComponent,
     TimeslotOverviewComponent,
-    AvailabilityPipe
+    AvailabilityPipe,
 
 
   ],
