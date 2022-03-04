@@ -5,6 +5,18 @@
 </div>
 <div class="row">
   <div class="col l3"></div>
+  <div class="col l1">
+    <input id="filter_klant" class="input-field" [(ngModel)]="searchName">
+    <label for="filter_klant">filter op klant</label>
+  </div>
+  <div class="col l1">
+    <input id="filter_datum" class="datepicker" [(ngModel)]="searchDate">
+    <label for="filter_datum">filter op datum</label>
+  </div>
+  <div class="col l3"></div>
+</div>
+<div class="row">
+  <div class="col l3"></div>
   <div class="col l6">
     <div class="row center teal lighten-3 white-text center overviewheadrow">
       <div class="col l2"><i class="material-icons">calendar_month</i></div>
@@ -15,8 +27,8 @@
       <div class="col l3"><i class="material-icons">pending</i></div>
     </div>
 
-    <div *ngFor="let booking of bookings$|async">
-      <div *ngFor="let user of users$|async">
+    <div *ngFor="let booking of bookings$|async|filterDate:searchDate">
+      <div *ngFor="let user of users$|async|filterUserName:searchName">
         <div *ngIf="booking.status!=='DELETED'">
           <a (click)="openViewBookingModal(booking.id!, user.id!)">
             <div class="row overviewrow center" *ngIf="user.id == booking.userUid">

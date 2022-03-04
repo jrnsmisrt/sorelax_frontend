@@ -26,6 +26,8 @@ import { CreateTimeslotComponent } from './dynamic-web-pages/create-timeslot/cre
 import { AdminBookingOverviewComponent } from './dynamic-web-pages/admin-booking-overview/admin-booking-overview.component';
 import { TimeslotOverviewComponent } from './dynamic-web-pages/timeslot-overview/timeslot-overview.component';
 import {AvailabilityPipe} from "./pipes/AvailabilityPipe";
+import {FilterUserName} from "./pipes/Filter-UserName";
+import {FilterDate} from "./pipes/Filter-Date";
 
 
 @NgModule({
@@ -46,6 +48,8 @@ import {AvailabilityPipe} from "./pipes/AvailabilityPipe";
     AdminBookingOverviewComponent,
     TimeslotOverviewComponent,
     AvailabilityPipe,
+    FilterUserName,
+    FilterDate
 
 
   ],
@@ -62,7 +66,7 @@ import {AvailabilityPipe} from "./pipes/AvailabilityPipe";
         ReactiveFormsModule,
         FormsModule,
     ],
-  providers: [AngularFirestore, AvailabilityPipe],
+  providers: [AngularFirestore, AvailabilityPipe, FilterUserName, FilterDate],
 
   bootstrap: [
     AppComponent]

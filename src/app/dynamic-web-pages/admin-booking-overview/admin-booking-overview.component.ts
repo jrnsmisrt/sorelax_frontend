@@ -16,6 +16,8 @@ export class AdminBookingOverviewComponent implements OnInit {
   selectedBooking!: Booking | undefined;
   users$!: Observable<User[]>;
   selectedUser!: User | undefined;
+  searchName!: string;
+  searchDate!:string;
 
   constructor(private fireStore: AngularFirestore, private userService: UserService) {
     this.bookings$ = this.fireStore.collection<Booking>('bookings', ref => ref.orderBy('date', 'asc').orderBy('time', 'asc')).valueChanges();
