@@ -6,12 +6,21 @@
 <div class="row">
   <div class="col l3"></div>
   <div class="col l2">
-    <input id="filter_klant" class="input-field" [(ngModel)]="searchName">
     <label for="filter_klant">filter op klant</label>
+    <input id="filter_klant" class="input-field teal-text" [(ngModel)]="searchName">
   </div>
   <div class="col l2">
-    <input id="filter_datum" class="input-field" [(ngModel)]="searchDate" >
     <label for="filter_datum">filter op datum</label>
+    <input id="filter_datum" class="input-field teal-text" [(ngModel)]="searchDate">
+  </div>
+  <div class="col l1">
+    <label for="filter_status">filter op status</label>
+    <select id="filter_status" class="select-dropdown teal-text" [(ngModel)]="searchStatus">
+      <option value=""></option>
+      <option value="confirmed">confirmed</option>
+      <option value="cancelled">cancelled</option>
+      <option value="pending">pending</option>
+    </select>
   </div>
   <div class="col l3"></div>
 </div>
@@ -27,7 +36,7 @@
       <div class="col l3"><i class="material-icons">pending</i></div>
     </div>
 
-    <div *ngFor="let booking of bookings$|async|filterDate:searchDate">
+    <div *ngFor="let booking of bookings$|async|filterDate:searchDate|filterStatus:searchStatus">
       <div *ngFor="let user of users$|async|filterUserName:searchName">
         <div *ngIf="booking.status!=='DELETED'">
           <a (click)="openViewBookingModal(booking.id!, user.id!)">

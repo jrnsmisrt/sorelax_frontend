@@ -28,6 +28,7 @@ import { TimeslotOverviewComponent } from './dynamic-web-pages/timeslot-overview
 import {AvailabilityPipe} from "./pipes/AvailabilityPipe";
 import {FilterUserName} from "./pipes/Filter-UserName";
 import {FilterDate} from "./pipes/Filter-Date";
+import {FilterStatus} from "./pipes/Filter-Status";
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import {FilterDate} from "./pipes/Filter-Date";
     TimeslotOverviewComponent,
     AvailabilityPipe,
     FilterUserName,
-    FilterDate
+    FilterDate,
+    FilterStatus
 
 
   ],
@@ -66,7 +68,7 @@ import {FilterDate} from "./pipes/Filter-Date";
         ReactiveFormsModule,
         FormsModule,
     ],
-  providers: [AngularFirestore, AvailabilityPipe, FilterUserName, FilterDate],
+  providers: [AngularFirestore, AvailabilityPipe, FilterUserName, FilterDate, FilterStatus],
 
   bootstrap: [
     AppComponent]
