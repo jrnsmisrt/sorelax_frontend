@@ -17,7 +17,7 @@ export class AdminBookingOverviewComponent implements OnInit {
   users$!: Observable<User[]>;
   selectedUser!: User | undefined;
   searchName!: string;
-  searchDate!:string;
+  searchDate!: string;
 
   constructor(private fireStore: AngularFirestore, private userService: UserService) {
     this.bookings$ = this.fireStore.collection<Booking>('bookings', ref => ref.orderBy('date', 'asc').orderBy('time', 'asc')).valueChanges();
@@ -27,6 +27,12 @@ export class AdminBookingOverviewComponent implements OnInit {
   ngOnInit(): void {
     $(document).ready(function () {
       $('.modal').modal();
+    });
+
+    $(document).ready(function () {
+      $('.datepicker').datepicker({
+        format: "dd/mm/yyyy",
+      });
     });
   }
 
@@ -46,7 +52,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'confirmed'
     }).then(() => {
-      M.toast({html: 'Booking confirmed', classes:'rounded custom-toast'});
+      M.toast({html: 'Booking confirmed', classes: 'rounded custom-toast'});
     }).catch(error => {
       console.log(error);
     })
@@ -56,19 +62,28 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'cancelled'
     }).then(() => {
-      M.toast({html: 'Booking cancelled', classes:'rounded custom-toast'});
+      M.toast({html: 'Booking cancelled', classes: 'rounded custom-toast'});
     }).catch(error => {
       console.log(error);
     })
   }
 
-  deleteBooking(bookingId:string){
+  deleteBooking(bookingId: string) {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'DELETED'
-    }).then(()=>{
-      M.toast({html:'Booking deleted', classes:'rounded custom-toast'});
-    }).catch(error=>{
+    }).then(() => {
+      M.toast({html: 'Booking deleted', classes: 'rounded custom-toast'});
+    }).catch(error => {
       console.log(error);
     })
+  }
+
+  setDate(searchDate: string) {
+   /* let dp = M.Datepicker.getInstance(document.getElementById('filter_datum')!);
+    dp.setInputValue();
+    this.searchDate = dp.date.toLocaleString();*/
+    this.searchDate = searchDate;
+
+    console.log(this.searchDate);
   }
 }

@@ -7,7 +7,6 @@ import {Booking} from "../model/Booking";
 export class FilterDate implements PipeTransform {
 
   transform(dateArray: Booking[] | null, dateFilter: string):  Booking[] | null {
-
     if (dateFilter === undefined ||
       dateArray === null ||
       dateFilter === null) {
@@ -15,9 +14,9 @@ export class FilterDate implements PipeTransform {
     }
 
     return  dateArray
-      .filter(
-        (booking) => booking.date
-      );
+      .filter(booking => {
+        booking.date;
+      })
   }
 
 }
