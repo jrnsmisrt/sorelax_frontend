@@ -26,14 +26,14 @@ const routes: Routes = [
   {path: 'massages', component: MassageComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
-  {path: 'users/overview', component: UsersOverviewComponent, canActivate: [RoleGuard, AuthGuard]},
+  {path: 'users/overview', component: UsersOverviewComponent, canActivate: [AuthGuard, RoleGuard]},
   {path: 'users/:id/bookmassage', component: BookingComponent, canActivate: [AuthGuard]},
   {path: 'users/:id/profile', component: UserProfileComponent, canActivate: [AuthGuard]},
   {path: 'users/:id/dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'users/:id/booking-overview', component: BookingOverviewComponent, canActivate: [AuthGuard]},
-  {path: 'timeslots/create-timeslot', component: CreateTimeslotComponent, canActivate: [RoleGuard, AuthGuard]},
-  {path: 'timeslots/overview', component: TimeslotOverviewComponent, canActivate: [RoleGuard, AuthGuard]},
-  {path: 'bookings/overview', component: AdminBookingOverviewComponent, canActivate: [RoleGuard, AuthGuard]},
+  {path: 'timeslots/create-timeslot', component: CreateTimeslotComponent, canActivate: [AuthGuard, RoleGuard]},
+  {path: 'timeslots/overview', component: TimeslotOverviewComponent, canActivate: [AuthGuard, RoleGuard]},
+  {path: 'bookings/overview', component: AdminBookingOverviewComponent, canActivate: [AuthGuard, RoleGuard]},
   {path: '**', component: HomeComponent}
 ]
 
