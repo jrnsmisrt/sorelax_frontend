@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth, private userService: UserService) {
     this.user = this.afAuthService.user$;
     this.user$ = this.userService.user;
+    this.isAdmin = userService.isAdmin;
     this.setAdmin();
   }
 
@@ -25,11 +26,6 @@ export class HeaderComponent implements OnInit {
     $( document ).ready(function(){
     $(".dropdown-trigger").dropdown();
     });
-  }
-  private setAdmin() {
-    this.user.subscribe((user) => {
-      this.isAdmin = user?.role === 'admin';
-    })
   }
 
   logout(): void {
@@ -40,6 +36,18 @@ export class HeaderComponent implements OnInit {
       else{
         M.toast({html:`Oops! Something went wrong, please try again.`})
       }
+    })
+  }
+
+  setAdmin() {
+    this.user.subscribe((user) => {
+      console.log('setadmin:' +user?.role+ user?.id);
+      if (user?.role === 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false
+      }
+      console.log(this.isAdmin)
     })
   }
 }

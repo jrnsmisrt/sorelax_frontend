@@ -10,26 +10,31 @@ import {getAuth} from "@angular/fire/auth";
 })
 export class RoleGuard implements CanActivate {
   user = this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges();
-  role!:string | undefined;
+  isAdmin!:boolean | undefined;
   constructor(private fireStore: AngularFirestore, private router: Router) {
-    this.isAdmin();
+    this.setAdmin();
   }
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    if(this.role!=='admin') {
-      console.log(this.role);
-
+    if(this.isAdmin) {
+      console.log(this.isAdmin);
       M.toast({html:'Access Denied, You are not an administrator!', classes:'rounded custom-toast'})
       this.router.navigate(['login']);
     }
     return true;
   }
 
-  async isAdmin(){
-    await this.user.subscribe((u)=>{
-      return this.role = u?.role;
+  setAdmin() {
+    this.user.subscribe((user) => {
+      console.log('setadmin:' +user?.role+ user?.id);
+      if (user?.role === 'admin') {
+        this.isAdmin = true;
+      } else {
+        this.isAdmin = false
+      }
+      console.log(this.isAdmin)
     })
   }
 }

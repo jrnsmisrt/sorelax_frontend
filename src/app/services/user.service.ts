@@ -9,6 +9,7 @@ import {
   DocumentData
 } from '@angular/fire/compat/firestore';
 import {FirestoreService} from "./firestore.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 
 @Injectable({
@@ -21,31 +22,43 @@ export class UserService {
   userDoc!: AngularFirestoreDocument;
   user!: Observable<User>;
   userRole!: string | undefined;
+  isAdmin!: boolean;
 
 
-  constructor(private fireStore: AngularFirestore, private firestoreService: FirestoreService, private afAuth: AuthService) {
+  constructor(private fireStore: AngularFirestore, private fireAuth: AngularFireAuth, private firestoreService: FirestoreService, private afAuth: AuthService) {
     this.userCollection = fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc')
-                                                        .orderBy('firstName','asc')
-                                                        .orderBy('dateOfBirth','asc'));
+      .orderBy('firstName', 'asc')
+      .orderBy('dateOfBirth', 'asc'));
     this.allUsers = this.userCollection.valueChanges({idField: 'uid'});
 
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
     // @ts-ignore
-    this.user = this.userDoc.valueChanges();
   }
 
+  setAdmin() {
+    let user = this.fireStore.collection<User>('users').doc(this.afAuth.getUserUid()).valueChanges();
+     user.subscribe((user) => {
+      console.log('setadmin:' +user?.role+ user?.id);
+      if (user?.role === 'admin') {
+         this.isAdmin = true;
+      } else {
+         this.isAdmin = false
+      }
+      console.log(this.isAdmin)
+    })
+  }
 
   getAllUsers(): Observable<User[]> {
     return this.userCollection.valueChanges();
   }
 
-  getUser(uid: string|undefined): Observable<User | undefined> {
+  getUser(uid: string | undefined): Observable<User | undefined> {
     let getUserDoc = this.fireStore.doc<User>(`users/${uid}`);
     return getUserDoc.valueChanges();
   }
 
-  getUserFirstName(uid: string):Subscription{
-    let userFullName:string|undefined;
+  getUserFirstName(uid: string): Subscription {
+    let userFullName: string | undefined;
     return this.getUser(uid).subscribe((user) => {
       userFullName = user?.firstName + ' ' + user?.lastName!;
       console.log(userFullName.toString());

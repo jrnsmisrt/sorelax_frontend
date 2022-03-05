@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "dist/sorelax_frontend",
     "ignore": [
       "firebase.json",
       "**/.*",

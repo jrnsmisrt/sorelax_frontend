@@ -5,6 +5,7 @@ import {AuthService} from "../../services/auth.service";
 import firebase from "firebase/compat";
 import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 import {getAuth, signInWithPopup} from "@angular/fire/auth";
+import {UserService} from "../../services/user.service";
 
 
 @Component({
@@ -21,8 +22,8 @@ export class LoginComponent implements OnInit {
   firebaseErrorMessage: string;
 
   constructor(public auth: AuthService, private router: Router,
-              private formBuilder: FormBuilder
-              ) {
+              private formBuilder: FormBuilder, private userService: UserService
+  ) {
     this.firebaseErrorMessage = '';
   }
 
@@ -33,32 +34,34 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid)
       return;
 
-    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
+    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then(async (result) => {
       if (result == null) {
-        console.log('logging in...');
-        M.toast({html:`Logging in...`});
-        M.toast({html:`Succesfully logged in!`});
+        M.toast({html: `Logging in...`});
+        M.toast({html: `Succesfully logged in!`});
+        await this.setAdmin();
         this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
-      }
-      else if (result.isValid == false) {
+      } else if (result.isValid == false) {
         console.log('login error', result);
         this.firebaseErrorMessage = result.message;
       }
     });
   }
 
-  signInWithGoogle(){
-    this.auth.signInWithGoogle().then(()=>{
-      if(this.auth.isUserSignedIn()){
-        M.toast({html:`Succesfully signed in with Google!`});
+  signInWithGoogle() {
+    this.auth.signInWithGoogle().then(() => {
+      if (this.auth.isUserSignedIn()) {
+        M.toast({html: `Succesfully signed in with Google!`});
         this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
-      }
-      else{
-        M.toast({html:'Sign in was unsuccessful please try again'})
+      } else {
+        M.toast({html: 'Sign in was unsuccessful please try again'})
       }
 
     });
   }
 
+  private setAdmin() {
+    this.userService.setAdmin();
+    console.log('set admin: ' + this.userService.isAdmin);
+  }
 
 }
