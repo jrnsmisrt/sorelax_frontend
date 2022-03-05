@@ -34,11 +34,10 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid)
       return;
 
-    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then(async (result) => {
+    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
       if (result == null) {
         M.toast({html: `Logging in...`});
         M.toast({html: `Succesfully logged in!`});
-        await this.setAdmin();
         this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
       } else if (result.isValid == false) {
         console.log('login error', result);
@@ -59,9 +58,5 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  private setAdmin() {
-    this.userService.setAdmin();
-    console.log('set admin: ' + this.userService.isAdmin);
-  }
 
 }

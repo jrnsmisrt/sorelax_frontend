@@ -35,19 +35,6 @@ export class UserService {
     // @ts-ignore
   }
 
-  setAdmin() {
-    let user = this.fireStore.collection<User>('users').doc(this.afAuth.getUserUid()).valueChanges();
-     user.subscribe((user) => {
-      console.log('setadmin:' +user?.role+ user?.id);
-      if (user?.role === 'admin') {
-         this.isAdmin = true;
-      } else {
-         this.isAdmin = false
-      }
-      console.log(this.isAdmin)
-    })
-  }
-
   getAllUsers(): Observable<User[]> {
     return this.userCollection.valueChanges();
   }
