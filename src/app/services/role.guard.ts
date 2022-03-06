@@ -4,38 +4,36 @@ import {Observable} from 'rxjs';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
 import {getAuth} from "@angular/fire/auth";
+import {UserService} from "./user.service";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleGuard implements CanActivate {
   user = this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges();
-  isAdmin!: boolean | undefined;
 
-  constructor(private fireStore: AngularFirestore, private router: Router) {
-    this.setAdmin();
+  constructor(private fireStore: AngularFirestore, private router: Router, private auth: AuthService) {
   }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    if (!this.isAdmin) {
+    if (!this?.isAdmin()) {
       M.toast({html: 'Access Denied, You are not an administrator!', classes: 'rounded custom-toast'})
-      this.router.navigate(['login']);
+      this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);      return false;
+    } else {
+      return true;
     }
-    return true;
   }
 
-  setAdmin() {
-    this.user.subscribe((user) => {
-      console.log('setadmin:' + user?.role + user?.id);
-      if (user?.role === 'admin') {
-        return this.isAdmin = true;
-      }  {
-        this.isAdmin = false
-      }
-      console.log(this.isAdmin)
-    })
+  async isAdmin(): Promise<boolean> {
+    let isAdmin!: boolean;
+    await this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges().subscribe((user) => {
+      isAdmin = user?.role === 'admin';
+    });
+    return isAdmin;
   }
+
 }

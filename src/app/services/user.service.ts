@@ -23,6 +23,7 @@ export class UserService {
   user!: Observable<User>;
   userRole!: string | undefined;
   isAdmin!: boolean;
+  currentUserRole!: string|undefined;
 
 
   constructor(private fireStore: AngularFirestore, private fireAuth: AngularFireAuth, private firestoreService: FirestoreService, private afAuth: AuthService) {
@@ -33,6 +34,16 @@ export class UserService {
 
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
     // @ts-ignore
+  }
+
+  async setCurrentUserRole(id: string){
+    await this.fireStore.collection<User>('users').doc(id).valueChanges().subscribe((u)=>{
+      this.currentUserRole = u?.role;
+    })
+  }
+
+  async getCurrentUserRole():Promise<string | undefined>{
+    return this.currentUserRole;
   }
 
   getAllUsers(): Observable<User[]> {
