@@ -1,47 +1,47 @@
-<div class="row center teal-text">
-  <h3>User overview</h3>
-</div>
-<div class="row">
-  <div class="col s3"></div>
-  <div class="col s6">
+<div class="container">
+  <div class="row center teal-text">
+    <h3>User overview</h3>
+  </div>
+  <div class="row">
+
     <div class="row teal lighten-3 white-text center overviewheadrow">
-      <div class="col s3">Firstname</div>
-      <div class="col s3">LastName</div>
-      <div class="col s3">ID</div>
-      <div class="col s3">Role</div>
+      <div class="col s4">Firstname</div>
+      <div class="col s4">LastName</div>
+      <div class="col s4">Role</div>
     </div>
     <div *ngIf="users">
       <div *ngFor="let user of users|async">
         <a (click)="openUserOverViewModal(user.id)">
           <div class="row center overviewrow">
-            <div class="col s3 overviewcol">{{user.firstName}}</div>
-            <div class="col s3 overviewcol">{{user.lastName}}</div>
-            <div class="col s3 overviewcol">{{user.id}}</div>
-            <div class="col s3 overviewcol">{{user.role}}</div>
+            <div class="col s4 overviewcol">{{user.firstName}}</div>
+            <div class="col s4 overviewcol">{{user.lastName}}</div>
+            <div class="col s4 overviewcol">{{user.role}}</div>
           </div>
         </a>
       </div>
-    </div>
 
-    <div class="col s3"></div>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="userOverViewModal">
   <div class="modal-content">
     <div class="row">
-      <div class="col s6"><a><i class="teal-text material-icons">edit</i></a></div>
-      <div class="col push-s5 s6">
-        <a><i class="red-text material-icons">delete</i></a></div>
+      <div class="col s6">
+        <a><i class="teal-text material-icons">edit</i></a>
+      </div>
+      <div class="col push-s5">
+        <a><i class="red-text material-icons">delete</i></a>
+      </div>
     </div>
     <div *ngIf="user|async as user">
       <div class="row teal lighten-3 white-text overviewheadrow">
-        <div class="col l4">Firstname</div>
-        <div class="col l4">Lastname</div>
+        <div class="col l4 s6">Firstname</div>
+        <div class="col l4 s6">Lastname</div>
       </div>
       <div class="row overviewrow">
-        <div class="col l4"><strong>{{user.firstName}}</strong></div>
-        <div class="col l4"><strong>{{user.lastName}}</strong></div>
+        <div class="col l4 s6"><strong>{{user.firstName}}</strong></div>
+        <div class="col l4 s6"><strong>{{user.lastName}}</strong></div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
         <div class="col l6">Date of Birth</div>
@@ -50,73 +50,74 @@
         <div class="col l6">{{user.dateOfBirth}}</div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
-        <div class="col l6">User ID</div>
-        <div class="col l6">Role</div>
+        <div class="col l6 s6">User ID</div>
+        <div class="col l6 s3">Role</div>
       </div>
-
       <div class="row overviewrow">
-        <div class="col l6">{{user.id}}</div>
-        <div class="col l6">{{user.role}}</div>
+        <div class="col l6 s6">{{user.id}}</div>
+        <div class="col l6 s6">{{user.role}}</div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
-        <div class="col l6">
-          E-mail</div>
-        <div class="col l6">
-          Phonenumber</div>
+        <div class="col s6">
+          E-mail
+        </div>
+        <div class="col s6">
+          Phonenumber
+        </div>
       </div>
       <div class="row overviewrow">
-        <div class="col l6">
+        <div class="col s6">
           {{user.email}}</div>
-        <div class="col l6">
+        <div class="col s6">
           {{user.phoneNumber}}
         </div>
       </div>
       <div class="row  teal lighten-4 white-text overviewheadrow">
-        <div class="col">
+        <div class="col push-s5">
           Address
         </div>
       </div>
       <div class="row teal lighten-3 white-text overviewheadrow">
-        <div class="col l6">
+        <div class="col s4">
           Street
         </div>
         <div class="col s2">
-          House Nr.
+          Nr.
         </div>
-        <div class="col s2">
+        <div class="col s3">
           Postbox
         </div>
       </div>
       <div class="row overviewrow">
-        <div class="col l6">
+        <div class="col s4">
           {{user.address.street}}
         </div>
-        <div class="col l2">
+        <div class="col s2">
           {{user.address.houseNumber}}
         </div>
-        <div class="col l2">
+        <div class="col s3">
           {{user.address.postBox}}
         </div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
-        <div class="col l6">
+        <div class="col s3">
           Postal code
         </div>
-        <div class="col l6">
+        <div class="col s3">
           City
         </div>
-        <div class="col l6">
+        <div class="col s3">
           Country
         </div>
       </div>
       <div class="row overviewrow">
-        <div class="col l6">
+        <div class="col s3">
           {{user.address.postalCode}}
         </div>
-        <div class="col l6">
+        <div class="col s3">
           {{user.address.city}}
         </div>
-        <div class="col l6">{{user.address.country}}
+        <div class="col s3">{{user.address.country}}
         </div>
       </div>
     </div>
