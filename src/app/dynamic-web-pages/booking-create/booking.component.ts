@@ -9,8 +9,6 @@ import {Observable} from "rxjs";
 import {Booking} from "../../model/Booking";
 import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
-import {collection, doc, setDoc} from "@angular/fire/firestore";
-import {newArray} from "@angular/compiler/src/util";
 import {Massage} from "../../model/Massage";
 
 @Component({
@@ -94,7 +92,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
         });
         this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
       }).then(()=>{
-        M.toast({html:'Uw boeking werd geplaatst'})
+        M.toast({html:'Uw boeking werd geplaatst', classes: 'rounded custom-toast'})
       })
     }).catch(error => {
       console.log('booking form error', error);

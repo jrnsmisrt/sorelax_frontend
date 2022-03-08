@@ -1,53 +1,86 @@
-<div class="row">
-  <div class="col s3"></div>
-  <div class="col s6 center teal-text"><h3>My Bookings</h3></div>
-  <div class="col s3"></div>
-</div>
-<div class="row">
-  <div class="col l3"></div>
-  <div class="col l6">
-    <div class="row center teal lighten-3 white-text center overviewheadrow">
-      <div class="col l2"><i class="material-icons">calendar_month</i></div>
-      <div class="col l1"><i class="material-icons">schedule</i></div>
-      <div class="col l2"><i class="material-icons">timer</i></div>
-      <div class="col l3"><i class="material-icons">spa</i></div>
-      <div class="col l3"><i class="material-icons">pending</i></div>
-    </div>
-    <div *ngFor="let booking of bookings$ | async">
-      <a [routerLink]="" (click)="openModal(booking.id, booking.userUid)">
-        <div class="row center overviewrow">
-          <div class="col l2 overviewcol">{{booking.date}}</div>
-          <div class="col l1 overviewcol">{{booking.time}}</div>
-          <div class="col l2 overviewcol">{{booking.duration}}</div>
-          <div class="col l3 overviewcol">{{booking.massage}}</div>
-          <div class="col l3 overviewcol">{{booking.status}}</div>
-        </div>
-      </a>
-    </div>
-
+<div class="container">
+  <div class="row">
+    <div class="col s12 teal-text"><h3 class="center">My Bookings</h3></div>
   </div>
-  <div class="col l3"></div>
+  <div class="row">
+    <div class="col l2 s3">
+      <label for="filter_datum">filter op datum</label>
+      <input id="filter_datum" class="input-field teal-text" [(ngModel)]="searchDate">
+    </div>
+    <div class="col l1 s3">
+      <label for="filter_status">filter op status</label>
+      <select id="filter_status" class="select-dropdown teal-text" [(ngModel)]="searchStatus">
+        <option value="">show all</option>
+        <option value="confirmed">confirmed</option>
+        <option value="cancelled">cancelled</option>
+        <option value="pending">pending</option>
+      </select>
+    </div>
+  </div>
+  <div class="row center teal lighten-3 white-text center overviewheadrow">
+    <div class="col s3"><i class="material-icons">calendar_month</i></div>
+    <div class="col s3"><i class="material-icons">schedule</i></div>
+    <div class="col s3"><i class="material-icons">spa</i></div>
+    <div class="col s3"><i class="material-icons">pending</i></div>
+  </div>
+  <div *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus">
+    <a [routerLink]="" (click)="openModal(booking.id, booking.userUid)">
+      <div class="row center overviewrow">
+        <div class="col s3 overviewcol">{{booking.date}}</div>
+        <div class="col s3 overviewcol">{{booking.time}}</div>
+        <div class="col s3 overviewcol">{{booking.massage}}</div>
+        <div class="col s3 overviewcol">{{booking.status}}</div>
+      </div>
+    </a>
+  </div>
 </div>
+
 
 <!-- Modal -->
 
 <div id="cancelModal" class="modal">
   <div class="modal-content">
-    <div class="row teal white-text overviewheadrow">
-      <div class="col m2"><strong>Datum</strong></div>
-      <div class="col m1"><strong>Tijd</strong></div>
-      <div class="col m2"><strong>Massage</strong></div>
-      <div class="col m1"><strong>Duur</strong></div>
-      <div class="col m3"><strong>Klant</strong></div>
-      <div class="col m3"><strong>Boodschap</strong></div>
-    </div>
-    <div class="row overviewrow" *ngIf="booking$|async as booking">
-      <div class="col m2 overviewcol">{{booking.date}}</div>
-      <div class="col m1 overviewcol">{{booking.time}}</div>
-      <div class="col m2 overviewcol">{{booking.massage}}</div>
-      <div class="col m1  overviewcol">{{booking.duration}}</div>
-      <div class="col m3 overviewcol">{{bookingUserFullName}}</div>
-      <div class="col m3 overviewcol">{{booking.personalMessage}}</div>
+    <div class="row" *ngIf="booking$|async as booking">
+      <div class="row">
+        <div class="col s6 overviewheadrow teal white-text">
+          Datum
+        </div>
+        <div class="col overviewrow s6">
+          {{booking.date}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6 overviewheadrow teal white-text">
+          Uur
+        </div>
+        <div class="col overviewrow s6">
+          {{booking.time}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6 overviewheadrow teal white-text">
+          Duur
+        </div>
+        <div class="col overviewrow s6">
+          {{booking.duration}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6 overviewheadrow teal white-text">
+          Massage
+        </div>
+        <div class="col overviewrow s6">
+          {{booking.massage}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6 overviewheadrow teal white-text">
+          Boodschap
+        </div>
+        <div class="col overviewrow s6">
+          {{booking.personalMessage}}
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-footer">

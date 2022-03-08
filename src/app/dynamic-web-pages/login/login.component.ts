@@ -36,8 +36,8 @@ export class LoginComponent implements OnInit {
 
     this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
       if (result == null) {
-        M.toast({html: `Logging in...`});
-        M.toast({html: `Succesfully logged in!`});
+        M.toast({html: `Logging in...`, classes: 'rounded custom-toast'});
+        M.toast({html: `Succesfully logged in!`, classes: 'rounded custom-toast'});
         this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
       } else if (result.isValid == false) {
         console.log('login error', result);
@@ -49,10 +49,10 @@ export class LoginComponent implements OnInit {
   signInWithGoogle() {
     this.auth.signInWithGoogle().then(() => {
       if (this.auth.isUserSignedIn()) {
-        M.toast({html: `Succesfully signed in with Google!`});
+        M.toast({html: `Succesfully signed in with Google!`, classes: 'rounded custom-toast'});
         this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
       } else {
-        M.toast({html: 'Sign in was unsuccessful please try again'})
+        M.toast({html: 'Sign in was unsuccessful please try again', classes: 'rounded custom-toast'})
       }
 
     });

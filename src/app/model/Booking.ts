@@ -7,5 +7,6 @@ export interface Booking{
   duration: number,
   personalMessage: string
   requestedOn: string,
+  timeslot: string,
   status: string, //pending, confirmed, denied, cancelled, removed(softdelete)
 }

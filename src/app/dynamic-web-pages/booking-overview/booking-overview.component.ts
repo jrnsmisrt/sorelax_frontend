@@ -7,6 +7,7 @@ import {UserService} from "../../services/user.service";
 import {User} from "../../model/User";
 import firebase from "firebase/compat/app";
 import {InitService} from "../../materialize/init.service";
+import {TimeSlot} from "../../model/TimeSlot";
 
 @Component({
   selector: 'app-booking-overview',
@@ -27,6 +28,8 @@ export class BookingOverviewComponent implements OnInit {
   users$!: Observable<User[]>;
 
   user$!: Observable<User | undefined>;
+  searchDate!: string;
+  searchStatus!: string;
 
 
   constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService, private init: InitService) {
@@ -39,6 +42,10 @@ export class BookingOverviewComponent implements OnInit {
   ngOnInit(): void {
     $(document).ready(function () {
       $('.modal').modal();
+    });
+
+    $(document).ready(function(){
+      $('select').formSelect();
     });
   }
 
@@ -83,11 +90,19 @@ export class BookingOverviewComponent implements OnInit {
     this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
       status: 'cancelled',
     }).then(()=>{
-      M.toast({html:'Boeking werd geannuleerd'});
+      M.toast({html:'Boeking werd geannuleerd', classes: 'rounded custom-toast'});
+    }).then((b)=>{
+      this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges().subscribe((b)=>{
+        this.fireStore.doc<TimeSlot>(`timeslots/${b?.timeslot}`).update({
+          isAvailable: true
+        })
+      });
     }).catch(error => {
       console.log('cancel booking: ' + error);
     });
   }
+
+  //create method to return timeslot with booking id...
 
   openConfirmCancelBooking(id: string) {
     this.cancelBookingId = id;
