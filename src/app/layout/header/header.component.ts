@@ -41,13 +41,11 @@ export class HeaderComponent implements OnInit {
 
   setAdmin() {
     this.user.subscribe((user) => {
-      console.log('setadmin:' +user?.role+ user?.id);
       if (user?.role === 'admin') {
         this.isAdmin = true;
       } else {
         this.isAdmin = false
       }
-      console.log(this.isAdmin)
     })
   }
 }

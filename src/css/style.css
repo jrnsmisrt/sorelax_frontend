@@ -58,7 +58,6 @@ footer.page-footer {
 
 .overviewheadrow {
   border-radius: 6px;
-  margin-bottom: 2px;
   font-size: larger;
 }
 
@@ -66,9 +65,9 @@ footer.page-footer {
   color: #000000;
   border: 1px solid teal;
   border-radius: 6px;
-  margin-bottom: 1px;
   transition-property: background-color;
   transition-duration: 1s;
+
 }
 
 .overviewrow:hover {

@@ -15,8 +15,7 @@
           <a href="/home">Contact</a>
         </li>
         <li>
-          <a routerLink="/login"> Book a Massage</a>
-        </li>
+          <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Book a Massage</a></li>
       </ul>
     </div>
     <div class="col right">
@@ -103,7 +102,8 @@
             Profile</a></li>
           <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My
             Bookings</a></li>
-          <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a>
+          <li class="tab">
+            <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a>
           </li>
         </ul>
         <div class="mobile-user-nav" *ngIf="isAdmin">
@@ -139,11 +139,6 @@
     <li *ngIf="!(afAuthService.userLoggedIn)">
       <a routerLink="/login">
         Login
-      </a>
-    </li>
-    <li *ngIf="(afAuthService.userLoggedIn)">
-      <a [routerLink]="['./','users',afAuthService.getUserUid(), 'dashboard']">
-        Dashboard
       </a>
     </li>
     <li *ngIf="(afAuthService.userLoggedIn)">
