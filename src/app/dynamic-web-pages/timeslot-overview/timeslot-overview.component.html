@@ -12,14 +12,14 @@
       <div *ngFor="let user of users | async">
         <div class="row center overviewrow" *ngIf="user.id == timeslot.customerId">
           <div class="col l3">{{timeslot.date}}</div>
-          <div class="col l3">{{timeslot.time}}</div>
+          <div class="col l3">{{timeslot.startTime}}</div>
           <div class="col l3">{{timeslot.isAvailable|availability}}</div>
           <div class="col l3">{{user.firstName}} {{user.lastName}}</div>
         </div>
       </div>
       <div class="row center overviewrow" *ngIf="timeslot.customerId==null">
         <div class="col l3">{{timeslot.date}}</div>
-        <div class="col l3">{{timeslot.time}}</div>
+        <div class="col l3">{{timeslot.startTime}}</div>
         <div class="col l3">{{timeslot.isAvailable|availability}}</div>
         <div class="col l3"><strong><small>No client assigned</small></strong></div>
       </div>

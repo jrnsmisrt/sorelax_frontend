@@ -27,7 +27,7 @@
               </button>
               <br>
               <strong class="teal-text" *ngIf="confirmedTimeslot">U selecteerde: {{confirmedTimeslot.date}}
-                om {{confirmedTimeslot.time}}
+                om {{confirmedTimeslot.startTime}}
               </strong>
             </div>
           </div>
@@ -60,32 +60,31 @@
       <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-large">Confirm</a>
     </div>
   </div>
+
   <div id="timeslotModal" class="modal">
     <div class="modal-content">
       <h4>Timeslots</h4>
       <p>Selecteer een Timeslot</p>
       <div>
-        <div class="row center">
-          <div class="col l2"><strong>Datum</strong></div>
-          <div class="col l1"><strong>Uur</strong></div>
-          <div class="col l3"><strong>Selecteer</strong></div>
+        <div class="row overviewheadrow teal white-text center">
+          <div class="col l2 s3"><strong>Datum</strong></div>
+          <div class="col l1 s3"><strong>Uur</strong></div>
+          <div class="col l3 s6"><strong>Selecteer</strong></div>
         </div>
-
-        <div class="row center" *ngFor="let timeslot of timeslots$ | async">
-          <div *ngIf="timeslot.isAvailable">
-            <div class="col l2 overviewcol">{{timeslot.date}}</div>
-            <div class="col l1 overviewcol">{{timeslot.time}}</div>
-            <div class="col l3 overviewcol">
-              <button (click)="selectTimeslot(timeslot)" class="waves-effect waves-teal btn-small">
+        <div class="row overviewrow center" *ngFor="let timeslot of timeslots$ | async">
+            <div class="col l2 s3 overviewcol">{{timeslot.date}}</div>
+            <div class="col l1 s3 overviewcol">{{timeslot.startTime}}</div>
+            <div class="col l3 s6 overviewcol">
+              <button (click)="selectTimeslot(timeslot)" [disabled]="!timeslot.isAvailable" class="waves-effect waves-teal btn-small">
                 Selecteer
               </button>
             </div>
           </div>
-        </div>
+
       </div>
       <div class="modal-footer">
         <div *ngIf="selectedTimeslot as t">
-          <p>U selecteerde: {{t.date}} om {{t.time}}</p>
+          <p>U selecteerde: {{t.date}} om {{t.startTime}}</p>
           <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
             Confirm
           </button>
@@ -101,18 +100,16 @@
       <p>Select a massage</p>
       <div>
         <div class="row">
-          <div class="col l6 teal-text" *ngIf="selectedMassage">U hebt een <strong>{{selectedMassage.type}}</strong> massage geselecteerd</div>
-          <div class="col l6 teal-text" *ngIf="selectedDuration">U hebt <strong>{{selectedDuration}}</strong> minuten geselecteerd</div>
+          <div class="col s6 teal-text" *ngIf="selectedMassage">U hebt een <strong>{{selectedMassage.type}}</strong> massage geselecteerd</div>
+          <div class="col s6 teal-text" *ngIf="selectedDuration">U hebt <strong>{{selectedDuration}}</strong> minuten geselecteerd</div>
         </div>
         <div class="row">
-          <div class="col l6"><strong>Massage</strong></div>
-          <div class="col l6"><strong>Available durations</strong></div>
-
+          <div class="col s6"><strong>Massage</strong></div>
+          <div class="col s6"><strong>Available durations</strong></div>
         </div>
 
         <div class="row">
-
-          <div class="col l6 overviewcol">
+          <div class="col s6 overviewcol">
             <div class="row" *ngFor="let massage of dbMassages | async">
               <div class="col">
                 <button class="btn-small waves-effect waves-teal"
@@ -120,7 +117,7 @@
               </div>
             </div>
           </div>
-          <div class="col l6 overviewcol">
+          <div class="col s6 overviewcol">
             <div class="row" *ngFor="let duration of dbMassageDurations">
               <div class="col">
                 <button class="btn-small waves-effect waves-teal"

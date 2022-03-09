@@ -53,7 +53,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
-    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots');
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('isAvailable', 'desc').orderBy('date', 'asc').orderBy('startingTime','asc'));
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
@@ -74,7 +74,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
       userUid: firebase.auth().currentUser?.uid,
       timeslot: this.confirmedTimeslot.id,
       date: this.confirmedTimeslot.date,
-      time: this.confirmedTimeslot.time,
+      time: this.confirmedTimeslot.startTime,
       massage: this.confirmedMassage,
       duration: this.confirmedDuration,
       personalMessage: this.bookingForm.get(['message'])?.value,

@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {collection, Firestore, getFirestore, getDocs, orderBy, query, onSnapshot,} from "@angular/fire/firestore";
 import {Observable} from "rxjs";
 import {User} from "../../model/User";
 import {UserService} from "../../services/user.service";

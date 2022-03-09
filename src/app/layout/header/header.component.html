@@ -93,7 +93,7 @@
       <a href="#">Contact</a>
     </li>
     <li>
-      <a routerLink="/login"> Book a Massage</a>
+      <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Book a Massage</a>
     </li>
     <li>
       <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
