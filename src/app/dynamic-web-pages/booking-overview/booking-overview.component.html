@@ -24,6 +24,7 @@
     <div class="col s3"><i class="material-icons">pending</i></div>
   </div>
   <div *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus">
+    <div *ngIf="booking.status!=='DELETED'">
     <a [routerLink]="" (click)="openModal(booking.id, booking.userUid)">
       <div class="row center overviewrow">
         <div class="col s3 overviewcol">{{booking.date}}</div>
@@ -31,7 +32,7 @@
         <div class="col s3 overviewcol">{{booking.massage}}</div>
         <div class="col s3 overviewcol">{{booking.status}}</div>
       </div>
-    </a>
+    </a></div>
   </div>
 </div>
 

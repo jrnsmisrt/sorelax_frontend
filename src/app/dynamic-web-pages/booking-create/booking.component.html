@@ -66,25 +66,26 @@
       <h4>Timeslots</h4>
       <p>Selecteer een Timeslot</p>
       <div>
-        <div class="row overviewheadrow teal white-text center">
-          <div class="col l2 s3"><strong>Datum</strong></div>
-          <div class="col l1 s3"><strong>Uur</strong></div>
-          <div class="col l3 s6"><strong>Selecteer</strong></div>
-        </div>
         <div class="row overviewrow center" *ngFor="let timeslot of timeslots$ | async">
-            <div class="col l2 s3 overviewcol">{{timeslot.date}}</div>
-            <div class="col l1 s3 overviewcol">{{timeslot.startTime}}</div>
-            <div class="col l3 s6 overviewcol">
-              <button (click)="selectTimeslot(timeslot)" [disabled]="!timeslot.isAvailable" class="waves-effect waves-teal btn-small">
-                Selecteer
-              </button>
-            </div>
+          <div class="col s6"><strong>Datum</strong></div>
+          <div class="col s6 overviewcol">{{timeslot.date}}</div>
+          <div class="col s6"><strong>Start</strong></div>
+          <div class="col s6 overviewcol">{{timeslot.startTime}}</div>
+          <div class="col s6"><strong>Einde</strong></div>
+          <div class="col s6 overviewcol">{{timeslot.endTime}}</div>
+          <div class="col s6"><strong>Selecteer</strong></div>
+          <div class="col s6 overviewcol">
+            <button (click)="selectTimeslot(timeslot)" [disabled]="!timeslot.isAvailable"
+                    class="waves-effect waves-teal btn-small">
+              Selecteer
+            </button>
           </div>
+        </div>
 
       </div>
       <div class="modal-footer">
         <div *ngIf="selectedTimeslot as t">
-          <p>U selecteerde: {{t.date}} om {{t.startTime}}</p>
+          <p class="teal-text"><strong>U selecteerde: <br> {{t.date}} van {{t.startTime}} tot {{t.endTime}}</strong></p>
           <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
             Confirm
           </button>
@@ -100,8 +101,12 @@
       <p>Select a massage</p>
       <div>
         <div class="row">
-          <div class="col s6 teal-text" *ngIf="selectedMassage">U hebt een <strong>{{selectedMassage.type}}</strong> massage geselecteerd</div>
-          <div class="col s6 teal-text" *ngIf="selectedDuration">U hebt <strong>{{selectedDuration}}</strong> minuten geselecteerd</div>
+          <div class="col s6 teal-text" *ngIf="selectedMassage">U hebt een <strong>{{selectedMassage.type}}</strong>
+            massage geselecteerd
+          </div>
+          <div class="col s6 teal-text" *ngIf="selectedDuration">U hebt <strong>{{selectedDuration}}</strong> minuten
+            geselecteerd
+          </div>
         </div>
         <div class="row">
           <div class="col s6"><strong>Massage</strong></div>

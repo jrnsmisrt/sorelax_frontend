@@ -6,8 +6,10 @@
       <label>Date</label>
       <input formControlName="date" type="text" class="datepicker validate" [value]="date"
                                 (change)="setDate()">
-      <label>Time</label>
-      <input formControlName="time" type="text" class="timepicker validate" [value]="time" (change)="setTime()">
+      <label>Start time</label>
+      <input formControlName="startTime" type="text" class="timepicker validate" [value]="startTime" (change)="setStartTime()">
+      <label>End time</label>
+      <input formControlName="endTime" type="text" class="endtimepicker validate" [value]="endTime" (change)="setEndTime()">
       <button class="btn-large waves-teal waves-effect">submit</button>
     </form>
   </div>

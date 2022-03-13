@@ -9,11 +9,13 @@ import {FormBuilder, FormControl, Validators} from "@angular/forms";
 })
 export class CreateTimeslotComponent implements OnInit {
   date!: string | number | string[] | undefined;
-  time!: string | number | string[] | undefined;
+  startTime!: string | number | string[] | undefined;
+  endTime!: string | number | string[] | undefined;
 
   timeslotForm = this.formBuilder.group({
     date: new FormControl('', [Validators.required]),
-    time: new FormControl('', [Validators.required])
+    startTime: new FormControl('', [Validators.required]),
+    endTime: new FormControl('', [Validators.required])
   })
 
   constructor(private fireStore: AngularFirestore,
@@ -24,12 +26,16 @@ export class CreateTimeslotComponent implements OnInit {
     $(document).ready(function () {
       $('.datepicker').datepicker({
         format: "dd/mm/yyyy",
-        //maxDate: new Date(new Date().getFullYear()+1),
         minDate: new Date(Date.now())
       });
     });
     $(document).ready(function () {
       $('.timepicker').timepicker({
+        twelveHour: false
+      });
+    });
+    $(document).ready(function () {
+      $('.endtimepicker').timepicker({
         twelveHour: false
       });
     });
@@ -43,11 +49,13 @@ export class CreateTimeslotComponent implements OnInit {
   createTimeslot() {
     this.timeslotForm.patchValue({
       date: this.date,
-      time: this.time
+      startTime: this.startTime,
+      endTime: this.endTime
     });
     this.fireStore.collection('timeslots').add({
       date: this.date,
-      time: this.time,
+      startTime: this.startTime,
+      endTime: this.endTime,
       isAvailable: true,
       confirmed: false
     }).then((docRef)=>{
@@ -89,10 +97,17 @@ export class CreateTimeslotComponent implements OnInit {
     });
   }
 
-  setTime() {
-    this.time = $('.timepicker').val();
+  setStartTime() {
+    this.startTime = $('.timepicker').val();
     this.timeslotForm.patchValue({
-      time: this.time
+      time: this.startTime
+    });
+  }
+
+  setEndTime() {
+    this.endTime = $('.endtimepicker').val();
+    this.timeslotForm.patchValue({
+      endTime: this.endTime
     });
   }
 }
