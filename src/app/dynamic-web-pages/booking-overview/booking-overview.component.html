@@ -9,7 +9,7 @@
     </div>
     <div class="col l1 s3">
       <label for="filter_status">filter op status</label>
-      <select id="filter_status" class="select-dropdown teal-text" [(ngModel)]="searchStatus">
+      <select id="filter_status" class="select select-dropdown teal-text" [(ngModel)]="searchStatus">
         <option value="">show all</option>
         <option value="confirmed">confirmed</option>
         <option value="cancelled">cancelled</option>
@@ -17,6 +17,15 @@
       </select>
     </div>
   </div>
+
+    <ul class="collapsible" data-collapsible="expandable">
+      <li *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus">
+        <div class="collapsible-header">{{booking.date}} {{booking.time}} {{booking.status}}</div>
+        <div class="collapsible-body"><span>{{booking.duration}} {{booking.massage}} {{booking.requestedOn}}</span><br>
+        <em>{{booking.personalMessage}}</em></div>
+      </li>
+    </ul>
+
   <div class="row center teal lighten-3 white-text center overviewheadrow">
     <div class="col s3"><i class="material-icons">calendar_month</i></div>
     <div class="col s3"><i class="material-icons">schedule</i></div>
@@ -25,14 +34,15 @@
   </div>
   <div *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus">
     <div *ngIf="booking.status!=='DELETED'">
-    <a [routerLink]="" (click)="openModal(booking.id, booking.userUid)">
-      <div class="row center overviewrow">
-        <div class="col s3 overviewcol">{{booking.date}}</div>
-        <div class="col s3 overviewcol">{{booking.time}}</div>
-        <div class="col s3 overviewcol">{{booking.massage}}</div>
-        <div class="col s3 overviewcol">{{booking.status}}</div>
-      </div>
-    </a></div>
+      <!-- <a [routerLink]="" (click)="openModal(booking.id, booking.userUid)">
+         <div class="row center overviewrow">
+           <div class="col s3 overviewcol">{{booking.date}}</div>
+           <div class="col s3 overviewcol">{{booking.time}}</div>
+           <div class="col s3 overviewcol">{{booking.massage}}</div>
+           <div class="col s3 overviewcol">{{booking.status}}</div>
+         </div>
+       </a>-->
+    </div>
   </div>
 </div>
 
