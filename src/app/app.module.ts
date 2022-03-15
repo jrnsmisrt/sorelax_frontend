@@ -29,6 +29,7 @@ import {AvailabilityPipe} from "./pipes/AvailabilityPipe";
 import {FilterUserName} from "./pipes/Filter-UserName";
 import {FilterDate} from "./pipes/Filter-Date";
 import {FilterStatus} from "./pipes/Filter-Status";
+import {FilterMassage} from "./pipes/Filter-Massage";
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import {FilterStatus} from "./pipes/Filter-Status";
     AvailabilityPipe,
     FilterUserName,
     FilterDate,
-    FilterStatus
+    FilterStatus,
+    FilterMassage
 
 
   ],
@@ -68,7 +70,7 @@ import {FilterStatus} from "./pipes/Filter-Status";
         ReactiveFormsModule,
         FormsModule,
     ],
-  providers: [AngularFirestore, AvailabilityPipe, FilterUserName, FilterDate, FilterStatus],
+  providers: [AngularFirestore, AvailabilityPipe, FilterUserName, FilterDate, FilterStatus, FilterMassage],
 
   bootstrap: [
     AppComponent]

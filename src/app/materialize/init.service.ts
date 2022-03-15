@@ -15,6 +15,12 @@ export class InitService {
     }, 1);
   }
 
+  initModal(){
+    $(document).ready(function () {
+      $('.modal').modal();
+    });
+  }
+
   initSideNav():any{
     $(document).ready(function(){
       $('.sidenav').sidenav();
@@ -23,7 +29,7 @@ export class InitService {
 
   initSelect(){
     $(document).ready(function(){
-      $('select').formSelect();
+      $('.select').formSelect();
     });
   }
 

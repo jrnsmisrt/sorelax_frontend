@@ -35,11 +35,6 @@ p {
   width: 100%;
 }
 
-.modal {
-  width: 90%;
-  height: 90%;
-}
-
 #index-banner .section {
   top: 10%;
 }
@@ -54,6 +49,29 @@ p {
 
 footer.page-footer {
   margin: 0;
+}
+
+.mybookingwarning{
+  border: 1px solid teal;
+  border-radius: 4px;
+  font-style: italic;
+}
+
+
+.collapsible {
+  border-radius: 2px;
+  background-color: #fff;
+  padding: 0;
+}
+
+.collapsible-header {
+  background-color: #00acc1;
+  margin: 0;
+}
+
+.collapsible-body {
+  margin: 0;
+  padding: 0;
 }
 
 .overviewheadrow {
@@ -97,7 +115,6 @@ a.mobile-user-nav-link {
 
 #toast-container {
   top: 10%;
-
 }
 
 .custom-toast {

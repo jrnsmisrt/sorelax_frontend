@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Booking} from "../../model/Booking";
-import {Observable, Subscription} from "rxjs";
+import {Observable} from "rxjs";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
@@ -12,7 +12,6 @@ import {TimeSlot} from "../../model/TimeSlot";
 @Component({
   selector: 'app-booking-overview',
   templateUrl: './booking-overview.component.html',
-  styleUrls: ['./booking-overview.component.css']
 })
 export class BookingOverviewComponent implements OnInit {
   bookingCollection!: AngularFirestoreCollection<Booking>;
@@ -26,39 +25,24 @@ export class BookingOverviewComponent implements OnInit {
 
   bookingUserFullName!: string;
   users$!: Observable<User[]>;
-
   user$!: Observable<User | undefined>;
+
   searchDate!: string;
   searchStatus!: string;
-
+  searchMassage!: string;
 
   constructor(private fireStore: AngularFirestore, private auth: AuthService, private userService: UserService, private init: InitService) {
     this.bookingCollection = this.fireStore.collection('bookings');
     this.bookings$ = this.getAllBookings();
     this.users$ = this.userService.allUsers;
     this.user$ = this.fireStore.collection<User>('users').doc(`${firebase.auth().currentUser?.uid}`).valueChanges();
-
-    $(document).ready(function(){
-      console.log('initiate: collapsible');
-      $('.collapsible').collapsible({
-        accordion: false
-      });
-      console.log('end: collapsible');
-    });
   }
 
   ngOnInit(): void {
-    $(document).ready(function () {
-      $('.modal').modal();
-    });
-
-    $(document).ready(function () {
-      $('.select').formSelect();
-    });
-
+    this.init.initCollapsible();
+    this.init.initSelect();
+    this.init.initModal();
   }
-
-
 
   getAllBookings(): Observable<Booking[]> {
     return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', firebase.auth().currentUser?.uid)
@@ -68,7 +52,6 @@ export class BookingOverviewComponent implements OnInit {
   setBooking(bookingId: string) {
     this.booking$ = this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges();
   }
-
 
   setUserName(userId: string | undefined) {
     this.userService.getUser(userId).subscribe((user) => {
@@ -100,8 +83,8 @@ export class BookingOverviewComponent implements OnInit {
     this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
       status: 'cancelled',
     }).then(() => {
-      M.toast({html: 'Boeking werd geannuleerd', classes: 'rounded custom-toast'});
-    }).then((b) => {
+      M.toast({html: 'Boeking werd geannuleerd', classes: 'rounded teal'});
+    }).then(() => {
       this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges().subscribe((b) => {
         this.fireStore.doc<TimeSlot>(`timeslots/${b?.timeslot}`).update({
           isAvailable: true
@@ -112,17 +95,9 @@ export class BookingOverviewComponent implements OnInit {
     });
   }
 
-  //create method to return timeslot with booking id...
-
   openConfirmCancelBooking(id: string) {
     this.cancelBookingId = id;
     M.Modal.getInstance(document.getElementById('confirmCancelBooking')!).open();
-  }
-
-  openModal(bookingId: string | undefined, customerId: string | undefined) {
-    this.booking$ = this.fireStore.collection<Booking>('bookings').doc(`${bookingId}`).valueChanges();
-    this.setUserName(customerId);
-    M.Modal.getInstance(document.getElementById('cancelModal')!).open();
   }
 
 
