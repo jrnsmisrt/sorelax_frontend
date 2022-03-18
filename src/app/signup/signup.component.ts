@@ -7,8 +7,8 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
 })
+
 export class SignupComponent implements OnInit {
   currentUserUid!: string;
 
@@ -34,7 +34,8 @@ export class SignupComponent implements OnInit {
 
 
   constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth,
-              private fireStore: AngularFirestore, private router: Router) {
+              private fireStore: AngularFirestore, private router: Router,
+  ) {
     this.firebaseErrorMessage = '';
   }
 
@@ -63,7 +64,6 @@ export class SignupComponent implements OnInit {
   }
 
   signupUser() {
-
     return this.afAuth.createUserWithEmailAndPassword(this.signupForm.get('email')?.value, this.signupForm.get('password')?.value)
       .then((result) => {
         result.user!.sendEmailVerification();
@@ -85,8 +85,6 @@ export class SignupComponent implements OnInit {
         if (error.code)
           return {isValid: false, message: error.message};
       });
-
-
   }
 
   onSubmit() {
@@ -98,11 +96,11 @@ export class SignupComponent implements OnInit {
     this.signupForm.markAllAsTouched();
 
     if (this.signupForm.invalid) {
-      M.toast({html: 'Oops! Think you forgot a field or did not use valid input', classes: 'rounded custom-toast'});
+      M.toast({html: 'Oops! Think you forgot a field or did not use valid input', classes: 'rounded teal'});
     } else {
 
       this.signupUser()!.then(() => {
-        M.toast({html: `Sign up has been succesful!`, classes: 'rounded  custom-toast'});
+        M.toast({html: `Sign up has been succesful!`, classes: 'rounded teal'});
         this.router.navigate(['/login']);
       });
     }
@@ -110,9 +108,8 @@ export class SignupComponent implements OnInit {
 
   clear() {
     this.signupForm.reset();
-    M.toast({html: 'form has been cleared', classes: 'rounded  custom-toast'});
+    M.toast({html: 'form has been cleared', classes: 'rounded teal'});
   }
-
 
   get firstName() {
     return this.signupForm.get('firstName');

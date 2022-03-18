@@ -2,19 +2,18 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {InitService} from "../../materialize/init.service";
-import {AuthService} from "../../services/auth.service";
-import {TimeSlot} from "../../model/TimeSlot";
+import {InitService} from "../materialize/init.service";
+import {AuthService} from "../services/auth.service";
+import {TimeSlot} from "../model/TimeSlot";
 import {Observable} from "rxjs";
-import {Booking} from "../../model/Booking";
+import {Booking} from "../model/Booking";
 import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
-import {Massage} from "../../model/Massage";
+import {Massage} from "../model/Massage";
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
-  styleUrls: ['./booking.component.css']
 })
 export class BookingComponent implements OnInit, AfterViewInit {
   uid!: string;

@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {Booking} from "../../model/Booking";
+import {Booking} from "../model/Booking";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {User} from "../../model/User";
+import {User} from "../model/User";
+import {InitService} from "../materialize/init.service";
 
 @Component({
   selector: 'app-admin-booking-overview',
   templateUrl: './admin-booking-overview.component.html',
-  styleUrls: ['./admin-booking-overview.component.css']
 })
 export class AdminBookingOverviewComponent implements OnInit {
   bookings$!: Observable<Booking[]>;
@@ -18,25 +18,15 @@ export class AdminBookingOverviewComponent implements OnInit {
   searchDate!: string;
   searchStatus!: string;
 
-  constructor(private fireStore: AngularFirestore) {
+  constructor(private fireStore: AngularFirestore, private init: InitService) {
     this.bookings$ = this.fireStore.collection<Booking>('bookings', ref => ref.orderBy('date', 'asc').orderBy('time', 'asc')).valueChanges();
     this.users$ = this.fireStore.collection<User>('users').valueChanges();
   }
 
   ngOnInit(): void {
-    $(document).ready(function () {
-      $('.modal').modal();
-    });
-
-    $(document).ready(function () {
-      $('.datepicker').datepicker({
-        format: "dd/mm/yyyy",
-      });
-    });
-
-    $(document).ready(function(){
-      $('select').formSelect();
-    });
+    this.init.initModal();
+    this.init.initDatePicker();
+    this.init.initSelect();
   }
 
 
@@ -82,9 +72,9 @@ export class AdminBookingOverviewComponent implements OnInit {
   }
 
   setDate(searchDate: string) {
-   /* let dp = M.Datepicker.getInstance(document.getElementById('filter_datum')!);
-    dp.setInputValue();
-    this.searchDate = dp.date.toLocaleString();*/
+    /* let dp = M.Datepicker.getInstance(document.getElementById('filter_datum')!);
+     dp.setInputValue();
+     this.searchDate = dp.date.toLocaleString();*/
     this.searchDate = searchDate;
 
     console.log(this.searchDate);

@@ -28,8 +28,6 @@
           <label>Date Of Birth</label>
           <input class="datepicker validate" formControlName="dateOfBirth" type="text"
                  placeholder="Date of birth">
-          <!-- <input class="validate" autocomplete="on" formControlName="dateOfBirth" type="text"
-                  placeholder="Date of birth">-->
           <div *ngIf="dateOfBirth!.invalid && (dateOfBirth!.dirty || dateOfBirth!.touched)">
             <div *ngIf="dateOfBirth!.errors?.['required']" class="text-error red-text">
               <small>Date of Birth is required.</small>

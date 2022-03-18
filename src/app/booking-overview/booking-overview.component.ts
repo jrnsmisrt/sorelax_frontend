@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Booking} from "../../model/Booking";
+import {Booking} from "../model/Booking";
 import {Observable} from "rxjs";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
-import {AuthService} from "../../services/auth.service";
-import {UserService} from "../../services/user.service";
-import {User} from "../../model/User";
+import {AuthService} from "../services/auth.service";
+import {UserService} from "../services/user.service";
+import {User} from "../model/User";
 import firebase from "firebase/compat/app";
-import {InitService} from "../../materialize/init.service";
-import {TimeSlot} from "../../model/TimeSlot";
+import {InitService} from "../materialize/init.service";
+import {TimeSlot} from "../model/TimeSlot";
 
 @Component({
   selector: 'app-booking-overview',

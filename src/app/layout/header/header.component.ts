@@ -4,18 +4,19 @@ import {AuthService} from "../../services/auth.service";
 import {User} from "../../model/User";
 import {UserService} from "../../services/user.service";
 import {Observable} from "rxjs";
+import {InitService} from "../../materialize/init.service";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
   user!: Observable<User | any>;
-  user$ : Observable<User | undefined>
+  user$: Observable<User | undefined>
   isAdmin!: boolean;
 
-  constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth, private userService: UserService) {
+  constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth,
+              private userService: UserService, private init: InitService) {
     this.user = this.afAuthService.user$;
     this.user$ = this.userService.user;
     this.isAdmin = userService.isAdmin;
@@ -23,18 +24,15 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    $( document ).ready(function(){
-    $(".dropdown-trigger").dropdown();
-    });
+    this.init.initDropdown();
   }
 
   logout(): void {
     this.afAuthService.signOut().then(() => {
       if (!this.afAuthService.isUserSignedIn()) {
-        M.toast({html: `Succesfully logged out!`})
-      }
-      else{
-        M.toast({html:`Oops! Something went wrong, please try again.`})
+        M.toast({html: `Succesfully logged out!`, classes: 'rounded teal'})
+      } else {
+        M.toast({html: `Oops! Something went wrong, please try again.`, classes: 'rounded teal'})
       }
     })
   }

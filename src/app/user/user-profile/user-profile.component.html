@@ -3,93 +3,130 @@
     <div class="col s12 teal-text"><h3 class="center">My profile</h3></div>
   </div>
   <div class="row" *ngIf="user|async as user">
-    <div class="row">
-      <div class="col s6">
-        <a><i class="teal-text material-icons">edit</i></a>
+    <form [formGroup]="editProfileForm" (ngSubmit)="saveProfile()">
+      <div class="row">
+        <div class="col s6">
+          <button class="btn waves-effect waves-light" *ngIf="!isEditable" (click)="editProfile()"><i class="white-text material-icons">edit</i></button>
+          <button class="btn waves-effect waves-light" *ngIf="isEditable" (click)="saveProfile()"  [disabled]="!editProfileForm.valid"><i class="white-text material-icons medium">save</i></button>
+          <button class="btn waves-effect waves-light" *ngIf="isEditable" (click)="clearForm()"><i class="white-text material-icons medium">clear</i></button>
+        </div>
+        <div class="col push-s5">
+          <a><i class="red-text material-icons">delete</i></a>
+        </div>
       </div>
-      <div class="col push-s5">
-        <a><i class="red-text material-icons">delete</i></a>
+      <div class="row teal lighten-3 white-text overviewheadrow">
+        <div class="col s6">Firstname</div>
+        <div class="col s6">Lastname</div>
       </div>
-    </div>
-    <div class="row teal lighten-3 white-text overviewheadrow">
-      <div class="col s6">Firstname</div>
-      <div class="col s6">Lastname</div>
-    </div>
-    <div class="row overviewrow">
-      <div class="col s6"><strong>{{user.firstName}}</strong></div>
-      <div class="col s6"><strong>{{user.lastName}}</strong></div>
-    </div>
-    <div class="row  teal lighten-3 white-text overviewheadrow">
-      <div class="col l6">Date of Birth</div>
-    </div>
-    <div class="row overviewrow">
-      <div class="col l6">{{user.dateOfBirth}}</div>
-    </div>
-    <div class="row  teal lighten-3 white-text overviewheadrow">
-      <div class="col l6 s6">User ID</div>
-      <div class="col l6 s3">Role</div>
-    </div>
-    <div class="row overviewrow">
-      <div class="col l6 s6">{{user.id}}</div>
-      <div class="col l6 s6">{{user.role}}</div>
-    </div>
-    <div class="row  teal lighten-3 white-text overviewheadrow">
-      <div class="col s6">
-        E-mail
+      <div class="row overviewrow">
+        <div class="col s6"><strong>{{user.firstName}}</strong></div>
+        <div class="col s6"><strong>{{user.lastName}}</strong></div>
+        <div class="input-field" *ngIf="isEditable">
+          <div class="col s6"><input class="input" formControlName="firstName" type="text"></div>
+          <div class="col s6"><input class="input" formControlName="lastName" type="text"></div>
+        </div>
       </div>
-      <div class="col s6">
-        Phonenumber
+      <div class="row  teal lighten-3 white-text overviewheadrow">
+        <div class="col l6">Date of Birth</div>
       </div>
-    </div>
-    <div class="row overviewrow">
-      <div class="col s6">
-        {{user.email}}</div>
-      <div class="col s6">
-        {{user.phoneNumber}}
+      <div class="row overviewrow">
+        <div class="col l6">{{user.dateOfBirth}}</div>
+        <div *ngIf="isEditable">
+          <div class="col s6"><input class="datepicker input" formControlName="dateOfBirth" type="text"
+                                     placeholder="{{user.dateOfBirth}}"></div>
+        </div>
       </div>
-    </div>
-    <div class="row teal lighten-3 white-text overviewheadrow">
-      <div class="col s4">
-        Street
+      <div class="row  teal lighten-3 white-text overviewheadrow">
+        <div class="col l6 s6">User ID</div>
+        <div class="col l6 s3">Role</div>
       </div>
-      <div class="col s3">
-        Nr.
+      <div class="row overviewrow">
+        <div class="col l6 s6">{{user.id}}</div>
+        <div class="col l6 s6">{{user.role}}</div>
       </div>
-      <div class="col s3">
-        Postbox
+      <div class="row  teal lighten-3 white-text overviewheadrow">
+        <div class="col s6">
+          E-mail
+        </div>
+        <div class="col s6">
+          Phonenumber
+        </div>
       </div>
-    </div>
-    <div class="row overviewrow">
-      <div class="col s4">
-        {{user.address.street}}
+      <div class="row overviewrow">
+        <div class="col s6">
+          {{user.email}}</div>
+        <div class="col s6">
+          {{user.phoneNumber}}
+        </div><br>
+        <div class="input-field" *ngIf="isEditable">
+          <div class="col s6"><input class="input" formControlName="email" type="text" placeholder="{{user.email}}"></div>
+          <div class="col s6"><input class="input" formControlName="phoneNumber" type="text" placeholder="{{user.phoneNumber}}"></div>
+        </div>
       </div>
-      <div class="col s3">
-        {{user.address.houseNumber}}
+      <div class="row teal lighten-3 white-text overviewheadrow">
+        <div class="col s4">
+          Street
+        </div>
+        <div class="col s3">
+          Nr.
+        </div>
+        <div class="col s3">
+          Postbox
+        </div>
       </div>
-      <div class="col s3">
-        {{user.address.postBox}}
+      <div formGroupName="address">
+        <div class="row overviewrow">
+          <div class="col s4">
+            {{user.address.street}}
+          </div>
+          <div class="col s3">
+            {{user.address.houseNumber}}
+          </div>
+          <div class="col s3">
+            {{user.address.postBox}}
+          </div><br>
+          <div class="input-field" *ngIf="isEditable">
+            <div class="col s4"><input class="input" formControlName="street" type="text" placeholder="{{user.address.street}}"></div>
+            <div class="col s3"><input class="input" formControlName="houseNumber" type="text" placeholder="{{user.address.houseNumber}}"></div>
+            <div class="col s3"><input class="input" formControlName="postBox" type="text" placeholder="{{user.address.postBox}}"></div>
+          </div>
+        </div>
+        <div class="row  teal lighten-3 white-text overviewheadrow">
+          <div class="col s4">
+            City
+          </div>
+          <div class="col s3">
+            Postal code
+          </div>
+          <div class="col s3">
+            Country
+          </div>
+        </div>
+        <div class="row overviewrow">
+          <div class="col s4">
+            {{user.address.city}}
+          </div>
+          <div class="col s3">
+            {{user.address.postalCode}}
+          </div>
+          <div class="col s3">{{user.address.country}}
+          </div>
+          <div class="input-field" *ngIf="isEditable">
+            <div class="col s4"><input class="input" formControlName="city" type="text" placeholder="{{user.address.city}}"></div>
+            <div class="col s3"><input class="input" formControlName="postalCode" type="text" placeholder="{{user.address.postalCode}}"></div>
+            <div class="col s3"><input class="input" formControlName="country" type="text" placeholder="{{user.address.country}}"></div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row  teal lighten-3 white-text overviewheadrow">
-      <div class="col s4">
-        City
+      <div *ngIf="isEditable" class="row">
+        <div class="col s6">
+          <button class="waves-effect waves-light btn" *ngIf="isEditable" (click)="saveProfile()"  [disabled]="!editProfileForm.valid"><i class="white-text material-icons medium">save</i></button>
+          <button class="waves-effect waves-light btn" *ngIf="isEditable" (click)="clearForm()"><i class="white-text material-icons medium">clear</i></button>
+        </div>
+        <div class="col push-s5">
+          <a><i class="red-text material-icons small">delete</i></a>
+        </div>
       </div>
-      <div class="col s3">
-        Postal code
-      </div>
-      <div class="col s3">
-        Country
-      </div>
-    </div>
-    <div class="row overviewrow">
-      <div class="col s4">
-        {{user.address.city}}
-      </div>
-      <div class="col s3">
-        {{user.address.postalCode}}
-      </div>
-      <div class="col s3">{{user.address.country}}
-      </div>
-    </div>
+    </form>
   </div>
 </div>

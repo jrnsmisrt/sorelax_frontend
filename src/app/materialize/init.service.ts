@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import 'materialize-css';
 import 'materialize-css/dist/css/materialize.min.css';
 
@@ -7,7 +7,8 @@ import 'materialize-css/dist/css/materialize.min.css';
 })
 export class InitService {
 
-  constructor() { }
+  constructor() {
+  }
 
   initParallax() {
     setTimeout(() => {
@@ -15,21 +16,27 @@ export class InitService {
     }, 1);
   }
 
-  initModal(){
+  initModal() {
     $(document).ready(function () {
       $('.modal').modal();
     });
   }
 
-  initSideNav():any{
-    $(document).ready(function(){
+  initSideNav(): any {
+    $(document).ready(function () {
       $('.sidenav').sidenav();
     });
   }
 
-  initSelect(){
-    $(document).ready(function(){
+  initSelect() {
+    $(document).ready(function () {
       $('.select').formSelect();
+    });
+  }
+
+  initDropdown() {
+    $(document).ready(function () {
+      $(".dropdown-trigger").dropdown();
     });
   }
 
@@ -63,14 +70,14 @@ export class InitService {
 
   }
 
-  initSlider(){
-    $(document).ready(function(){
+  initSlider() {
+    $(document).ready(function () {
       $('.slider').slider();
     });
   }
 
-  initCollapsible(){
-    $(document).ready(function(){
+  initCollapsible() {
+    $(document).ready(function () {
       $('.collapsible').collapsible();
     });
   }

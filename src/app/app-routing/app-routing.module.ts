@@ -1,23 +1,23 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from "@angular/router";
 import {HomeComponent} from "../static-web-pages/home/home.component";
-import {LoginComponent} from "../dynamic-web-pages/login/login.component";
-import {SignupComponent} from "../dynamic-web-pages/signup/signup.component";
-import {DashboardComponent} from "../dynamic-web-pages/dashboard/dashboard.component";
+import {LoginComponent} from "../login/login.component";
+import {SignupComponent} from "../signup/signup.component";
+import {DashboardComponent} from "../dashboard/dashboard.component";
 
 import {AuthGuard} from "../services/auth.guard";
 import {UserProfileComponent} from "../user/user-profile/user-profile.component";
-import {BookingComponent} from "../dynamic-web-pages/booking-create/booking.component";
+import {BookingComponent} from "../booking-create/booking.component";
 import {AboutComponent} from "../static-web-pages/about/about.component";
 import {MassageComponent} from "../static-web-pages/massage/massage.component";
 import {UsersOverviewComponent} from "../user/users-overview/users-overview.component";
-import {BookingOverviewComponent} from "../dynamic-web-pages/booking-overview/booking-overview.component";
-import {CreateTimeslotComponent} from "../dynamic-web-pages/create-timeslot/create-timeslot.component";
+import {BookingOverviewComponent} from "../booking-overview/booking-overview.component";
+import {CreateTimeslotComponent} from "../create-timeslot/create-timeslot.component";
 import {
   AdminBookingOverviewComponent
-} from "../dynamic-web-pages/admin-booking-overview/admin-booking-overview.component";
+} from "../admin-booking-overview/admin-booking-overview.component";
 import {RoleGuard} from "../services/role.guard";
-import {TimeslotOverviewComponent} from "../dynamic-web-pages/timeslot-overview/timeslot-overview.component";
+import {TimeslotOverviewComponent} from "../timeslot-overview/timeslot-overview.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},

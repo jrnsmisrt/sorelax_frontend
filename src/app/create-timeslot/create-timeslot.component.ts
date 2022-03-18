@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {InitService} from "../materialize/init.service";
 
 @Component({
   selector: 'app-create-timeslot',
   templateUrl: './create-timeslot.component.html',
-  styleUrls: ['./create-timeslot.component.css']
 })
 export class CreateTimeslotComponent implements OnInit {
   date!: string | number | string[] | undefined;
@@ -19,29 +19,17 @@ export class CreateTimeslotComponent implements OnInit {
   })
 
   constructor(private fireStore: AngularFirestore,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private init: InitService) {
   }
 
   ngOnInit(): void {
-    $(document).ready(function () {
-      $('.datepicker').datepicker({
-        format: "dd/mm/yyyy",
-        minDate: new Date(Date.now())
-      });
-    });
-    $(document).ready(function () {
-      $('.timepicker').timepicker({
-        twelveHour: false
-      });
-    });
+    this.init.initDatePicker();
+    this.init.initTimePicker();
+    this.init.initModal();
     $(document).ready(function () {
       $('.endtimepicker').timepicker({
         twelveHour: false
-      });
-    });
-    $(document).ready(function () {
-      $('.modal').modal({
-        preventScrolling: true,
       });
     });
   }
@@ -58,27 +46,11 @@ export class CreateTimeslotComponent implements OnInit {
       endTime: this.endTime,
       isAvailable: true,
       confirmed: false
-    }).then((docRef)=>{
+    }).then((docRef) => {
       this.fireStore.collection('timeslots').doc(docRef.id).update({
         id: docRef.id
       })
     })
-
-    /*
-    if (this.timeslotForm.invalid) {
-      this.timeslotForm.markAllAsTouched();
-    } else {
-      return this.fireStore.collection('timeslots').doc().set({
-        date: this.date,
-        time: this.time,
-        isAvailable: true,
-        confirmed: false
-      }).then(() => {
-        this.timeslotForm.reset();
-      }).catch(error => {
-        console.log('timeslot form error', error);
-      })
-    }*/
   }
 
   openTimeslotModal() {

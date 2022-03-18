@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
-import {UserService} from "../../services/user.service";
-import {User} from "../../model/User";
+import {UserService} from "../services/user.service";
+import {User} from "../model/User";
 import {Observable, Subscription} from "rxjs";
-import {FirestoreService} from "../../services/firestore.service";
-import {AngularFirestoreCollection} from "@angular/fire/compat/firestore";
+import {FirestoreService} from "../services/firestore.service";
 import firebase from "firebase/compat";
 import DocumentData = firebase.firestore.DocumentData;
 
