@@ -5,13 +5,18 @@
   <div class="row" *ngIf="user|async as user">
     <form [formGroup]="editProfileForm" (ngSubmit)="saveProfile()">
       <div class="row">
-        <div class="col s6">
-          <button class="btn waves-effect waves-light" *ngIf="!isEditable" (click)="editProfile()"><i class="white-text material-icons">edit</i></button>
-          <button class="btn waves-effect waves-light" *ngIf="isEditable" (click)="saveProfile()"  [disabled]="!editProfileForm.valid"><i class="white-text material-icons medium">save</i></button>
-          <button class="btn waves-effect waves-light" *ngIf="isEditable" (click)="clearForm()"><i class="white-text material-icons medium">clear</i></button>
+        <div class="col l1 s2">
+          <button class="btn waves-effect waves-light" *ngIf="!isEditable" (click)="editProfile()"><i
+            class="white-text material-icons">edit</i></button>
+          <button class="btn waves-effect waves-light" *ngIf="isEditable" (click)="saveProfile()"
+                  [disabled]="!editProfileForm.valid"><i class="white-text material-icons medium">save</i></button>
         </div>
-        <div class="col push-s5">
-          <a><i class="red-text material-icons">delete</i></a>
+        <div class="col l10 s8">
+          <button class="btn waves-effect waves-light" *ngIf="isEditable" (click)="clearForm()"><i
+            class="white-text material-icons medium">clear</i></button>
+        </div>
+        <div class="col l1 s2">
+          <button class="btn waves-effect waves-red "><i class="white-text material-icons">delete</i></button>
         </div>
       </div>
       <div class="row teal lighten-3 white-text overviewheadrow">
@@ -30,11 +35,9 @@
         <div class="col l6">Date of Birth</div>
       </div>
       <div class="row overviewrow">
-        <div class="col l6">{{user.dateOfBirth}}</div>
-        <div *ngIf="isEditable">
-          <div class="col s6"><input class="datepicker input" formControlName="dateOfBirth" type="text"
-                                     placeholder="{{user.dateOfBirth}}"></div>
-        </div>
+        <div class="col s6">{{user.dateOfBirth}}</div><br>
+        <div *ngIf="isEditable" class="input-field col s6"><input class="datepicker input" formControlName="dateOfBirth"
+                                                      type="text"></div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
         <div class="col l6 s6">User ID</div>
@@ -57,10 +60,15 @@
           {{user.email}}</div>
         <div class="col s6">
           {{user.phoneNumber}}
-        </div><br>
+        </div>
+        <br>
         <div class="input-field" *ngIf="isEditable">
-          <div class="col s6"><input class="input" formControlName="email" type="text" placeholder="{{user.email}}"></div>
-          <div class="col s6"><input class="input" formControlName="phoneNumber" type="text" placeholder="{{user.phoneNumber}}"></div>
+          <div class="col s6 input-field inline"><input class="input validate" formControlName="email" type="email" placeholder="{{user.email}}">
+            <br>
+            <span class="helper-text" data-error="wrong format" data-success=""><small> </small></span>
+          </div>
+          <div class="col s6"><input class="input validate" formControlName="phoneNumber" type="text"
+                                     placeholder="{{user.phoneNumber}}"></div>
         </div>
       </div>
       <div class="row teal lighten-3 white-text overviewheadrow">
@@ -84,11 +92,15 @@
           </div>
           <div class="col s3">
             {{user.address.postBox}}
-          </div><br>
+          </div>
+          <br>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4"><input class="input" formControlName="street" type="text" placeholder="{{user.address.street}}"></div>
-            <div class="col s3"><input class="input" formControlName="houseNumber" type="text" placeholder="{{user.address.houseNumber}}"></div>
-            <div class="col s3"><input class="input" formControlName="postBox" type="text" placeholder="{{user.address.postBox}}"></div>
+            <div class="col s4"><input class="input" formControlName="street" type="text"
+                                       placeholder="{{user.address.street}}"></div>
+            <div class="col s3"><input class="input" formControlName="houseNumber" type="text"
+                                       placeholder="{{user.address.houseNumber}}"></div>
+            <div class="col s3"><input class="input" formControlName="postBox" type="text"
+                                       placeholder="{{user.address.postBox}}"></div>
           </div>
         </div>
         <div class="row  teal lighten-3 white-text overviewheadrow">
@@ -112,21 +124,35 @@
           <div class="col s3">{{user.address.country}}
           </div>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4"><input class="input" formControlName="city" type="text" placeholder="{{user.address.city}}"></div>
-            <div class="col s3"><input class="input" formControlName="postalCode" type="text" placeholder="{{user.address.postalCode}}"></div>
-            <div class="col s3"><input class="input" formControlName="country" type="text" placeholder="{{user.address.country}}"></div>
+            <div class="col s4"><input class="input" formControlName="city" type="text"
+                                       placeholder="{{user.address.city}}"></div>
+            <div class="col s3"><input class="input" formControlName="postalCode" type="text"
+                                       placeholder="{{user.address.postalCode}}"></div>
+            <div class="col s3"><input class="input" formControlName="country" type="text"
+                                       placeholder="{{user.address.country}}"></div>
           </div>
         </div>
       </div>
       <div *ngIf="isEditable" class="row">
         <div class="col s6">
-          <button class="waves-effect waves-light btn" *ngIf="isEditable" (click)="saveProfile()"  [disabled]="!editProfileForm.valid"><i class="white-text material-icons medium">save</i></button>
-          <button class="waves-effect waves-light btn" *ngIf="isEditable" (click)="clearForm()"><i class="white-text material-icons medium">clear</i></button>
+          <button class="waves-effect waves-light btn" *ngIf="isEditable" (click)="saveProfile()"
+                  [disabled]="!editProfileForm.valid"><i class="white-text material-icons medium">save</i></button>
+          <button class="waves-effect waves-light btn" *ngIf="isEditable" (click)="clearForm()"><i
+            class="white-text material-icons medium">clear</i></button>
         </div>
         <div class="col push-s5">
           <a><i class="red-text material-icons small">delete</i></a>
         </div>
       </div>
     </form>
+  </div>
+
+  <div id="unregisterModal" class="modal">
+    <div class="modal-content">
+      Bent u zeker dat u zich wilt uitschrijven?
+    </div>
+    <div class="modal-footer">
+      <button (submit)="confirmUnregisterProfile()">Uitschrijven</button>
+    </div>
   </div>
 </div>

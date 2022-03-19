@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
-import {Observable, tap} from "rxjs";
+import {Observable} from "rxjs";
 import {User} from "../../model/User";
 import {ActivatedRoute} from "@angular/router";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
@@ -38,6 +38,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit() {
     this.init.initDatePicker();
+    this.init.initModal();
     this.setUser();
     this.editProfileForm = this.formBuilder.group({
       'email': ['', [Validators.email, Validators.required]],
@@ -54,7 +55,6 @@ export class UserProfileComponent implements OnInit {
         'country': ['', Validators.required]
       })
     })
-    this.setEditUser();
     this.user.subscribe((user)=>{
       this.editProfileForm.patchValue({
         email: user?.email,
@@ -81,23 +81,21 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveProfile() {
-    this.isEditable = false;
-    this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).update(this.editProfileForm.value);
+    if(this.editProfileForm.valid) {
+      this.isEditable = false;
+      this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).update(this.editProfileForm.value);
+    }
   }
 
-  private setEditUser() {
-    this.editUser = this.user.pipe(tap(user => {
-      this.editProfileForm.patchValue({
-        email: user?.email,
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        dateOfBirth: user?.dateOfBirth,
-        address: user?.address,
-        phoneNumber: user?.phoneNumber
-      });
-    }));
+  unregisterProfile(){
+    M.Modal.getInstance(document.querySelector('#unregisterModal')!).open();
   }
 
+  confirmUnregisterProfile() {
+    this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).update({
+      status: 'unregistered'
+    })
+  }
 
   get firstName() {
     return this.editProfileForm.get('firstName');
@@ -146,4 +144,5 @@ export class UserProfileComponent implements OnInit {
   get email() {
     return this.editProfileForm.get('email');
   }
+
 }
