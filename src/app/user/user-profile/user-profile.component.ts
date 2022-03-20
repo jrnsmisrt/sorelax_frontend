@@ -2,10 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {Observable} from "rxjs";
 import {User} from "../../model/User";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InitService} from "../../materialize/init.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
+import firebase from "firebase/compat/app";
+import auth = firebase.auth;
 
 @Component({
   selector: 'app-user-profile',
@@ -14,32 +17,23 @@ import {InitService} from "../../materialize/init.service";
 export class UserProfileComponent implements OnInit {
   user!: Observable<User | undefined>;
   isEditable = false;
-
-  editFirstName!: string | undefined;
-  editLastName!: string | undefined;
-  editDateOfBirth!: string | undefined;
-  editEmail!: string | undefined;
-  editPhoneNumber!: string | undefined;
-  editStreet!: string | undefined;
-  editHouseNumber!: string | undefined;
-  editPostBox!: string | undefined;
-  editPostalCode!: string | undefined;
-  editCity!: string | undefined;
-  editCountry!: string | undefined;
-  editAddress!: { street: string; houseNumber: string; postBox: string; postalCode: string; city: string; country: string } | undefined;
-
+  currentUserEmail!: string | null;
   editUser!: Observable<User | undefined>;
   editProfileForm!: FormGroup;
+  confirmPasswordForm!: FormGroup;
+  changePasswordForm!: FormGroup;
 
   constructor(private userService: UserService, private route: ActivatedRoute,
-              private fireStore: AngularFirestore, private formBuilder: FormBuilder,
+              private router: Router,
+              private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
+              private formBuilder: FormBuilder,
               private init: InitService) {
   }
 
   ngOnInit() {
-    this.init.initDatePicker();
     this.init.initModal();
     this.setUser();
+    this.currentUserEmail = auth().currentUser!.email;
     this.editProfileForm = this.formBuilder.group({
       'email': ['', [Validators.email, Validators.required]],
       'firstName': ['', Validators.required],
@@ -54,8 +48,8 @@ export class UserProfileComponent implements OnInit {
         'city': ['', Validators.required],
         'country': ['', Validators.required]
       })
-    })
-    this.user.subscribe((user)=>{
+    });
+    this.user.subscribe((user) => {
       this.editProfileForm.patchValue({
         email: user?.email,
         firstName: user?.firstName,
@@ -64,6 +58,16 @@ export class UserProfileComponent implements OnInit {
         address: user?.address,
         phoneNumber: user?.phoneNumber
       })
+    });
+
+    this.confirmPasswordForm = this.formBuilder.group({
+      'password': ['', Validators.required]
+    })
+
+    this.changePasswordForm = this.formBuilder.group({
+      'currentPassword': ['', Validators.required],
+      'newPassword': ['', Validators.required],
+      'newPasswordConfirmation': ['', Validators.required]
     })
 
   }
@@ -74,27 +78,111 @@ export class UserProfileComponent implements OnInit {
 
   editProfile() {
     this.isEditable = true;
+    this.init.initDatePicker();
   }
 
-  clearForm(){
+  clearForm() {
     this.isEditable = false;
   }
 
   saveProfile() {
-    if(this.editProfileForm.valid) {
-      this.isEditable = false;
-      this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).update(this.editProfileForm.value);
+    if (this.editProfileForm.valid) {
+      if (this.email?.value != this.currentUserEmail) {
+        M.Modal.getInstance(document.querySelector('#confirmEmailChangeModal')!).open();
+      } else {
+        this.saveUserData();
+        this.isEditable = false;
+      }
     }
   }
 
-  unregisterProfile(){
+  private static reauthenticate(currentPassword: string) {
+    let user = firebase.auth().currentUser;
+    let cred = firebase.auth.EmailAuthProvider.credential(
+      <string>user?.email, currentPassword);
+    return user!.reauthenticateWithCredential(cred);
+  };
+
+  private saveUserData() {
+    this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).update(this.editProfileForm.value)
+      .then(() => {
+        M.toast({html: 'Profile has been updated', classes: 'rounded teal'});
+        this.isEditable = false;
+      }).catch((error) => {
+      M.toast({html: `${error}`, classes: 'rounded teal'});
+      console.log(error);
+    });
+  }
+
+  unregisterProfile() {
     M.Modal.getInstance(document.querySelector('#unregisterModal')!).open();
   }
 
   confirmUnregisterProfile() {
-    this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).update({
-      status: 'unregistered'
+    this.fireStore.collection<User>('deleted-users').doc(this.route.snapshot.paramMap.get('id')!).set(this.editProfileForm.value)
+      .then(() => {
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+    this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!)
+      .delete()
+      .then(() => {
+        auth().currentUser?.delete().then(() => {
+          M.toast({html: 'Succesfully unregistered', classes: 'rounded teal'});
+          this.router.navigate(['login']);
+        })
+      }).catch((error) => {
+      console.log(error);
     })
+  }
+
+  setPassword() {
+    console.log(this.password?.value);
+    UserProfileComponent.reauthenticate(this.password?.value).then(() => {
+      auth().currentUser!.updateEmail(this.email?.value)
+        .then(() => {
+          M.toast({
+            html: 'E-mail address changed',
+            classes: 'rounded teal'
+          });
+          auth().currentUser!.sendEmailVerification()
+            .then(() => {
+              M.toast({
+                html: 'Please check your inbox to verify your new e-mail',
+                classes: 'rounded teal'
+              });
+            })
+            .catch((error) => {
+              M.toast({html: `${error}`, classes: 'rounded teal'})
+            })
+        })
+        .catch((error) => {
+          M.toast({html: `${error}`, classes: 'rounded teal'});
+        });
+    });
+
+    M.Modal.getInstance(document.querySelector('#confirmEmailChangeModal')!).close();
+    this.saveUserData();
+  }
+
+  openChangePasswordModal() {
+    M.Modal.getInstance(document.querySelector('#changePasswordModal')!).open();
+  }
+
+  changePassword() {
+    UserProfileComponent.reauthenticate(this.currentPassword?.value).then(() => {
+      if (this.newPassword?.value === this.newPasswordConfirmation?.value) {
+        auth().currentUser!.updatePassword(this.newPassword?.value).then(()=>{
+          M.toast({html: 'Password changed', classes: 'rounded teal'});
+          M.Modal.getInstance(document.querySelector('#changePasswordModal')!).close();
+        }).catch((error)=>{
+          M.toast({html:`${error}`, classes:'rounded teal'});
+        });
+      }else{
+        M.toast({html: 'Passwords do not match', classes: 'rounded red'});
+      }
+    });
   }
 
   get firstName() {
@@ -145,4 +233,19 @@ export class UserProfileComponent implements OnInit {
     return this.editProfileForm.get('email');
   }
 
+  get password() {
+    return this.confirmPasswordForm.get('password');
+  }
+
+  get currentPassword() {
+    return this.changePasswordForm.get('currentPassword');
+  }
+
+  get newPassword() {
+    return this.changePasswordForm.get('newPassword');
+  }
+
+  get newPasswordConfirmation() {
+    return this.changePasswordForm.get('newPasswordConfirmation');
+  }
 }

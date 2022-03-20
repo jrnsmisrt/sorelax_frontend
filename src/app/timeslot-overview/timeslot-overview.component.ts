@@ -13,7 +13,7 @@ export class TimeslotOverviewComponent {
   users!: Observable<User[]>;
 
   constructor(private fireStore: AngularFirestore) {
-    this.timeslots = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('time', 'asc')).valueChanges();
+    this.timeslots = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('isAvailable', 'desc').orderBy('date', 'asc').orderBy('startTime', 'asc')).valueChanges();
     this.users = this.fireStore.collection<User>('users').valueChanges();
   }
 
