@@ -103,7 +103,7 @@
 
           <div id="timeslotdatecontainer">
             <input class="timeslotdatepicker">
-            <span *ngIf="getDates() as dates">{{dates}}</span>
+            <span *ngIf="getDates() as dates">{{dates.join(' - ')}}</span>
           </div>
         </div>
 

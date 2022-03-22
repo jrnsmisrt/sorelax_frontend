@@ -39,7 +39,7 @@ export class BookingComponent implements OnInit {
     duration: new FormControl('', [Validators.required]),
     message: new FormControl('', [Validators.required])
   })
-  arrayOfDates!: string[];
+  arrayOfDates: string[] = [];
 
 
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
@@ -52,7 +52,10 @@ export class BookingComponent implements OnInit {
 
   ngOnInit(): void {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
-    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('isAvailable', 'desc').orderBy('date', 'asc').orderBy('startTime', 'asc'));
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc').orderBy('isAvailable', 'desc'));
+    this.setTimeslotDates();
+    console.log('array', this.arrayOfDates);
+    console.log('array get', this.getDates());
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
@@ -67,16 +70,12 @@ export class BookingComponent implements OnInit {
       $(".timeslotdatepicker").datepicker({
           format: 'dd/mm/yyyy',
           defaultDate: new Date(currYear, currMonth, currDay),
-          minDate: new Date(Date.now()),
-          maxDate: new Date(currYear + 1, currMonth, currDay),
           showClearBtn: true,
           autoClose: true,
-          container: document.getElementById('timeslotdatecontainer'),
-          // disableDayFn:  (date)=> {
-          //   return !this.arrayOfDates.includes(date.toDateString());
-          // }
-          disableDayFn: function (date) {
-            return date.getDay() !== 1;
+          disableDayFn: (date) => {
+            let convertedDate = date.toLocaleString('en-GB').slice(0, 10);
+            console.log(convertedDate);
+            return !this.arrayOfDates.includes(convertedDate);
           }
         },
       );
@@ -88,7 +87,9 @@ export class BookingComponent implements OnInit {
   setTimeslotDates() {
     this.getTimeslots().subscribe((data) => {
       data.forEach((timeslot) => {
-        this.arrayOfDates.push(timeslot.date);
+        if (!this.arrayOfDates.includes(timeslot.date)) {
+          this.arrayOfDates.push(timeslot.date);
+        }
       });
     })
   }
