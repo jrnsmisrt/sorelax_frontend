@@ -61,37 +61,63 @@
     </div>
   </div>
 
+  <!--  <div id="timeslotModal" class="modal">-->
+  <!--    <div class="modal-content">-->
+  <!--      <h4>Timeslots</h4>-->
+  <!--      <p>Selecteer een Timeslot</p>-->
+  <!--      <div>-->
+  <!--        <div class="row overviewrow center" *ngFor="let timeslot of timeslots$ | async">-->
+  <!--          <div class="col s6"><strong>Datum</strong></div>-->
+  <!--          <div class="col s6 overviewcol">{{timeslot.date}}</div>-->
+  <!--          <div class="col s6"><strong>Start</strong></div>-->
+  <!--          <div class="col s6 overviewcol">{{timeslot.startTime}}</div>-->
+  <!--          <div class="col s6"><strong>Einde</strong></div>-->
+  <!--          <div class="col s6 overviewcol">{{timeslot.endTime}}</div>-->
+  <!--          <div class="col s6"><strong>Selecteer</strong></div>-->
+  <!--          <div class="col s6 overviewcol">-->
+  <!--            <button (click)="selectTimeslot(timeslot)" [disabled]="!timeslot.isAvailable"-->
+  <!--                    class="waves-effect waves-teal btn-small">-->
+  <!--              Selecteer-->
+  <!--            </button>-->
+  <!--          </div>-->
+  <!--        </div>-->
+
+  <!--      </div>-->
+  <!--      <div class="modal-footer">-->
+  <!--        <div *ngIf="selectedTimeslot as t">-->
+  <!--          <p class="teal-text"><strong>U selecteerde: <br> {{t.date}} van {{t.startTime}} tot {{t.endTime}}</strong></p>-->
+  <!--          <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">-->
+  <!--            Confirm-->
+  <!--          </button>-->
+  <!--        </div>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+
   <div id="timeslotModal" class="modal">
     <div class="modal-content">
       <h4>Timeslots</h4>
       <p>Selecteer een Timeslot</p>
       <div>
-        <div class="row overviewrow center" *ngFor="let timeslot of timeslots$ | async">
-          <div class="col s6"><strong>Datum</strong></div>
-          <div class="col s6 overviewcol">{{timeslot.date}}</div>
-          <div class="col s6"><strong>Start</strong></div>
-          <div class="col s6 overviewcol">{{timeslot.startTime}}</div>
-          <div class="col s6"><strong>Einde</strong></div>
-          <div class="col s6 overviewcol">{{timeslot.endTime}}</div>
-          <div class="col s6"><strong>Selecteer</strong></div>
-          <div class="col s6 overviewcol">
-            <button (click)="selectTimeslot(timeslot)" [disabled]="!timeslot.isAvailable"
-                    class="waves-effect waves-teal btn-small">
-              Selecteer
-            </button>
+        <div class="row">
+
+          <div id="timeslotdatecontainer">
+            <input class="timeslotdatepicker">
+            <span *ngIf="getDates() as dates">{{dates}}</span>
           </div>
         </div>
 
       </div>
-      <div class="modal-footer">
-        <div *ngIf="selectedTimeslot as t">
-          <p class="teal-text"><strong>U selecteerde: <br> {{t.date}} van {{t.startTime}} tot {{t.endTime}}</strong></p>
-          <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
-            Confirm
-          </button>
-        </div>
+    </div>
+    <div class="modal-footer">
+      <div *ngIf="selectedTimeslot as t">
+        <p class="teal-text"><strong>U selecteerde: <br> {{t.date}} van {{t.startTime}} tot {{t.endTime}}</strong></p>
+        <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
+          Confirm
+        </button>
       </div>
     </div>
+
   </div>
 
 

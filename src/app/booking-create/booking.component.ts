@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -15,7 +15,7 @@ import {Massage} from "../model/Massage";
   selector: 'app-booking',
   templateUrl: './booking.component.html',
 })
-export class BookingComponent implements OnInit, AfterViewInit {
+export class BookingComponent implements OnInit {
   uid!: string;
   timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
@@ -26,7 +26,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
   formValid = false;
 
   dbMassages = this.fireStore.collection<Massage>('massages').valueChanges();
-  dbMassage: Observable<any>|undefined;
+  dbMassage: Observable<any> | undefined;
   dbMassageDurations!: string[]
   selectedMassage!: Massage;
   confirmedMassage!: string;
@@ -39,7 +39,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
     duration: new FormControl('', [Validators.required]),
     message: new FormControl('', [Validators.required])
   })
-
+  arrayOfDates!: string[];
 
 
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
@@ -52,21 +52,51 @@ export class BookingComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
-    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('isAvailable', 'desc').orderBy('date', 'asc').orderBy('startTime','asc'));
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('isAvailable', 'desc').orderBy('date', 'asc').orderBy('startTime', 'asc'));
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
 
-  }
-
-  ngAfterViewInit(): void {
-    $(document).ready(function () {
-      $('.modal').modal();
-    });
+    this.initService.initModal();
     this.initService.initSelect();
 
+    $(document).ready(() => {
+      let currYear = (new Date()).getFullYear();
+      let currMonth = (new Date()).getMonth();
+      let currDay = (new Date()).getDay();
+      $(".timeslotdatepicker").datepicker({
+          format: 'dd/mm/yyyy',
+          defaultDate: new Date(currYear, currMonth, currDay),
+          minDate: new Date(Date.now()),
+          maxDate: new Date(currYear + 1, currMonth, currDay),
+          showClearBtn: true,
+          autoClose: true,
+          container: document.getElementById('timeslotdatecontainer'),
+          // disableDayFn:  (date)=> {
+          //   return !this.arrayOfDates.includes(date.toDateString());
+          // }
+          disableDayFn: function (date) {
+            return date.getDay() !== 1;
+          }
+        },
+      );
+    });
+
 
   }
+
+  setTimeslotDates() {
+    this.getTimeslots().subscribe((data) => {
+      data.forEach((timeslot) => {
+        this.arrayOfDates.push(timeslot.date);
+      });
+    })
+  }
+
+  getDates() {
+    return this.arrayOfDates;
+  }
+
 
   bookMassage() {
     this.fireStore.collection('bookings').add({
@@ -90,19 +120,12 @@ export class BookingComponent implements OnInit, AfterViewInit {
           isAvailable: false
         });
         this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
-      }).then(()=>{
-        M.toast({html:'Uw boeking werd geplaatst', classes: 'rounded custom-toast'})
+      }).then(() => {
+        M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded custom-toast'})
       })
     }).catch(error => {
       console.log('booking form error', error);
     })
-  }
-
-  changeMassage(typeOfMassage: any, massage: any) {
-    this.dbMassage = this.getDbMassage(typeOfMassage.target.value);
-    this.massage!.setValue(typeOfMassage.target.value, {
-      onlySelf: true
-    });
   }
 
   changeDuration(minutes: any) {
@@ -116,7 +139,7 @@ export class BookingComponent implements OnInit, AfterViewInit {
     bookingModal.open();
   }
 
-  openModalMassageSelection(){
+  openModalMassageSelection() {
     let massageModal = M.Modal.getInstance(document.querySelector('#massageModal')!);
     massageModal.open();
   }
@@ -138,20 +161,20 @@ export class BookingComponent implements OnInit, AfterViewInit {
     this.selectedTimeslot = timeslot;
   }
 
-  selectMassage(massage:Massage){
+  selectMassage(massage: Massage) {
     this.selectedMassage = massage;
     this.setDurationArray(massage);
   }
 
-  selectDuration(duration: string){
+  selectDuration(duration: string) {
     this.selectedDuration = duration;
   }
 
-  private setDurationArray(massage:Massage){
+  private setDurationArray(massage: Massage) {
     this.dbMassageDurations = massage.duration;
   }
 
-  confirmMassage(){
+  confirmMassage() {
     this.confirmedMassage = this.selectedMassage.type;
     this.confirmedDuration = this.selectedDuration;
     this.bookingForm.patchValue({
@@ -177,7 +200,4 @@ export class BookingComponent implements OnInit, AfterViewInit {
     return this.bookingForm.get(['timeslot']);
   }
 
-  private getDbMassage(massage: string) {
-    return this.fireStore.collection('massages').doc(massage).valueChanges();
-  }
 }
