@@ -20,19 +20,35 @@ p {
   line-height: 2rem;
 }
 
+.about {
+  font-size: larger;
+  padding: 2px;
+  border-bottom: 1px teal dashed;
+  border-radius: 6px;
+  transition-property: background-color;
+  transition-duration: 0.8s;
+}
+
+.about:hover {
+  background-color: #e1f5f5;
+}
+
+.sofiesignature {
+  margin-top: 2%;
+  color: #78d9d9;
+  font-style: italic;
+  font-size: xx-large;
+}
+
+.massageprice {
+  border-radius: 20px;
+  background-color: #e1f5f5;
+  padding: 6px;
+  margin-top: 10px;
+}
+
 .sidenav-trigger {
   color: #26a69a;
-}
-
-.parallax-container {
-  min-height: 380px;
-  line-height: 0;
-  height: auto;
-  color: rgba(255, 255, 255, .9);
-}
-
-.parallax-container .section {
-  width: 100%;
 }
 
 #index-banner .section {
@@ -51,7 +67,7 @@ footer.page-footer {
   margin: 0;
 }
 
-.mybookingwarning{
+.mybookingwarning {
   border: 1px solid teal;
   border-radius: 4px;
   font-style: italic;
@@ -124,26 +140,6 @@ a.mobile-user-nav-link {
   text-align: center;
 }
 
-@media only screen and (max-width: 600px) {
-  #index-banner .section {
-    top: 0;
-  }
-
-  .parallax-container {
-    line-height: 0;
-    height: 25%;
-    color: rgba(255, 255, 255, .9);
-  }
-
-  .parallax-container .section {
-    width: 100%;
-    height: 25%;
-  }
-}
-
-@media only screen and (max-width: 992px) {
-  .parallax-container .section {
-    position: absolute;
-    top: 40%;
-  }
+.parallax-container {
+  height: 10%;
 }

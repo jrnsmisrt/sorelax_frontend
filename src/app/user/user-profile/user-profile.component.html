@@ -32,8 +32,8 @@
         <div class="col s6"><strong>{{user.firstName}}</strong></div>
         <div class="col s6"><strong>{{user.lastName}}</strong></div>
         <div class="input-field" *ngIf="isEditable">
-          <div class="col s6"><input class="input" formControlName="firstName" type="text"></div>
-          <div class="col s6"><input class="input" formControlName="lastName" type="text"></div>
+          <div class="col s6"><input class="input validate teal-text" formControlName="firstName" type="text"></div>
+          <div class="col s6"><input class="input validate teal-text" formControlName="lastName" type="text"></div>
         </div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
@@ -43,7 +43,7 @@
         <div class="col s6">{{user.dateOfBirth}}</div>
         <br>
         <div *ngIf="isEditable" class="input-field col s6">
-          <input class="datepicker" type="text" formControlName="dateOfBirth" >
+          <input class="datepicker validate teal-text" type="text" formControlName="dateOfBirth">
         </div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
@@ -74,13 +74,13 @@
           <div *ngIf="isEditable">
             <div class="col s6 input-field">
               <div class="input-field inline">
-                <input class="input validate" formControlName="email" type="email" placeholder="{{user.email}}">
+                <input class="input validate teal-text" formControlName="email" type="email" placeholder="{{user.email}}">
                 <span class="helper-text" data-error="wrong format" data-success=""><small> </small></span>
               </div>
             </div>
             <div class="col s6 input-field">
               <div class="input-field inline">
-                <input class="input validate" formControlName="phoneNumber" type="text"
+                <input class="input validate teal-text" formControlName="phoneNumber" type="text"
                        placeholder="{{user.phoneNumber}}">
               </div>
             </div>
@@ -111,11 +111,11 @@
           </div>
           <br>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4"><input class="input" formControlName="street" type="text"
+            <div class="col s4"><input class="input validate teal-text" formControlName="street" type="text"
                                        placeholder="{{user.address.street}}"></div>
-            <div class="col s3"><input class="input" formControlName="houseNumber" type="text"
+            <div class="col s3"><input class="input validate teal-text" formControlName="houseNumber" type="text"
                                        placeholder="{{user.address.houseNumber}}"></div>
-            <div class="col s3"><input class="input" formControlName="postBox" type="text"
+            <div class="col s3"><input class="input teal-text" formControlName="postBox" type="text"
                                        placeholder="{{user.address.postBox}}"></div>
           </div>
         </div>
@@ -140,11 +140,11 @@
           <div class="col s3">{{user.address.country}}
           </div>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4"><input class="input" formControlName="city" type="text"
+            <div class="col s4"><input class="input validate teal-text" formControlName="city" type="text"
                                        placeholder="{{user.address.city}}"></div>
-            <div class="col s3"><input class="input" formControlName="postalCode" type="text"
+            <div class="col s3"><input class="input validate teal-text" formControlName="postalCode" type="text"
                                        placeholder="{{user.address.postalCode}}"></div>
-            <div class="col s3"><input class="input" formControlName="country" type="text"
+            <div class="col s3"><input class="input validate teal-text" formControlName="country" type="text"
                                        placeholder="{{user.address.country}}"></div>
           </div>
         </div>
@@ -192,15 +192,21 @@
 
   <div id="changePasswordModal" class="modal">
     <div class="modal-content">
-      <form [formGroup]="changePasswordForm">
-        <label>Vul uw huidig paswoord in</label>
-        <input class="input" formControlName="currentPassword" type="password">
-        <label>Vul uw nieuw paswoord in</label>
-        <input class="input" formControlName="newPassword" type="password">
-        <label>Bevestig uw nieuw paswoord</label>
-        <input class="input" formControlName="newPasswordConfirmation" type="password">
-        <button class="btn waves-light waves-effect" (click)="changePassword()">Bevestig</button>
-      </form>
+      <div class="container">
+        <div class="row center-align center-block">
+          <div class="col">
+            <form [formGroup]="changePasswordForm">
+              <label>Vul uw huidig paswoord in</label>
+              <input class="input validate" formControlName="currentPassword" type="password">
+              <label>Vul uw nieuw paswoord in</label>
+              <input class="input validate" formControlName="newPassword" type="password">
+              <label>Bevestig uw nieuw paswoord</label>
+              <input class="input validate" formControlName="newPasswordConfirmation" type="password">
+              <button class="btn waves-light waves-effect" [disabled]="!changePasswordForm.valid" (click)="changePassword()">Bevestig</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
     </div>

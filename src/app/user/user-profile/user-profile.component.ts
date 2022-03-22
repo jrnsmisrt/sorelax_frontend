@@ -133,7 +133,7 @@ export class UserProfileComponent implements OnInit {
           this.router.navigate(['login']);
         })
       }).catch((error) => {
-      console.log(error);
+      M.toast({html: `${error}`, classes: 'rounded red'})
     })
   }
 
@@ -154,11 +154,11 @@ export class UserProfileComponent implements OnInit {
               });
             })
             .catch((error) => {
-              M.toast({html: `${error}`, classes: 'rounded teal'})
+              M.toast({html: `${error}`, classes: 'rounded red'})
             })
         })
         .catch((error) => {
-          M.toast({html: `${error}`, classes: 'rounded teal'});
+          M.toast({html: `${error}`, classes: 'rounded red'});
         });
     });
 
@@ -173,15 +173,17 @@ export class UserProfileComponent implements OnInit {
   changePassword() {
     UserProfileComponent.reauthenticate(this.currentPassword?.value).then(() => {
       if (this.newPassword?.value === this.newPasswordConfirmation?.value) {
-        auth().currentUser!.updatePassword(this.newPassword?.value).then(()=>{
+        auth().currentUser!.updatePassword(this.newPassword?.value).then(() => {
           M.toast({html: 'Password changed', classes: 'rounded teal'});
           M.Modal.getInstance(document.querySelector('#changePasswordModal')!).close();
-        }).catch((error)=>{
-          M.toast({html:`${error}`, classes:'rounded teal'});
+        }).catch((error) => {
+          M.toast({html: `${error}`, classes: 'rounded red'});
         });
-      }else{
+      } else {
         M.toast({html: 'Passwords do not match', classes: 'rounded red'});
       }
+    }).catch(() => {
+      M.toast({html: `Wrong password`, classes: 'rounded red'});
     });
   }
 
