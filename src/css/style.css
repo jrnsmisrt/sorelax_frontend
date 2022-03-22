@@ -45,8 +45,20 @@ p {
   background-color: #e1f5f5;
   padding: 6px;
   margin-top: 10px;
+  color: #50beb4;
+  font-weight: bold;
 }
-
+.massagedescription{
+  font-size: larger;
+  color: teal;
+  border-radius: 20px;
+  border: 6px solid #e1f5f5;
+  transition-property: background-color;
+  transition-duration: 0.8s;
+}
+.massagedescription:hover{
+  background-color: #e1f5f5;
+}
 .sidenav-trigger {
   color: #26a69a;
 }
