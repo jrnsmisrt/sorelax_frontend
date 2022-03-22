@@ -74,7 +74,6 @@ export class BookingComponent implements OnInit {
           autoClose: true,
           disableDayFn: (date) => {
             let convertedDate = date.toLocaleString('en-GB').slice(0, 10);
-            console.log(convertedDate);
             return !this.arrayOfDates.includes(convertedDate);
           }
         },
