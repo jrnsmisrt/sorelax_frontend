@@ -22,9 +22,20 @@
           <label>Timeslot</label>
           <div class="row">
             <div class="col input-field">
-              <button class="btn-small waves-effect waves-teal" (click)="openModalTimeslotSelection()">Selecteer
+              <input class="timeslotdatepicker" name="datechange">
+              <br>
+              <span *ngIf="timeslotDatePickerDateSelected as date">
+                u selecteerde Timeslot datum :{{date}}
+              </span><br>
+              <div *ngIf="timeslotDatePickerDateSelected">
+                <span *ngIf="!timeslotPickedTime">Selecteer een tijdstip</span>
+                <div *ngFor="let timeslot of timeslotsPickedDate">
+                  {{timeslot.startTime}} - {{timeslot.endTime}}
+              </div>
+              </div>
+             <!-- <button class="btn-small waves-effect waves-teal" (click)="openModalTimeslotSelection()">Selecteer
                 Timeslot
-              </button>
+              </button>-->
               <br>
               <strong class="teal-text" *ngIf="confirmedTimeslot">U selecteerde: {{confirmedTimeslot.date}}
                 om {{confirmedTimeslot.startTime}}

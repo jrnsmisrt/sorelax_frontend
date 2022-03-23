@@ -40,6 +40,10 @@ export class BookingComponent implements OnInit {
     message: new FormControl('', [Validators.required])
   })
   arrayOfDates: string[] = [];
+  timeslotDatePickerDateSelected!: string;
+  timeslotPickedTime!: string;
+
+  timeslotsPickedDate!: TimeSlot[];
 
 
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
@@ -54,8 +58,7 @@ export class BookingComponent implements OnInit {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc').orderBy('isAvailable', 'desc'));
     this.setTimeslotDates();
-    console.log('array', this.arrayOfDates);
-    console.log('array get', this.getDates());
+
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
@@ -75,12 +78,25 @@ export class BookingComponent implements OnInit {
           disableDayFn: (date) => {
             let convertedDate = date.toLocaleString('en-GB').slice(0, 10);
             return !this.arrayOfDates.includes(convertedDate);
+          },
+          onSelect: (date) => {
+            let selectedDate = date.toLocaleString('en-GB').slice(0, 10);
+            this.timeslotDatePickerDateSelected = selectedDate;
+            this.getTimeSlotsFromDate(this.timeslotDatePickerDateSelected);
           }
         },
       );
     });
 
+  }
 
+  getTimeSlotsFromDate(date: string){
+    this.fireStore.collection<TimeSlot>('timeslots', ref => ref.where('date', '==', date))
+      .valueChanges()
+      .subscribe((timeslots)=>{
+        let timeslotsArray = timeslots;
+        this.timeslotsPickedDate = timeslotsArray;
+      });
   }
 
   setTimeslotDates() {
@@ -113,7 +129,6 @@ export class BookingComponent implements OnInit {
       this.fireStore.collection('bookings').doc(docRef.id).update({
         id: docRef.id
       }).then(() => {
-        console.log(this.confirmedTimeslot.id);
         this.fireStore.collection('timeslots').doc(this.confirmedTimeslot.id).update({
           customerid: firebase.auth().currentUser?.uid,
           test: "test",
@@ -200,4 +215,12 @@ export class BookingComponent implements OnInit {
     return this.bookingForm.get(['timeslot']);
   }
 
+  timeslotDatePicked(date: string) {
+
+  }
+
+  onChange(value: any) {
+    this.timeslotDatePickerDateSelected = value;
+    console.log(this.timeslotDatePickerDateSelected)
+  }
 }
