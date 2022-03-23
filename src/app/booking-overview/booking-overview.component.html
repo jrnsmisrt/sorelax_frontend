@@ -23,16 +23,31 @@
   </div>
 
   <ul class="collapsible" data-collapsible="expandable">
-    <li *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
+    <li
+      *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
       <div class="collapsible-header row" *ngIf="booking.status!=='DELETED'">
-        <div class="col s4 teal-text center-align"><strong>{{booking.date}}</strong></div>
-        <div class="col s4 teal-text  center-align"><strong>{{booking.time}}</strong></div>
-        <div class="col s4 teal-text  center-align"><strong>{{booking.massage}}</strong></div>
+        <div class="col m3 s4 teal-text center-align"><strong>{{booking.date}}</strong></div>
+        <div class="col m3 s4 teal-text center-align"><strong>{{booking.time}}</strong></div>
+        <div class="col m3 s4 teal-text  center-align"><strong>{{booking.massage}}</strong></div>
+        <div class="col m3 hide-on-small-and-down teal-text  center-align">
+          <span *ngIf="booking.status==='pending'"><strong><span class="bookingStatusPending">{{booking.status}}</span></strong></span>
+          <span *ngIf="booking.status==='confirmed'"><strong><span
+            class="bookingStatusConfirmed">{{booking.status}}</span></strong></span>
+          <span *ngIf="booking.status==='cancelled'"><strong><span
+            class="bookingStatusCancelled">{{booking.status}}</span></strong></span>
+        </div>
 
       </div>
       <div class="collapsible-body row teal-text teal lighten-5" *ngIf="booking.status!=='DELETED'">
-        <div class="row">
-          <div class="col s12 center mybookingwarning"><strong>Status: </strong>{{booking.status}}</div>
+        <div class="row show-on-small hide-on-med-and-up center-align center-align">
+          <div class="col s12">
+            <span *ngIf="booking.status==='pending'"><strong><span
+              class="bookingStatusPending">{{booking.status}}</span></strong></span>
+            <span *ngIf="booking.status==='confirmed'"><strong><span
+              class="bookingStatusConfirmed">{{booking.status}}</span></strong></span>
+            <span *ngIf="booking.status==='cancelled'"><strong><span
+              class="bookingStatusCancelled">{{booking.status}}</span></strong></span>
+          </div>
         </div>
         <div class="row">
           <div class="col s4 center-align"><strong>Duur</strong></div>
@@ -40,9 +55,9 @@
           <div class="col s4 center-align"><strong>Aanvraag</strong></div>
         </div>
         <div class="row">
-          <div class="col s4 center-align">{{booking.duration}}</div>
-          <div class="col s4 center-align">{{booking.massage}}</div>
-          <div class="col s4 center-align">{{booking.requestedOn}}</div>
+          <div class="col s4 center-align"><span class="bookingData">{{booking.duration}}</span></div>
+          <div class="col s4 center-align"><span  class="bookingData">{{booking.massage}}</span></div>
+          <div class="col s4 center-align"><span  class="bookingData">{{booking.requestedOn.slice(1, 11)}}</span></div>
         </div>
         <div class="row">
           <div class="col s12 center-align">
@@ -51,7 +66,7 @@
         </div>
         <div class="row">
           <div class="col s12 center-align">
-            {{booking.personalMessage}}
+            <span  class="bookingData">{{booking.personalMessage}}</span>
           </div>
         </div>
 

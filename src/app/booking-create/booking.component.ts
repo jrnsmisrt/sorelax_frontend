@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
-import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InitService} from "../materialize/init.service";
 import {AuthService} from "../services/auth.service";
 import {TimeSlot} from "../model/TimeSlot";
@@ -32,13 +32,8 @@ export class BookingComponent implements OnInit {
   confirmedMassage!: string;
   selectedDuration!: string;
   confirmedDuration!: string
+  bookingForm!: FormGroup;
 
-  bookingForm = this.formBuilder.group({
-    timeslot: new FormControl('', [Validators.required]),
-    massage: new FormControl('', [Validators.required]),
-    duration: new FormControl('', [Validators.required]),
-    message: new FormControl('', [Validators.required])
-  })
   arrayOfDates: string[] = [];
   timeslotDatePickerDateSelected!: string;
   timeslotPickedTime!: string;
@@ -59,6 +54,12 @@ export class BookingComponent implements OnInit {
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc').orderBy('isAvailable', 'desc'));
     this.setTimeslotDates();
 
+    this.bookingForm = this.formBuilder.group({
+      timeslot: ['', [Validators.required]],
+      massage: ['', [Validators.required]],
+      duration: ['', [Validators.required]],
+      message: ['']
+    })
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
@@ -83,6 +84,7 @@ export class BookingComponent implements OnInit {
             let selectedDate = date.toLocaleString('en-GB').slice(0, 10);
             this.timeslotDatePickerDateSelected = selectedDate;
             this.getTimeSlotsFromDate(this.timeslotDatePickerDateSelected);
+            close();
           }
         },
       );
@@ -102,7 +104,7 @@ export class BookingComponent implements OnInit {
   setTimeslotDates() {
     this.getTimeslots().subscribe((data) => {
       data.forEach((timeslot) => {
-        if (!this.arrayOfDates.includes(timeslot.date)) {
+        if (!this.arrayOfDates.includes(timeslot.date) && timeslot.isAvailable) {
           this.arrayOfDates.push(timeslot.date);
         }
       });
@@ -130,16 +132,15 @@ export class BookingComponent implements OnInit {
         id: docRef.id
       }).then(() => {
         this.fireStore.collection('timeslots').doc(this.confirmedTimeslot.id).update({
-          customerid: firebase.auth().currentUser?.uid,
-          test: "test",
+          customerId: firebase.auth().currentUser?.uid,
           isAvailable: false
         });
         this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
       }).then(() => {
-        M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded custom-toast'})
+        M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
       })
     }).catch(error => {
-      console.log('booking form error', error);
+      M.toast({html:error, classes:'rounded red'});
     })
   }
 
@@ -168,8 +169,12 @@ export class BookingComponent implements OnInit {
     return this.timeslotCollection.valueChanges();
   }
 
-  confirmTimeslot() {
-    this.confirmedTimeslot = this.selectedTimeslot;
+  confirmTimeslot(timeslot: TimeSlot) {
+    this.confirmedTimeslot = timeslot;
+    this.bookingForm.patchValue({
+      timeslot: timeslot.id
+    })
+    M.toast({html:`Timeslot op ${this.confirmedTimeslot.date} om ${this.confirmedTimeslot.startTime} geselecteerd`, classes:'rounded teal'});
   }
 
   selectTimeslot(timeslot: any) {
@@ -179,10 +184,16 @@ export class BookingComponent implements OnInit {
   selectMassage(massage: Massage) {
     this.selectedMassage = massage;
     this.setDurationArray(massage);
+    this.bookingForm.patchValue({
+      massage: this.selectedMassage.type
+    })
   }
 
   selectDuration(duration: string) {
     this.selectedDuration = duration;
+    this.bookingForm.patchValue({
+      duration: this.selectedDuration
+    })
   }
 
   private setDurationArray(massage: Massage) {
@@ -196,6 +207,7 @@ export class BookingComponent implements OnInit {
       massage: this.selectedMassage,
       duration: this.selectedDuration
     });
+    M.toast({html:`${this.confirmedMassage} massage van ${this.confirmedDuration} min geselecteerd`, classes:'rounded teal'});
   }
 
   clear() {
@@ -215,12 +227,4 @@ export class BookingComponent implements OnInit {
     return this.bookingForm.get(['timeslot']);
   }
 
-  timeslotDatePicked(date: string) {
-
-  }
-
-  onChange(value: any) {
-    this.timeslotDatePickerDateSelected = value;
-    console.log(this.timeslotDatePickerDateSelected)
-  }
 }

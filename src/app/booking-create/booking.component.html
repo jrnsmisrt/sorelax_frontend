@@ -1,142 +1,87 @@
 <div class="row"></div>
-<div class="row">
-  <div class="col l3 s2"></div>
-  <div class="col l6 s8">
-    <form [formGroup]="bookingForm">
-      <div class="row">
-        <div class="col  teal-text lighten-3"><h5>( 1 )</h5></div>
-        <div class="col s6">
-          <label>Massage</label>
-          <div class="input-field">
-            <button class="btn-small waves-effect waves-teal" (click)="openModalMassageSelection()">select massage
-            </button>
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <form [formGroup]="bookingForm">
+        <div class="row bookingRow">
+          <div class="col s2  teal-text lighten-3"><h5>( 1 )</h5></div>
+          <div class="col s10">
+            <label>Massage</label>
+            <div class="input-field">
+              Selecteer een massage<br>
+              <button class="btn-small waves-effect waves-teal" (click)="openModalMassageSelection()">Massage
+              </button>
+            </div>
+            <br>
+            <strong class="teal-text" *ngIf="confirmedMassage">U selecteerde: {{confirmedMassage}} massage
+              van {{confirmedDuration}} minuten</strong>
           </div>
-          <br>
-          <strong class="teal-text" *ngIf="confirmedMassage">U selecteerde: {{confirmedMassage}} massage
-            van {{confirmedDuration}} minuten</strong>
         </div>
-      </div>
-      <div class="row">
-        <div class="col  teal-text lighten-3"><h5>( 2 )</h5></div>
-        <div class="col l3">
-          <label>Timeslot</label>
-          <div class="row">
-            <div class="col input-field">
-              <input class="timeslotdatepicker" name="datechange">
-              <br>
-              <span *ngIf="timeslotDatePickerDateSelected as date">
-                u selecteerde Timeslot datum :{{date}}
-              </span><br>
-              <div *ngIf="timeslotDatePickerDateSelected">
-                <span *ngIf="!timeslotPickedTime">Selecteer een tijdstip</span>
-                <div *ngFor="let timeslot of timeslotsPickedDate">
-                  {{timeslot.startTime}} - {{timeslot.endTime}}
+        <div class="row bookingRow">
+          <div class="col s2  teal-text lighten-3"><h5>( 2 )</h5></div>
+          <div class="col l10">
+            <label>Timeslot</label>
+            <div class="row">
+              <div class="col input-field">
+                Selecteer een datum<br>
+                <button id="timeslotdatepicker" class="timeslotdatepicker btn waves-effect waves-light"
+                        name="datechange">Datum: {{this.timeslotDatePickerDateSelected}}</button>
+                <br>
+                <span *ngIf="timeslotDatePickerDateSelected as date">
+                  <strong class="teal-text">u selecteerde een Timeslot op  datum :{{date}}</strong>
+              </span><br><br>
+                <div *ngIf="timeslotDatePickerDateSelected">
+                  <span *ngIf="!timeslotPickedTime">Selecteer een tijdstip</span>
+                  <div *ngFor="let timeslot of timeslotsPickedDate">
+                    <a *ngIf="timeslot.isAvailable" class="btn waves-effect waves-light"
+                       (click)="confirmTimeslot(timeslot)">{{timeslot.startTime}} - {{timeslot.endTime}}</a>
+                  </div>
+                </div>
+                <!-- <button class="btn-small waves-effect waves-teal" (click)="openModalTimeslotSelection()">Selecteer
+                   Timeslot
+                 </button>-->
+                <br>
+                <strong class="teal-text" *ngIf="confirmedTimeslot">U selecteerde: {{confirmedTimeslot.date}}
+                  om {{confirmedTimeslot.startTime}}
+                </strong>
               </div>
-              </div>
-             <!-- <button class="btn-small waves-effect waves-teal" (click)="openModalTimeslotSelection()">Selecteer
-                Timeslot
-              </button>-->
-              <br>
-              <strong class="teal-text" *ngIf="confirmedTimeslot">U selecteerde: {{confirmedTimeslot.date}}
-                om {{confirmedTimeslot.startTime}}
-              </strong>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col  teal-text lighten-3"><h5>( 3 )</h5></div>
-        <div class="col l6">
-          <label>Nuttige informatie / toevoegingen</label>
-          <textarea formControlName="message" class="materialize-textarea validate"></textarea>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col teal-text lighten-3"><h5>( 4 )</h5></div>
-        <div class="col l6">
-          <a class="btn-large waves-effect waves-teal" (click)="openModalBookingConfirmation()">Boek Massage</a>
-        </div>
-      </div>
-    </form>
-  </div>
-  <div class="col l3 s2">
-  </div>
-
-  <div id="bookingModal" class="modal">
-    <div class="modal-content">
-      <h4>Bevestig uw boeking</h4>
-      <p>Bevestig deze boeking door op "Confirm" te drukken aub.</p>
-    </div>
-    <div class="modal-footer">
-      <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-large">Confirm</a>
-    </div>
-  </div>
-
-  <!--  <div id="timeslotModal" class="modal">-->
-  <!--    <div class="modal-content">-->
-  <!--      <h4>Timeslots</h4>-->
-  <!--      <p>Selecteer een Timeslot</p>-->
-  <!--      <div>-->
-  <!--        <div class="row overviewrow center" *ngFor="let timeslot of timeslots$ | async">-->
-  <!--          <div class="col s6"><strong>Datum</strong></div>-->
-  <!--          <div class="col s6 overviewcol">{{timeslot.date}}</div>-->
-  <!--          <div class="col s6"><strong>Start</strong></div>-->
-  <!--          <div class="col s6 overviewcol">{{timeslot.startTime}}</div>-->
-  <!--          <div class="col s6"><strong>Einde</strong></div>-->
-  <!--          <div class="col s6 overviewcol">{{timeslot.endTime}}</div>-->
-  <!--          <div class="col s6"><strong>Selecteer</strong></div>-->
-  <!--          <div class="col s6 overviewcol">-->
-  <!--            <button (click)="selectTimeslot(timeslot)" [disabled]="!timeslot.isAvailable"-->
-  <!--                    class="waves-effect waves-teal btn-small">-->
-  <!--              Selecteer-->
-  <!--            </button>-->
-  <!--          </div>-->
-  <!--        </div>-->
-
-  <!--      </div>-->
-  <!--      <div class="modal-footer">-->
-  <!--        <div *ngIf="selectedTimeslot as t">-->
-  <!--          <p class="teal-text"><strong>U selecteerde: <br> {{t.date}} van {{t.startTime}} tot {{t.endTime}}</strong></p>-->
-  <!--          <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">-->
-  <!--            Confirm-->
-  <!--          </button>-->
-  <!--        </div>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--  </div>-->
-
-  <div id="timeslotModal" class="modal">
-    <div class="modal-content">
-      <h4>Timeslots</h4>
-      <p>Selecteer een Timeslot</p>
-      <div>
-        <div class="row">
-
-          <div id="timeslotdatecontainer">
-            <input class="timeslotdatepicker">
-            <span *ngIf="getDates() as dates">{{dates.join(' - ')}}</span>
+        <div class="row  bookingRow">
+          <div class="col s2 teal-text lighten-3"><h5>( 3 )</h5></div>
+          <div class="col s10 input-field">
+            <label>Nuttige informatie / toevoegingen</label>
+            <textarea formControlName="message" class="materialize-textarea validate"></textarea>
           </div>
         </div>
+        <div class="row">
+          <div class="col s2 teal-text lighten-3"><h5>( 4 )</h5></div>
+          <div class="col s10">
+            <button [disabled]="!bookingForm.valid" class="btn-large waves-effect waves-teal"
+                    (click)="openModalBookingConfirmation()">Boek Massage
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
 
+    <!-- Confirm Booking -->
+    <div id="bookingModal" class="modal">
+      <div class="modal-content">
+        <h4>Bevestig uw boeking</h4>
+        <p>Bevestig deze boeking door op "Confirm" te drukken aub.</p>
+      </div>
+      <div class="modal-footer">
+        <a (click)="bookMassage()" class="modal-close waves-effect waves-green btn-large">Confirm</a>
       </div>
     </div>
-    <div class="modal-footer">
-      <div *ngIf="selectedTimeslot as t">
-        <p class="teal-text"><strong>U selecteerde: <br> {{t.date}} van {{t.startTime}} tot {{t.endTime}}</strong></p>
-        <button (click)="confirmTimeslot()" class="modal-close waves-effect waves-teal btn-large">
-          Confirm
-        </button>
-      </div>
-    </div>
 
-  </div>
-
-
-  <div id="massageModal" class="modal">
-    <div class="modal-content">
-      <h4>Massages</h4>
-      <p>Select a massage</p>
-      <div>
+    <!-- Massage selection -->
+    <div id="massageModal" class="modal">
+      <div class="modal-content">
+        <h4>Massages</h4>
+        <p>Select a massage</p>
         <div class="row">
           <div class="col s6 teal-text" *ngIf="selectedMassage">U hebt een <strong>{{selectedMassage.type}}</strong>
             massage geselecteerd
@@ -149,28 +94,23 @@
           <div class="col s6"><strong>Massage</strong></div>
           <div class="col s6"><strong>Available durations</strong></div>
         </div>
-
         <div class="row">
           <div class="col s6 overviewcol">
-            <div class="row" *ngFor="let massage of dbMassages | async">
-              <div class="col">
-                <button class="btn-small waves-effect waves-teal"
-                        (click)="selectMassage(massage)">{{massage.type}}</button>
-              </div>
+            <div class="input-field" *ngFor="let massage of dbMassages | async">
+              <button class="btn-small waves-effect waves-teal"
+                      (click)="selectMassage(massage)">{{massage.type}}</button>
             </div>
           </div>
           <div class="col s6 overviewcol">
-            <div class="row" *ngFor="let duration of dbMassageDurations">
-              <div class="col">
-                <button class="btn-small waves-effect waves-teal"
-                        (click)="selectDuration(duration)">{{duration}}</button>
-              </div>
+            <div class="input-field" *ngFor="let duration of dbMassageDurations">
+              <button class="btn-small waves-effect waves-teal"
+                      (click)="selectDuration(duration)">{{duration}}</button>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <div *ngIf="selectedMassage as massage">
-            <div *ngIf="selectedDuration as duration">
+          <div class="row center-block center-align" *ngIf="selectedMassage as massage">
+            <div class="col s12" *ngIf="selectedDuration as duration">
               <p class="teal-text">Selectie: <strong>{{massage.type}} massage van {{duration}} minuten</strong></p>
               <button (click)="confirmMassage()" class="modal-close waves-effect waves-teal btn-large">
                 Confirm
@@ -179,7 +119,7 @@
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </div>

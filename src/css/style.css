@@ -33,6 +33,36 @@ p {
   background-color: #e1f5f5;
 }
 
+.bookingStatusCancelled {
+  text-decoration: line-through;
+  background-color: #ef5757;
+  color: white;
+  border-radius: 10px;
+  padding: 4px;
+}
+.bookingStatusConfirmed {
+  font-weight: bold;
+  background-color: #50beb4;
+  color: white;
+  border-radius: 10px;
+  padding: 4px;
+}
+.bookingStatusPending {
+  font-style: italic;
+  background-color: slategrey;
+  color: white;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.bookingData{
+  background-color: #ffffff;
+  color: #50beb4;
+  font-weight: bold;
+  border-radius: 20px;
+  padding: 6px;
+}
+
 .sofiesignature {
   margin-top: 2%;
   color: #78d9d9;
@@ -48,7 +78,15 @@ p {
   color: #50beb4;
   font-weight: bold;
 }
-.massagedescription{
+.bookingRow{
+  font-size: larger;
+  color: teal;
+  background-color: #e1f5f5;
+  border: 6px solid #97d2d2;
+  border-radius: 20px;
+
+}
+.massagedescription {
   font-size: larger;
   color: teal;
   border-radius: 20px;
@@ -56,9 +94,11 @@ p {
   transition-property: background-color;
   transition-duration: 0.8s;
 }
-.massagedescription:hover{
+
+.massagedescription:hover {
   background-color: #e1f5f5;
 }
+
 .sidenav-trigger {
   color: #26a69a;
 }
