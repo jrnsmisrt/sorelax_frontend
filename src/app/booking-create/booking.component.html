@@ -7,34 +7,49 @@
           <div class="col s2  teal-text lighten-3"><h6>( 1 )</h6></div>
           <div class="col s10">
             <label>Massage</label>
-            <div class="input-field">
+            <div>
               <ng-container>
                 <div class="row">
-                  <div class="col s6">
+                  <div class="col s7">
                     <h6>Massage selectie</h6>
-                    <div class="input-field" *ngFor="let massage of dbMassages | async">
-                      <button class="btn-small waves-effect waves-teal"
-                              (click)="selectMassage(massage)">{{massage.type}}</button>
-                    </div>
+                    <ul>
+                      <li *ngFor="let massage of dbMassages | async">
+
+                        <div class="row">
+                          <a (click)="selectMassage(massage)">
+                            <div class="col m6 s10 center-align selectmassagelink">
+                              {{massage.type}}
+                            </div>
+                          </a>
+                        </div>
+
+                      </li>
+                    </ul>
                   </div>
-                  <div class="col s6 center center-align center-block">
+                  <div class="col s5 center-block">
                     <h6>Tijdsduur selectie</h6>
-                    <div class="input-field" *ngFor="let duration of dbMassageDurations">
-                      <button class="btn-small waves-effect waves-teal"
-                              (click)="selectDuration(duration)">{{duration}}</button>
-                    </div>
+                    <ul class="center-block center center-align">
+                      <li *ngFor="let duration of dbMassageDurations">
+                        <div class="row">
+                          <a (click)="selectDuration(duration)">
+                            <div class="col s6 selectmassagelink  center center-align center-block">
+                              {{duration}}
+                            </div>
+                          </a>
+                        </div>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </ng-container>
             </div>
-            <br>
-            <span class="bookingSelectionInfo"><strong class="teal-text" *ngIf="confirmedMassage">U selecteerde: {{confirmedMassage}} massage
-              van {{confirmedDuration}} minuten</strong></span>
+            <p class="bookingSelectionInfo center-align" *ngIf="confirmedMassage">
+              U selecteerde: {{confirmedMassage}} massage van {{confirmedDuration}} minuten</p>
           </div>
         </div>
         <div class="row center-block bookingRow">
           <div class="col s2  teal-text lighten-3"><h6>( 2 )</h6></div>
-          <div class="col l10">
+          <div class="col S10">
             <div class="row">
               <div class="col s12">
                 <label>Timeslot</label>
@@ -44,14 +59,14 @@
               <div class="col s12 input-field">
                 Selecteer een datum<br>
                 <div class="row">
-                  <div class="col input-field s6">
+                  <div class="col input-field s12">
                     <label for="timeslotdatepicker"><i class="material-icons teal-text">calendar_month</i></label>
                     <input id="timeslotdatepicker" class="timeslotdatepicker teal-text center-align">
                   </div>
                 </div>
-                <span *ngIf="timeslotDatePickerDateSelected as date">
-                  <strong class="teal-text">u selecteerde een Timeslot op  datum :{{date}}</strong>
-              </span><br><br>
+                <p *ngIf="timeslotDatePickerDateSelected as date">
+                  <strong class="teal-text">u selecteerde een Timeslot op datum :{{date}}</strong>
+                </p><br><br>
                 <div *ngIf="timeslotDatePickerDateSelected">
                   <span *ngIf="!timeslotPickedTime">Selecteer een tijdstip</span>
                   <div *ngFor="let timeslot of timeslotsPickedDate">
@@ -59,10 +74,8 @@
                        (click)="confirmTimeslot(timeslot)">{{timeslot.startTime}} - {{timeslot.endTime}}</a>
                   </div>
                 </div>
-                <br>
-                <span class="bookingSelectionInfo"><strong class="teal-text" *ngIf="confirmedTimeslot">U selecteerde: {{confirmedTimeslot.date}}
-                  om {{confirmedTimeslot.startTime}}
-                </strong></span>
+                <p class="bookingSelectionInfo center-align" *ngIf="confirmedTimeslot">
+                  U selecteerde: {{confirmedTimeslot.date}} om {{confirmedTimeslot.startTime}}</p>
               </div>
             </div>
           </div>
@@ -84,7 +97,7 @@
         </div>
         <div class="row">
           <div class="col s2 teal-text lighten-3"><h6>( 4 )</h6></div>
-          <div class="col s10">
+          <div class="col s8 center center-block center-align">
             <button [disabled]="!bookingForm.valid" class="btn-large waves-effect waves-teal"
                     (click)="bookMassage()">Boek Massage
             </button>

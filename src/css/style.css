@@ -63,6 +63,14 @@ p {
   padding: 6px;
 }
 
+.bookingSelectionInfo{
+  border-radius: 20px;
+  border: 2px #50beb4 solid;
+  background-color: #ffffff;
+  color: teal;
+  font-weight: bold;
+}
+
 .sofiesignature {
   margin-top: 2%;
   color: #78d9d9;
@@ -98,7 +106,21 @@ p {
 .massagedescription:hover {
   background-color: #e1f5f5;
 }
-
+.selectmassagelink{
+  color:white;
+  background-color: teal;
+  border: 1px white solid;
+  border-radius: 6px;
+  transition-property: background-color;
+  transition-duration: 0.8s;
+}
+.selectmassagelink:hover{
+  color: teal;
+  background-color: #5ecece;
+  border: 1px white solid;
+  border-radius: 6px;
+  font-weight: bold;
+}
 .sidenav-trigger {
   color: #26a69a;
 }

@@ -38,6 +38,13 @@
           *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
           <div class="collapsible-header">
             {{booking.massage}}
+            <div *ngFor="let user of users$|async |filterUserName: searchName">
+              <p *ngIf="user.id===booking.userUid">{{user.firstName}}</p>
+            </div>
+          </div>
+          <div class="collapsible-body">
+            {{booking.date}}
+
           </div>
         </li>
 

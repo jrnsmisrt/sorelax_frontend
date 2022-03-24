@@ -28,6 +28,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.init.initModal();
     this.init.initDatePicker();
     this.init.initSelect();
+    this.init.initCollapsible();
   }
 
 
@@ -79,5 +80,9 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.searchDate = searchDate;
 
     console.log(this.searchDate);
+  }
+
+  getBookingUser(id: string|undefined): Observable<User|undefined>{
+    return this.fireStore.collection<User>('users').doc(id).valueChanges();
   }
 }
