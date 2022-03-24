@@ -72,6 +72,7 @@ export class BookingComponent implements OnInit {
       let currMonth = (new Date()).getMonth();
       let currDay = (new Date()).getDay();
       $(".timeslotdatepicker").datepicker({
+          //container: document.getElementById('#showdatepicker'),
           format: 'dd/mm/yyyy',
           defaultDate: new Date(currYear, currMonth, currDay),
           showClearBtn: true,
@@ -92,10 +93,10 @@ export class BookingComponent implements OnInit {
 
   }
 
-  getTimeSlotsFromDate(date: string){
+  getTimeSlotsFromDate(date: string) {
     this.fireStore.collection<TimeSlot>('timeslots', ref => ref.where('date', '==', date))
       .valueChanges()
-      .subscribe((timeslots)=>{
+      .subscribe((timeslots) => {
         let timeslotsArray = timeslots;
         this.timeslotsPickedDate = timeslotsArray;
       });
@@ -140,7 +141,7 @@ export class BookingComponent implements OnInit {
         M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
       })
     }).catch(error => {
-      M.toast({html:error, classes:'rounded red'});
+      M.toast({html: error, classes: 'rounded red'});
     })
   }
 
@@ -174,7 +175,10 @@ export class BookingComponent implements OnInit {
     this.bookingForm.patchValue({
       timeslot: timeslot.id
     })
-    M.toast({html:`Timeslot op ${this.confirmedTimeslot.date} om ${this.confirmedTimeslot.startTime} geselecteerd`, classes:'rounded teal'});
+    M.toast({
+      html: `Timeslot op ${this.confirmedTimeslot.date} om ${this.confirmedTimeslot.startTime} geselecteerd`,
+      classes: 'rounded teal'
+    });
   }
 
   selectTimeslot(timeslot: any) {
@@ -193,7 +197,8 @@ export class BookingComponent implements OnInit {
     this.selectedDuration = duration;
     this.bookingForm.patchValue({
       duration: this.selectedDuration
-    })
+    });
+    this.confirmMassage();
   }
 
   private setDurationArray(massage: Massage) {
@@ -207,7 +212,10 @@ export class BookingComponent implements OnInit {
       massage: this.selectedMassage,
       duration: this.selectedDuration
     });
-    M.toast({html:`${this.confirmedMassage} massage van ${this.confirmedDuration} min geselecteerd`, classes:'rounded teal'});
+    M.toast({
+      html: `${this.confirmedMassage} massage van ${this.confirmedDuration} min geselecteerd`,
+      classes: 'rounded teal'
+    });
   }
 
   clear() {
