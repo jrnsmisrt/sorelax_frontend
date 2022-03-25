@@ -16,7 +16,7 @@ export class AdminBookingOverviewComponent implements OnInit {
   selectedUser!: User | undefined;
   searchName!: string;
   searchDate!: string;
-  searchStatus!: string;
+  searchStatus: string = 'pending';
   searchMassage!: string;
 
   constructor(private fireStore: AngularFirestore, private init: InitService) {
@@ -29,6 +29,9 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.init.initDatePicker();
     this.init.initSelect();
     this.init.initCollapsible();
+    $(document).ready(function () {
+      $('.collapsibleUser').collapsible();
+    });
   }
 
 
@@ -84,5 +87,9 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   getBookingUser(id: string|undefined): Observable<User|undefined>{
     return this.fireStore.collection<User>('users').doc(id).valueChanges();
+  }
+
+  getUsersBookings(id: string|undefined): Observable<Booking[]|undefined>{
+    return this.fireStore.collection<Booking>('bookings', ref=>ref.where('userUid','==', id)).valueChanges();
   }
 }

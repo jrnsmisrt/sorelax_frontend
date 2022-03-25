@@ -1,29 +1,33 @@
 <div class="container">
-  <div class="row">
-    <div class="col center teal-text"><h3>Booking Overview</h3></div>
+  <div class="row center center-block center-align">
+    <div class="col s12 teal-text"><h3>Booking Overview</h3></div>
   </div>
-  <div class="row">
-    <div class="col l2 s3">
-      <label for="filter_klant">filter op klant</label>
-      <input id="filter_klant" class="input-field teal-text" [(ngModel)]="searchName">
-    </div>
-    <div class="col l2 s3">
-      <label for="filter_datum">filter op datum</label>
-      <input id="filter_datum" class="input-field teal-text" [(ngModel)]="searchDate">
-    </div>
-    <div class="col l1 s3">
-      <label for="filter_status">filter op status</label>
-      <select id="filter_status" class="select-dropdown teal-text" [(ngModel)]="searchStatus">
-        <option value="">show all</option>
-        <option value="confirmed">confirmed</option>
-        <option value="cancelled">cancelled</option>
-        <option value="pending">pending</option>
-      </select>
+  <div class="row center center-block center-align">
+    <div class=" col s12">
+      <div class="row">
+        <div class="col l2 s3">
+          <label for="filter_klant">filter op klant</label>
+          <input id="filter_klant" class="input-field teal-text" [(ngModel)]="searchName">
+        </div>
+        <div class="col l2 s3">
+          <label for="filter_datum">filter op datum</label>
+          <input id="filter_datum" class="input-field teal-text" [(ngModel)]="searchDate">
+        </div>
+        <div class="col l2 s3">
+          <label for="filter_status">filter op status</label>
+          <select id="filter_status" class="select-dropdown teal-text" [(ngModel)]="searchStatus">
+            <option value="">show all</option>
+            <option value="confirmed">confirmed</option>
+            <option value="cancelled">cancelled</option>
+            <option value="pending">pending</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
+  <div class="row center center-block center-align">
+    <div class="col s12">
       <!--<div class="row center teal lighten-3 white-text center overviewheadrow">
         <div class="col l2 s3"><i class="material-icons">calendar_month</i></div>
         <div class="col l1 s2"><i class="material-icons">schedule</i></div>
@@ -32,23 +36,97 @@
         <div class="col l3 s2"><i class="material-icons">person</i></div>
         <div class="col l3 s2"><i class="material-icons">pending</i></div>
       </div>-->
+      <ul class="collapsible" data-collapsible="expandable">
+        <li *ngFor="let user of users$ | async | filterUserName: searchName">
+          <div class="collapsible-header">
+            <ng-container>
 
+            </ng-container>
+          </div>
+          <div class="collapsible-body">
+          </div>
+        </li>
+      </ul>
+<ng-container>
       <ul class="collapsible" data-collapsible="expandable">
         <li
           *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
-          <div class="collapsible-header">
-            {{booking.massage}}
-            <div *ngFor="let user of users$|async |filterUserName: searchName">
-              <p *ngIf="user.id===booking.userUid">{{user.firstName}}</p>
+          <div class="collapsible-header s12">
+            <div class="row">
+
+              <div class="col">
+                {{booking.date}}
+              </div>
+              <div class="col">
+                {{booking.time}}
+              </div>
+              <div class="col">
+                <ng-container *ngFor="let user of users$|async |filterUserName: searchName">
+                  <span *ngIf="user.id===booking.userUid">{{user.firstName}} {{user.lastName}}</span>
+                </ng-container>
+              </div>
+              <div class="col">
+                <span *ngIf="booking.status==='confirmed'" class="bookingStatusConfirmed">{{booking.status}}</span>
+                <span *ngIf="booking.status==='pending'" class="bookingStatusPending">{{booking.status}}</span>
+                <span *ngIf="booking.status==='cancelled'" class="bookingStatusCancelled">{{booking.status}}</span>
+              </div>
             </div>
           </div>
           <div class="collapsible-body">
-            {{booking.date}}
+            <div class="row">
+              <div class="col">
+                Massage:
+              </div>
+              <div class="col">
+                {{booking.massage}}
+              </div>
+              <div class="col">
+                Tijdsduur:
+              </div>
+              <div class="col">
+                {{booking.duration}}
+              </div>
+            </div>
+            <div class="row">
+              <div class="row center-align">
+                <div class="col s12">
+                  <h6><strong class="teal-text">Boodschap</strong></h6>
+                </div>
+              </div>
+              <div class="row bookingRow center-align">
+                <div class="col s12">
+                  <p>{{booking.personalMessage}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="row center-block center-align">
+              <div class="col s4">
+                <button class="btn-small waves-light waves-effect">Confirm</button>
+              </div>
+              <div class="col s4">
+                <button class="btn-small waves-light waves-effect">Cancel</button>
+              </div>
+              <div class="col s4">
+                <button class="btn-small waves-light waves-effect">Delete</button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12 center-block center">
+                <form>
+                  <div class="input-field">
+                    <label for="msgForClient">informatie voor de klant</label>
+                    <textarea id="msgForClient" class="materialize-textarea"></textarea>
+                  </div>
+                  <button class="btn-large">Submit</button>
+                </form>
+              </div>
+            </div>
 
           </div>
         </li>
 
       </ul>
+      </ng-container>
       <div *ngFor="let booking of bookings$|async|filterDate:searchDate|filterStatus:searchStatus">
         <div *ngFor="let user of users$|async|filterUserName:searchName">
           <div *ngIf="booking.status!=='DELETED'">
