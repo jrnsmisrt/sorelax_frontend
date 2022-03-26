@@ -30,7 +30,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.init.initSelect();
     this.init.initCollapsible();
     $(document).ready(function () {
-      $('.collapsibleUser').collapsible();
+      $('.collapsible2').collapsible();
     });
   }
 
@@ -50,8 +50,10 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'confirmed'
     }).then(() => {
-      M.toast({html: 'Booking confirmed', classes: 'rounded custom-toast'});
+      //send E-mail
+      M.toast({html: 'Booking confirmed', classes: 'rounded teal'});
     }).catch(error => {
+      M.toast({html: `${error}`, classes: 'rounded red'});
       console.log(error);
     })
   }
@@ -60,8 +62,10 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'cancelled'
     }).then(() => {
-      M.toast({html: 'Booking cancelled', classes: 'rounded custom-toast'});
+      //send E-mail
+      M.toast({html: 'Booking cancelled', classes: 'rounded teal'});
     }).catch(error => {
+      M.toast({html: `${error}`, classes: 'rounded red'});
       console.log(error);
     })
   }
@@ -70,8 +74,10 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'DELETED'
     }).then(() => {
-      M.toast({html: 'Booking deleted', classes: 'rounded custom-toast'});
+      //send E-mail
+      M.toast({html: 'Booking deleted', classes: 'rounded teal'});
     }).catch(error => {
+      M.toast({html: `${error}`, classes: 'rounded red'});
       console.log(error);
     })
   }

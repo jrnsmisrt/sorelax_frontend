@@ -13,19 +13,19 @@ export class SignupComponent implements OnInit {
   currentUserUid!: string;
 
   signupForm = this.formBuilder.group({
-    'email': new FormControl('', [Validators.required, Validators.email]),
-    'password': new FormControl('', Validators.required),
-    'firstName': new FormControl('', [Validators.required]),
-    'lastName': new FormControl('', [Validators.required]),
-    'dateOfBirth': new FormControl('', [Validators.required]),
-    'phoneNumber': new FormControl('', [Validators.required]),
+    'email': ['', [Validators.required, Validators.pattern('(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'),Validators.email]],
+    'password': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
+    'firstName': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+    'lastName': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+    'dateOfBirth': ['', [Validators.required]],
+    'phoneNumber': ['', [Validators.required, Validators.minLength(6),Validators.pattern('^[0-9]*$')]],
     'address': this.formBuilder.group({
-      'street': new FormControl('', [Validators.required]),
-      'houseNumber': new FormControl('', [Validators.required, Validators.min(1)]),
-      'postBox': new FormControl(''),
-      'postalCode': new FormControl('', [Validators.required]),
-      'city': new FormControl('', [Validators.required, Validators.maxLength(30)]),
-      'country': new FormControl('', [Validators.required, Validators.maxLength(30)])
+      'street': ['', [Validators.required]],
+      'houseNumber': ['', [Validators.required, Validators.minLength(1),Validators.min(1)]],
+      'postBox': [''],
+      'postalCode': ['', [Validators.required]],
+      'city': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+      'country': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]]
     }),
     'role': new FormControl('')
   });
@@ -81,26 +81,24 @@ export class SignupComponent implements OnInit {
         this.signupForm.reset();
       })
       .catch(error => {
-        console.log('Auth Service: signup error', error);
+        M.toast({html: `${error}`, classes: 'rounded red'})
         if (error.code)
           return {isValid: false, message: error.message};
       });
   }
 
   onSubmit() {
-    console.log('click submit');
     this.signupForm.patchValue({
       dateOfBirth: $('.datepicker').val()
     })
-    console.log(this.signupForm.get('dateOfBirth')?.value);
     this.signupForm.markAllAsTouched();
 
     if (this.signupForm.invalid) {
-      M.toast({html: 'Oops! Think you forgot a field or did not use valid input', classes: 'rounded teal'});
+      M.toast({html: 'Oops! Iets vergeten? Correct formaat gebruikt?', classes: 'rounded red'});
     } else {
 
       this.signupUser()!.then(() => {
-        M.toast({html: `Sign up has been succesful!`, classes: 'rounded teal'});
+        M.toast({html: `Succesvol ingeschreven!`, classes: 'rounded teal'});
         this.router.navigate(['/login']);
       });
     }

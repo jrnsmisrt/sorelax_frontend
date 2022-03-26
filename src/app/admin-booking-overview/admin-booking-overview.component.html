@@ -36,96 +36,97 @@
         <div class="col l3 s2"><i class="material-icons">person</i></div>
         <div class="col l3 s2"><i class="material-icons">pending</i></div>
       </div>-->
-      <ul class="collapsible" data-collapsible="expandable">
-        <li *ngFor="let user of users$ | async | filterUserName: searchName">
-          <div class="collapsible-header">
-            <ng-container>
+      <!-- <div *ngFor="let user of users$ | async | filterUserName: searchName">
+        <ul class="collapsible" data-collapsible="expandable">
 
-            </ng-container>
-          </div>
-          <div class="collapsible-body">
-          </div>
-        </li>
-      </ul>
-<ng-container>
-      <ul class="collapsible" data-collapsible="expandable">
-        <li
-          *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
-          <div class="collapsible-header s12">
-            <div class="row">
-
-              <div class="col">
+          <li>
+            <div class="collapsible-header">
+              header
+            </div>
+            <div class="collapsible-body">
+              body
+            </div>
+          </li>
+        </ul>
+      </div>-->
+      <ng-container>
+        <ul class="collapsible" data-collapsible="expandable">
+          <li
+            *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
+            <div class="collapsible-header">
+              <div class="col l3 s4">
                 {{booking.date}}
               </div>
-              <div class="col">
+              <div class="col l2 s3">
                 {{booking.time}}
               </div>
-              <div class="col">
+              <div class="col l3 s5">
                 <ng-container *ngFor="let user of users$|async |filterUserName: searchName">
                   <span *ngIf="user.id===booking.userUid">{{user.firstName}} {{user.lastName}}</span>
                 </ng-container>
               </div>
-              <div class="col">
+              <div class="col l4 hide-on-small-and-down">
                 <span *ngIf="booking.status==='confirmed'" class="bookingStatusConfirmed">{{booking.status}}</span>
                 <span *ngIf="booking.status==='pending'" class="bookingStatusPending">{{booking.status}}</span>
                 <span *ngIf="booking.status==='cancelled'" class="bookingStatusCancelled">{{booking.status}}</span>
               </div>
             </div>
-          </div>
-          <div class="collapsible-body">
-            <div class="row">
-              <div class="col">
-                Massage:
-              </div>
-              <div class="col">
-                {{booking.massage}}
-              </div>
-              <div class="col">
-                Tijdsduur:
-              </div>
-              <div class="col">
-                {{booking.duration}}
-              </div>
-            </div>
-            <div class="row">
-              <div class="row center-align">
+            <div class="collapsible-body">
+              <div class="row bookingRow hide-on-med-and-up show-on-small center center-block center-align">
                 <div class="col s12">
-                  <h6><strong class="teal-text">Boodschap</strong></h6>
+                  <span *ngIf="booking.status==='confirmed'" class="bookingStatusConfirmed">{{booking.status}}</span>
+                  <span *ngIf="booking.status==='pending'" class="bookingStatusPending">{{booking.status}}</span>
+                  <span *ngIf="booking.status==='cancelled'" class="bookingStatusCancelled">{{booking.status}}</span>
                 </div>
               </div>
-              <div class="row bookingRow center-align">
-                <div class="col s12">
-                  <p>{{booking.personalMessage}}</p>
+              <div class="row">
+                <div class="col s6">
+                  <p class="bookingRow">{{booking.massage}}</p>
+                </div>
+                <div class="col s6">
+                  <p class="bookingRow">{{booking.duration}} minuten</p>
                 </div>
               </div>
-            </div>
-            <div class="row center-block center-align">
-              <div class="col s4">
-                <button class="btn-small waves-light waves-effect">Confirm</button>
-              </div>
-              <div class="col s4">
-                <button class="btn-small waves-light waves-effect">Cancel</button>
-              </div>
-              <div class="col s4">
-                <button class="btn-small waves-light waves-effect">Delete</button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col s12 center-block center">
-                <form>
-                  <div class="input-field">
-                    <label for="msgForClient">informatie voor de klant</label>
-                    <textarea id="msgForClient" class="materialize-textarea"></textarea>
+              <div class="row">
+                <div class="row center-align">
+                  <div class="col s12">
+                    <h6><strong class="teal-text">Boodschap</strong></h6>
                   </div>
-                  <button class="btn-large">Submit</button>
-                </form>
+                </div>
+                <div class="row bookingRow center-align">
+                  <div class="col s12">
+                    <p>{{booking.personalMessage}}</p>
+                  </div>
+                </div>
               </div>
+              <div class="row center-block center-align">
+                <div class="col s4">
+                  <a class="btn-small waves-light waves-effect" (click)="confirmBooking(booking.id)">Confirm
+                  </a>
+                </div>
+                <div class="col s4">
+                  <a class="btn-small waves-light waves-effect" (click)="cancelBooking(booking.id)">Cancel</a>
+                </div>
+                <div class="col s4">
+                  <a class="btn-small waves-light waves-effect" (click)="deleteBooking(booking.id)">Delete</a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12 center-block center">
+                  <form>
+                    <div class="input-field">
+                      <label for="msgForClient">informatie voor de klant</label>
+                      <textarea id="msgForClient" class="materialize-textarea"></textarea>
+                    </div>
+                    <button class="btn-large">Submit</button>
+                  </form>
+                </div>
+              </div>
+
             </div>
+          </li>
 
-          </div>
-        </li>
-
-      </ul>
+        </ul>
       </ng-container>
       <div *ngFor="let booking of bookings$|async|filterDate:searchDate|filterStatus:searchStatus">
         <div *ngFor="let user of users$|async|filterUserName:searchName">

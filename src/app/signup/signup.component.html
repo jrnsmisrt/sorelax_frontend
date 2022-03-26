@@ -4,20 +4,26 @@
     <form [formGroup]="signupForm">
       <div class="row">
         <div class="col s6">
-          <label>Firstname</label>
-          <input class="validate" autocomplete="on" formControlName="firstName" type="text" placeholder="Firstname">
+          <label>Voornaam</label>
+          <input class="validate" autocomplete="on" formControlName="firstName" type="text" placeholder="Voornaam">
           <div *ngIf="firstName!.invalid && (firstName!.dirty || firstName!.touched)">
             <div *ngIf="firstName!.errors?.['required']" class="text-error red-text">
-              <small>First name is required.</small>
+              <small>Voornaam is verplicht</small>
+            </div>
+            <div *ngIf="firstName!.errors?.['pattern']" class="text-error red-text">
+              <small>Voornaam mag enkel letters bevatten (a-z).</small>
             </div>
           </div>
         </div>
         <div class="col s6">
-          <label>LastName</label>
-          <input class="validate" autocomplete="on" formControlName="lastName" type="text" placeholder="Lastname">
+          <label>Familienaam</label>
+          <input class="validate" autocomplete="on" formControlName="lastName" type="text" placeholder="Familienaam">
           <div *ngIf="lastName!.invalid && (lastName!.dirty || lastName!.touched)">
             <div *ngIf="lastName!.errors?.['required']" class="text-error red-text">
-              <small>Last name is required.</small>
+              <small>Familienaam is verplicht.</small>
+            </div>
+            <div *ngIf="lastName!.errors?.['pattern']" class="text-error red-text">
+              <small>Familienaam mag enkel letters bevatten (a-z).</small>
             </div>
           </div>
         </div>
@@ -25,29 +31,35 @@
 
       <div class="row">
         <div class="col s6">
-          <label>Date Of Birth</label>
+          <label>Geboortedatum</label>
           <input class="datepicker validate" formControlName="dateOfBirth" type="text"
-                 placeholder="Date of birth">
+                 placeholder="Geboortedatum">
           <div *ngIf="dateOfBirth!.invalid && (dateOfBirth!.dirty || dateOfBirth!.touched)">
             <div *ngIf="dateOfBirth!.errors?.['required']" class="text-error red-text">
-              <small>Date of Birth is required.</small>
+              <small>Geboortedatum is verplicht</small>
             </div>
           </div>
         </div>
         <div class="col s6">
-          <label>Phone number</label>
+          <label>Telefoon/GSM nummer</label>
           <input class="validate" autocomplete="on" formControlName="phoneNumber" type="text"
-                 placeholder="Phone number">
+                 placeholder="Telefoon/GSM nummer">
           <div *ngIf="phoneNumber!.invalid && (phoneNumber!.dirty || phoneNumber!.touched)">
             <div *ngIf="phoneNumber!.errors?.['required']" class="text-error red-text">
-              <small>Phonenumber is required.</small>
+              <small>Telefoon/GSM nummer is verplicht.</small>
+            </div>
+            <div *ngIf="phoneNumber!.errors?.['pattern']" class="text-error red-text">
+              <small>Telefoon/GSM nummer mag enkel cijfers bevatten (0-9).</small>
+            </div>
+            <div *ngIf="phoneNumber!.errors?.['minlength']" class="text-error red-text">
+              <small>Telefoon/GSM nummer moet uit minimum 6 cijfers bestaan.</small>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col s12">
-          <label>Address</label>
+          <label>Adres</label>
         </div>
       </div>
       <div class="row">
@@ -55,10 +67,10 @@
           <div formGroupName="address">
             <div class="row">
               <div class="col s12">
-                <input class="validate" autocomplete="on" formControlName="street" type="text" placeholder="Street">
+                <input class="validate" autocomplete="on" formControlName="street" type="text" placeholder="Straat">
                 <div *ngIf="street!.invalid && (street!.dirty || street!.touched)">
                   <div *ngIf="street!.errors?.['required']" class="text-error red-text">
-                    <small>Street is required.</small>
+                    <small>Straat is verplicht.</small>
                   </div>
                 </div>
               </div>
@@ -66,40 +78,52 @@
                                          placeholder="Nr">
                 <div *ngIf="houseNr!.invalid && (houseNr!.dirty || houseNr!.touched)">
                   <div *ngIf="houseNr!.errors?.['required']" class="text-error red-text">
-                    <small>House number is required.</small>
+                    <small>Huis nummer is verplicht.</small>
+                  </div>
+                  <div *ngIf="houseNr!.errors?.['minlength']" class="text-error red-text">
+                    <small>Huis nummer moet uit minimum 1 cijfer bestaan.</small>
+                  </div>
+                  <div *ngIf="houseNr!.errors?.['minlength']" class="text-error red-text">
+                    <small>Huis nummer moet groter of gelijk zijn aan 1.</small>
                   </div>
                 </div>
               </div>
 
               <div class="col s3"><input class="validate" autocomplete="on" formControlName="postBox" type="text"
-                                         placeholder="Box">
+                                         placeholder="Bus">
               </div>
             </div>
             <div class="row">
               <div class="col s3">
                 <input class="validate" autocomplete="on" formControlName="postalCode" type="text"
-                       placeholder="Postal Code">
+                       placeholder="Postcode">
                 <div *ngIf="postalCode!.invalid && (postalCode!.dirty || postalCode!.touched)">
                   <div *ngIf="postalCode!.errors?.['required']" class="text-error red-text">
-                    <small>Postalcode is required.</small>
+                    <small>Postcode is verplicht.</small>
                   </div>
                 </div>
               </div>
               <div class="col s9"><input class="validate" autocomplete="on" formControlName="city" type="text"
-                                         placeholder="City">
+                                         placeholder="Stad">
                 <div *ngIf="city!.invalid && (city!.dirty || city!.touched)">
                   <div *ngIf="city!.errors?.['required']" class="text-error red-text">
-                    <small>City is required.</small>
+                    <small>Stad is verplicht.</small>
+                  </div>
+                  <div *ngIf="city!.errors?.['pattern']" class="text-error red-text">
+                    <small>Stad mag enkel uit letters bestaan (a-z).</small>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col s12">
-                <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Country">
+                <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Land">
                 <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
                   <div *ngIf="country!.errors?.['required']" class="text-error red-text">
-                    <small>Country is required.</small>
+                    <small>Land is required.</small>
+                  </div>
+                  <div *ngIf="country!.errors?.['pattern']" class="text-error red-text">
+                    <small>Land mag enkel uit letters bestaan (a-z).</small>
                   </div>
                 </div>
               </div>
@@ -110,20 +134,26 @@
       <div class="row">
         <div class="col">
           <label>E-mail</label>
-          <input class="validate" autocomplete="on" formControlName="email" type="email" placeholder="Email">
+          <input class="validate" autocomplete="on" formControlName="email" type="email" placeholder="E-mail">
           <div *ngIf="email!.invalid && (email!.dirty || email!.touched)">
             <div *ngIf="email!.errors?.['required']" class="text-error red-text">
-              <small>E-mail is required.</small>
+              <small>E-mail is verplicht.</small>
+            </div>
+            <div *ngIf="email!.errors?.['pattern'] || email!.errors?.['email']" class="text-error red-text">
+              <small>E-mail moet bestaan uit een correct e-mail formaat: naam@domein.extensie</small>
             </div>
           </div>
         </div>
         <div class="col">
-          <label>Password</label>
+          <label>Paswoord</label>
           <input class="validate" autocomplete="off" formControlName="password" type="password"
-                 placeholder="Password">
+                 placeholder="Paswoord">
           <div *ngIf="passWord!.invalid && (passWord!.dirty || passWord!.touched)">
             <div *ngIf="passWord!.errors?.['required']" class="text-error red-text">
-              <small>Password is required.</small>
+              <small>Paswoord is verplicht.</small>
+            </div>
+            <div *ngIf="passWord!.errors?.['pattern']" class="text-error red-text">
+              <small>Paswoord moet bestaan uit min: 8 karakters, 1 hoofdletter, 1 kleine letter, 1 cijfer, 1 speciaal teken.</small>
             </div>
           </div>
         </div>
@@ -137,7 +167,7 @@
       </div>
       <div class="row">
         <div class="col s6 push-l1 push-s3">
-          <button class="btn-small" (click)="onSubmit()">Signup</button>
+          <button class="btn-small" [disabled]="!signupForm.valid" (click)="onSubmit()">Signup</button>
         </div>
         <div class="col s6 pull-l3">
           <button class="btn-small" (click)="clear()">Clear</button>
