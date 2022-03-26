@@ -22,6 +22,7 @@ export class UserProfileComponent implements OnInit {
   editProfileForm!: FormGroup;
   confirmPasswordForm!: FormGroup;
   changePasswordForm!: FormGroup;
+  isPasswordEqual!: boolean;
 
   constructor(private userService: UserService, private route: ActivatedRoute,
               private router: Router,
@@ -66,8 +67,8 @@ export class UserProfileComponent implements OnInit {
 
     this.changePasswordForm = this.formBuilder.group({
       'currentPassword': ['', Validators.required],
-      'newPassword': ['', Validators.required],
-      'newPasswordConfirmation': ['', Validators.required]
+      'newPassword': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
+      'newPasswordConfirmation': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]]
     })
 
   }
@@ -138,18 +139,17 @@ export class UserProfileComponent implements OnInit {
   }
 
   setPassword() {
-    console.log(this.password?.value);
     UserProfileComponent.reauthenticate(this.password?.value).then(() => {
       auth().currentUser!.updateEmail(this.email?.value)
         .then(() => {
           M.toast({
-            html: 'E-mail address changed',
+            html: 'E-mail adres is veranderd',
             classes: 'rounded teal'
           });
           auth().currentUser!.sendEmailVerification()
             .then(() => {
               M.toast({
-                html: 'Please check your inbox to verify your new e-mail',
+                html: 'Gelieve uw e-mail inbox te controleren',
                 classes: 'rounded teal'
               });
             })
@@ -173,17 +173,18 @@ export class UserProfileComponent implements OnInit {
   changePassword() {
     UserProfileComponent.reauthenticate(this.currentPassword?.value).then(() => {
       if (this.newPassword?.value === this.newPasswordConfirmation?.value) {
+        this.isPasswordEqual = true;
         auth().currentUser!.updatePassword(this.newPassword?.value).then(() => {
-          M.toast({html: 'Password changed', classes: 'rounded teal'});
+          M.toast({html: 'Paswoord succesvol veranderd', classes: 'rounded teal'});
           M.Modal.getInstance(document.querySelector('#changePasswordModal')!).close();
         }).catch((error) => {
           M.toast({html: `${error}`, classes: 'rounded red'});
         });
       } else {
-        M.toast({html: 'Passwords do not match', classes: 'rounded red'});
+        M.toast({html: 'Paswoorden zijn niet gelijk', classes: 'rounded red'});
       }
     }).catch(() => {
-      M.toast({html: `Wrong password`, classes: 'rounded red'});
+      M.toast({html: `Verkeerd paswoord.`, classes: 'rounded red'});
     });
   }
 

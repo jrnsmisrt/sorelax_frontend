@@ -74,7 +74,8 @@
           <div *ngIf="isEditable">
             <div class="col s6 input-field">
               <div class="input-field inline">
-                <input class="input validate teal-text" formControlName="email" type="email" placeholder="{{user.email}}">
+                <input class="input validate teal-text" formControlName="email" type="email"
+                       placeholder="{{user.email}}">
                 <span class="helper-text" data-error="wrong format" data-success=""><small> </small></span>
               </div>
             </div>
@@ -198,11 +199,38 @@
             <form [formGroup]="changePasswordForm">
               <label>Vul uw huidig paswoord in</label>
               <input class="input validate" formControlName="currentPassword" type="password">
+              <div *ngIf="currentPassword!.invalid && (currentPassword!.dirty || currentPassword!.touched)">
+                <div *ngIf="currentPassword!.errors?.['required']" class="text-error red-text">
+                  <small>Paswoord is verplicht.</small>
+                </div>
+              </div>
               <label>Vul uw nieuw paswoord in</label>
               <input class="input validate" formControlName="newPassword" type="password">
+              <div *ngIf="newPassword!.invalid && (newPassword!.dirty || newPassword!.touched)">
+                <div *ngIf="newPassword!.errors?.['required']" class="text-error red-text">
+                  <small>Paswoord is verplicht.</small>
+                </div>
+                <div *ngIf="newPassword!.errors?.['pattern']" class="text-error red-text">
+                  <small>Paswoord moet bestaan uit min: 8 karakters, 1 hoofdletter, 1 kleine letter, 1 cijfer, 1
+                    speciaal teken.</small>
+                </div>
+              </div>
               <label>Bevestig uw nieuw paswoord</label>
               <input class="input validate" formControlName="newPasswordConfirmation" type="password">
-              <button class="btn waves-light waves-effect" [disabled]="!changePasswordForm.valid" (click)="changePassword()">Bevestig</button>
+              <div
+                *ngIf="newPasswordConfirmation!.invalid && (newPasswordConfirmation!.dirty || newPasswordConfirmation!.touched)">
+                <div *ngIf="newPasswordConfirmation!.errors?.['required']" class="text-error red-text">
+                  <small>Paswoord is verplicht.</small>
+                </div>
+                <div *ngIf="newPasswordConfirmation!.errors?.['pattern']" class="text-error red-text">
+                  <small>Paswoord moet bestaan uit min: 8 karakters, 1 hoofdletter, 1 kleine letter, 1 cijfer, 1
+                    speciaal teken.</small>
+                </div>
+              </div>
+
+              <button class="btn waves-light waves-effect" [disabled]="!changePasswordForm.valid"
+                      (click)="changePassword()">Bevestig
+              </button>
             </form>
           </div>
         </div>
