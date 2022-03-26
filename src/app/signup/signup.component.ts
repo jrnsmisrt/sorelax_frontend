@@ -42,7 +42,7 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
     document.addEventListener('DOMContentLoaded', function () {
       var elems = document.querySelectorAll('.modal');
-      var instances = M.Modal.init(elems, {
+      M.Modal.init(elems, {
         dismissible: true,
       });
     });
