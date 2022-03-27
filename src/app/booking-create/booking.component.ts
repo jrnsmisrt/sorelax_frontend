@@ -74,8 +74,8 @@ export class BookingComponent implements OnInit {
       let currDay = (new Date()).getDay();
       $(".timeslotdatepicker").datepicker({
           format: 'dd/mm/yyyy',
-          defaultDate: new Date(currYear, currMonth, currDay),
-          showClearBtn: true,
+          defaultDate: new Date(currYear, currMonth, (currDay+1)),
+          minDate: new Date(currYear, currMonth, (currDay+1)),
           autoClose: true,
           disableDayFn: (date) => {
             let convertedDate = date.toLocaleString('en-GB').slice(0, 10);
@@ -160,7 +160,7 @@ export class BookingComponent implements OnInit {
             },
           }).then(() => {
             let user = this.userService.getUser(firebase.auth().currentUser?.uid);
-            user.subscribe((user)=>{
+            user.subscribe((user) => {
               this.fireStore.collection('mail').add({
                 to: 'info@sorelax.be',
                 from: 'info@sorelax.be',

@@ -9,15 +9,11 @@
         <div class="col l3"><strong>Eind uur</strong></div>
       </div>
       <div *ngFor="let timeslot of timeslots|async">
-        <div *ngFor="let user of users | async">
           <div class="row center overviewrow">
             <div class="col l2">{{timeslot.date}}</div>
             <div class="col l3">{{timeslot.startTime}}</div>
             <div class="col l3">{{timeslot.endTime}}</div>
           </div>
-        </div>
-
-
       </div>
     </div>
     <div class="col l4"></div>

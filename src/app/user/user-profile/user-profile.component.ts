@@ -37,18 +37,18 @@ export class UserProfileComponent implements OnInit {
     this.setUser();
     this.currentUserEmail = auth().currentUser!.email;
     this.editProfileForm = this.formBuilder.group({
-      'email': ['', [Validators.email, Validators.required]],
-      'firstName': ['', Validators.required],
-      'lastName': ['', Validators.required],
-      'dateOfBirth': ['', Validators.required],
-      'phoneNumber': ['', Validators.required],
+      'email': ['', [Validators.required, Validators.pattern('(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\\])'), Validators.email]],
+      'firstName': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+      'lastName': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+      'dateOfBirth': ['', [Validators.required]],
+      'phoneNumber': ['', [Validators.required, Validators.minLength(6), Validators.pattern('^[0-9]*$')]],
       'address': this.formBuilder.group({
-        'street': ['', Validators.required],
-        'houseNumber': ['', Validators.required],
+        'street': ['', [Validators.required]],
+        'houseNumber': ['', [Validators.required, Validators.minLength(1), Validators.min(1)]],
         'postBox': [''],
-        'postalCode': ['', Validators.required],
-        'city': ['', Validators.required],
-        'country': ['', Validators.required]
+        'postalCode': ['', [Validators.required]],
+        'city': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+        'country': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]]
       })
     });
     this.user.subscribe((user) => {
@@ -84,7 +84,19 @@ export class UserProfileComponent implements OnInit {
 
   editProfile() {
     this.isEditable = true;
-    this.init.initDatePicker();
+    $(document).ready(function () {
+      var currYear = (new Date()).getFullYear();
+      let currMonth = (new Date()).getMonth();
+      let currDay = (new Date()).getDay();
+
+      $(".datepicker").datepicker({
+          format: 'dd/mm/yyyy',
+          maxDate: new Date(currYear - 18, currMonth, currDay),
+          autoClose: true
+        },
+      );
+
+    });
   }
 
   clearForm() {
@@ -259,7 +271,7 @@ export class UserProfileComponent implements OnInit {
     return this.changePasswordForm.get('newPasswordConfirmation');
   }
 
-  get deleteUserPassword(){
+  get deleteUserPassword() {
     return this.unRegisterPasswordForm.get('deleteUserPassword')
   }
 }

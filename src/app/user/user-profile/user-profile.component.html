@@ -32,8 +32,28 @@
         <div class="col s6"><strong>{{user.firstName}}</strong></div>
         <div class="col s6"><strong>{{user.lastName}}</strong></div>
         <div class="input-field" *ngIf="isEditable">
-          <div class="col s6"><input class="input validate teal-text" formControlName="firstName" type="text"></div>
-          <div class="col s6"><input class="input validate teal-text" formControlName="lastName" type="text"></div>
+          <div class="col s6">
+            <input class="input validate teal-text" formControlName="firstName" type="text">
+            <div *ngIf="firstName!.invalid && (firstName!.dirty || firstName!.touched)">
+              <div *ngIf="firstName!.errors?.['required']" class="text-error red-text">
+                <small>Voornaam is verplicht</small>
+              </div>
+              <div *ngIf="firstName!.errors?.['pattern']" class="text-error red-text">
+                <small>Voornaam mag enkel letters bevatten (a-z).</small>
+              </div>
+            </div>
+          </div>
+          <div class="col s6">
+            <input class="input validate teal-text" formControlName="lastName" type="text">
+            <div *ngIf="lastName!.invalid && (lastName!.dirty || lastName!.touched)">
+              <div *ngIf="lastName!.errors?.['required']" class="text-error red-text">
+                <small>Familienaam is verplicht.</small>
+              </div>
+              <div *ngIf="lastName!.errors?.['pattern']" class="text-error red-text">
+                <small>Familienaam mag enkel letters bevatten (a-z).</small>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
@@ -44,6 +64,11 @@
         <br>
         <div *ngIf="isEditable" class="input-field col s6">
           <input class="datepicker validate teal-text" type="text" formControlName="dateOfBirth">
+          <div *ngIf="dateOfBirth!.invalid && (dateOfBirth!.dirty || dateOfBirth!.touched)">
+            <div *ngIf="dateOfBirth!.errors?.['required']" class="text-error red-text">
+              <small>Geboortedatum is verplicht</small>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row  teal lighten-3 white-text overviewheadrow">
@@ -76,13 +101,31 @@
               <div class="input-field inline">
                 <input class="input validate teal-text" formControlName="email" type="email"
                        placeholder="{{user.email}}">
-                <span class="helper-text" data-error="wrong format" data-success=""><small> </small></span>
+                <div *ngIf="email!.invalid && (email!.dirty || email!.touched)">
+                  <div *ngIf="email!.errors?.['required']" class="text-error red-text">
+                    <small>E-mail is verplicht.</small>
+                  </div>
+                  <div *ngIf="email!.errors?.['pattern'] || email!.errors?.['email']" class="text-error red-text">
+                    <small>E-mail moet bestaan uit een correct e-mail formaat: naam@domein.extensie</small>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col s6 input-field">
               <div class="input-field inline">
                 <input class="input validate teal-text" formControlName="phoneNumber" type="text"
                        placeholder="{{user.phoneNumber}}">
+                <div *ngIf="phoneNumber!.invalid && (phoneNumber!.dirty || phoneNumber!.touched)">
+                  <div *ngIf="phoneNumber!.errors?.['required']" class="text-error red-text">
+                    <small>Telefoon/GSM nummer is verplicht.</small>
+                  </div>
+                  <div *ngIf="phoneNumber!.errors?.['pattern']" class="text-error red-text">
+                    <small>Telefoon/GSM nummer mag enkel cijfers bevatten (0-9).</small>
+                  </div>
+                  <div *ngIf="phoneNumber!.errors?.['minlength']" class="text-error red-text">
+                    <small>Telefoon/GSM nummer moet uit minimum 6 cijfers bestaan.</small>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -112,12 +155,34 @@
           </div>
           <br>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4"><input class="input validate teal-text" formControlName="street" type="text"
-                                       placeholder="{{user.address.street}}"></div>
-            <div class="col s3"><input class="input validate teal-text" formControlName="houseNumber" type="text"
-                                       placeholder="{{user.address.houseNumber}}"></div>
-            <div class="col s3"><input class="input teal-text" formControlName="postBox" type="text"
-                                       placeholder="{{user.address.postBox}}"></div>
+            <div class="col s4">
+              <input class="input validate teal-text" formControlName="street" type="text"
+                                       placeholder="{{user.address.street}}">
+              <div *ngIf="street!.invalid && (street!.dirty || street!.touched)">
+                <div *ngIf="street!.errors?.['required']" class="text-error red-text">
+                  <small>Straat is verplicht.</small>
+                </div>
+              </div>
+            </div>
+            <div class="col s3">
+              <input class="input validate teal-text" formControlName="houseNumber" type="text"
+                                       placeholder="{{user.address.houseNumber}}">
+              <div *ngIf="houseNr!.invalid && (houseNr!.dirty || houseNr!.touched)">
+                <div *ngIf="houseNr!.errors?.['required']" class="text-error red-text">
+                  <small>Huis nummer is verplicht.</small>
+                </div>
+                <div *ngIf="houseNr!.errors?.['minlength']" class="text-error red-text">
+                  <small>Huis nummer moet uit minimum 1 cijfer bestaan.</small>
+                </div>
+                <div *ngIf="houseNr!.errors?.['minlength']" class="text-error red-text">
+                  <small>Huis nummer moet groter of gelijk zijn aan 1.</small>
+                </div>
+              </div>
+            </div>
+            <div class="col s3">
+              <input class="input teal-text" formControlName="postBox" type="text"
+                                       placeholder="{{user.address.postBox}}">
+            </div>
           </div>
         </div>
         <div class="row  teal lighten-3 white-text overviewheadrow">
@@ -141,12 +206,39 @@
           <div class="col s3">{{user.address.country}}
           </div>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4"><input class="input validate teal-text" formControlName="city" type="text"
-                                       placeholder="{{user.address.city}}"></div>
-            <div class="col s3"><input class="input validate teal-text" formControlName="postalCode" type="text"
-                                       placeholder="{{user.address.postalCode}}"></div>
-            <div class="col s3"><input class="input validate teal-text" formControlName="country" type="text"
-                                       placeholder="{{user.address.country}}"></div>
+            <div class="col s4">
+              <input class="input validate teal-text" formControlName="city" type="text"
+                                       placeholder="{{user.address.city}}">
+              <div *ngIf="city!.invalid && (city!.dirty || city!.touched)">
+                <div *ngIf="city!.errors?.['required']" class="text-error red-text">
+                  <small>Stad is verplicht.</small>
+                </div>
+                <div *ngIf="city!.errors?.['pattern']" class="text-error red-text">
+                  <small>Stad mag enkel uit letters bestaan (a-z).</small>
+                </div>
+              </div>
+            </div>
+            <div class="col s3">
+              <input class="input validate teal-text" formControlName="postalCode" type="text"
+                                       placeholder="{{user.address.postalCode}}">
+              <div *ngIf="postalCode!.invalid && (postalCode!.dirty || postalCode!.touched)">
+                <div *ngIf="postalCode!.errors?.['required']" class="text-error red-text">
+                  <small>Postcode is verplicht.</small>
+                </div>
+              </div>
+            </div>
+            <div class="col s3">
+              <input class="input validate teal-text" formControlName="country" type="text"
+                                       placeholder="{{user.address.country}}">
+              <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
+                <div *ngIf="country!.errors?.['required']" class="text-error red-text">
+                  <small>Land is required.</small>
+                </div>
+                <div *ngIf="country!.errors?.['pattern']" class="text-error red-text">
+                  <small>Land mag enkel uit letters bestaan (a-z).</small>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
