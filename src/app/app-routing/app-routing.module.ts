@@ -18,12 +18,14 @@ import {
 } from "../admin-booking-overview/admin-booking-overview.component";
 import {RoleGuard} from "../services/role.guard";
 import {TimeslotOverviewComponent} from "../timeslot-overview/timeslot-overview.component";
+import {ContactComponent} from "../static-web-pages/contact/contact.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
   {path: 'about', component: AboutComponent},
   {path: 'massages', component: MassageComponent},
+  {path: 'contact', component: ContactComponent},
   {path: 'login', component: LoginComponent},
   {path: 'signup', component: SignupComponent},
   {path: 'users/overview', component: UsersOverviewComponent, canActivate: [RoleGuard, AuthGuard]},

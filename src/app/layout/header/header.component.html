@@ -12,7 +12,7 @@
           <a routerLink="/massages">Massages</a>
         </li>
         <li>
-          <a href="/home">Contact</a>
+          <a routerLink="/contact">Contact</a>
         </li>
         <li>
           <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Book a Massage</a></li>
@@ -90,7 +90,7 @@
       <a routerLink="/massages">Massages</a>
     </li>
     <li>
-      <a href="#">Contact</a>
+      <a routerLink="/contact">Contact</a>
     </li>
     <li>
       <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Book a Massage</a>
