@@ -151,7 +151,7 @@ export class BookingComponent implements OnInit {
               html: `<code>Beste,<br>
                 bedankt om te boeken bij sorelax! <br>
                 U hebt een boeking geplaatst voor:<br>
-                <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
+                <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration} minuten<br>
                 U zal nog een e-mail krijgen ter bevestiging/annulatie van deze boeking.
 
                 Mvg,
@@ -168,7 +168,7 @@ export class BookingComponent implements OnInit {
                   subject: `Nieuwe boeking van ${user?.firstName} ${user?.lastName}`,
                   html: `<code>Beste,<br>
                 Nieuwe boeking van ${user?.firstName} ${user?.lastName} <br>
-                <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
+                <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration} minuten<br>
                </code>`,
                 },
               })
