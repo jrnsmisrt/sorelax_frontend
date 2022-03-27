@@ -74,8 +74,8 @@ export class BookingComponent implements OnInit {
       let currDay = (new Date()).getDay();
       $(".timeslotdatepicker").datepicker({
           format: 'dd/mm/yyyy',
-          defaultDate: new Date(currYear, currMonth, (currDay+1)),
-          minDate: new Date(currYear, currMonth, (currDay+1)),
+          defaultDate: new Date(currYear, currMonth, (currDay + 1)),
+          minDate: new Date(currYear, currMonth, (currDay + 1)),
           autoClose: true,
           disableDayFn: (date) => {
             let convertedDate = date.toLocaleString('en-GB').slice(0, 10);
@@ -147,11 +147,11 @@ export class BookingComponent implements OnInit {
             to: firebase.auth().currentUser?.email,
             from: 'info@sorelax.be',
             message: {
-              subject: 'Bevestiging Boeking',
-              html: `<code>Beste,<br>' +
-                'bedankt om te boeken bij sorelax! <br>' +
-                'U heb een boeking geplaatst voor:<br>' +
-                '<strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
+              subject: 'Boeking Sorelax',
+              html: `<code>Beste,<br>
+                bedankt om te boeken bij sorelax! <br>
+                U hebt een boeking geplaatst voor:<br>
+                <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
                 U zal nog een e-mail krijgen ter bevestiging/annulatie van deze boeking.
 
                 Mvg,
@@ -163,18 +163,13 @@ export class BookingComponent implements OnInit {
             user.subscribe((user) => {
               this.fireStore.collection('mail').add({
                 to: 'info@sorelax.be',
-                from: 'info@sorelax.be',
+                from: 'web@sorelax.be',
                 message: {
                   subject: `Nieuwe boeking van ${user?.firstName} ${user?.lastName}`,
-                  html: `<code>Beste,<br>' +
-                'bedankt om te boeken bij sorelax! <br>' +
-                'U heb een boeking geplaatst voor:<br>' +
-                '<strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
-                U zal nog een e-mail krijgen ter bevestiging/annulatie van deze boeking.
-
-                Mvg,
-                Sofie
-                </code>`,
+                  html: `<code>Beste,<br>
+                Nieuwe boeking van ${user?.firstName} ${user?.lastName} <br>
+                <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
+               </code>`,
                 },
               })
             });
