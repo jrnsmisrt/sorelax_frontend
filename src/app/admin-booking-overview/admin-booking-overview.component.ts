@@ -4,6 +4,7 @@ import {Booking} from "../model/Booking";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
 import {InitService} from "../materialize/init.service";
+import firebase from "firebase/compat/app";
 
 @Component({
   selector: 'app-admin-booking-overview',
@@ -50,8 +51,27 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'confirmed'
     }).then(() => {
-      //send E-mail
       M.toast({html: 'Booking confirmed', classes: 'rounded teal'});
+      let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+      booking.subscribe((booking) => {
+
+        this.fireStore.collection('mail').add({
+          to: firebase.auth().currentUser?.email,
+          from: 'info@sorelax.be',
+          message: {
+            subject: 'Bevestiging Boeking',
+            html: `<code>Beste,<br>' +
+                'Uw boeking werd bevestigd!'
+                '<strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration}<br>
+
+                Mvg,
+                Sofie
+                </code>`,
+          },
+        }).catch((error) => {
+          M.toast({html: `${error}`, classes: 'rounded red'});
+        })
+      })
     }).catch(error => {
       M.toast({html: `${error}`, classes: 'rounded red'});
       console.log(error);
@@ -62,8 +82,28 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'cancelled'
     }).then(() => {
-      //send E-mail
       M.toast({html: 'Booking cancelled', classes: 'rounded teal'});
+      let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+      booking.subscribe((booking) => {
+
+        this.fireStore.collection('mail').add({
+          to: firebase.auth().currentUser?.email,
+          from: 'info@sorelax.be',
+          message: {
+            subject: 'Annulatie Boeking',
+            html: `<code>Beste,<br>' +
+                'Uw boeking werd helaas geannuleerd!'
+                '<strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration}<br>
+                +'Deze boeking kan helaas niet doorgaan.'
+
+                Mvg,
+                Sofie
+                </code>`,
+          },
+        }).catch((error) => {
+          M.toast({html: `${error}`, classes: 'rounded red'});
+        })
+      })
     }).catch(error => {
       M.toast({html: `${error}`, classes: 'rounded red'});
       console.log(error);
@@ -74,7 +114,6 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'DELETED'
     }).then(() => {
-      //send E-mail
       M.toast({html: 'Booking deleted', classes: 'rounded teal'});
     }).catch(error => {
       M.toast({html: `${error}`, classes: 'rounded red'});
@@ -83,19 +122,16 @@ export class AdminBookingOverviewComponent implements OnInit {
   }
 
   setDate(searchDate: string) {
-    /* let dp = M.Datepicker.getInstance(document.getElementById('filter_datum')!);
-     dp.setInputValue();
-     this.searchDate = dp.date.toLocaleString();*/
     this.searchDate = searchDate;
 
     console.log(this.searchDate);
   }
 
-  getBookingUser(id: string|undefined): Observable<User|undefined>{
+  getBookingUser(id: string | undefined): Observable<User | undefined> {
     return this.fireStore.collection<User>('users').doc(id).valueChanges();
   }
 
-  getUsersBookings(id: string|undefined): Observable<Booking[]|undefined>{
-    return this.fireStore.collection<Booking>('bookings', ref=>ref.where('userUid','==', id)).valueChanges();
+  getUsersBookings(id: string | undefined): Observable<Booking[] | undefined> {
+    return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', id)).valueChanges();
   }
 }

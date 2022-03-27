@@ -51,8 +51,7 @@ export class UserService {
   }
 
   getUser(uid: string | undefined): Observable<User | undefined> {
-    let getUserDoc = this.fireStore.doc<User>(`users/${uid}`);
-    return getUserDoc.valueChanges();
+    return this.fireStore.collection<User>('users').doc(uid).valueChanges();
   }
 
   getUserFirstName(uid: string): Subscription {

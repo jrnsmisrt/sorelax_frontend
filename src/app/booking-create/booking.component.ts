@@ -10,6 +10,7 @@ import {Booking} from "../model/Booking";
 import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
 import {Massage} from "../model/Massage";
+import {UserService} from "../services/user.service";
 
 @Component({
   selector: 'app-booking',
@@ -45,7 +46,8 @@ export class BookingComponent implements OnInit {
               private formBuilder: FormBuilder,
               private initService: InitService,
               public afAuthService: AuthService,
-              private router: Router) {
+              private router: Router,
+              private userService: UserService) {
   }
 
 
@@ -62,7 +64,6 @@ export class BookingComponent implements OnInit {
       preferredMinute: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       message: ['']
     })
-    // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
     this.initService.initModal();
@@ -84,7 +85,7 @@ export class BookingComponent implements OnInit {
             let selectedDate = date.toLocaleString('en-GB').slice(0, 10);
             this.timeslotDatePickerDateSelected = selectedDate;
             this.getTimeSlotsFromDate(this.timeslotDatePickerDateSelected);
-            close();
+            M.Datepicker.getInstance(document.getElementById('timeslotdatepicker')!).close();
           }
         },
       );
@@ -117,12 +118,12 @@ export class BookingComponent implements OnInit {
 
 
   bookMassage() {
-    let numericalpreferredTime = this.preferredHour?.value+this.preferredMinute?.value;
-    let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0,2)+this.confirmedTimeslot.endTime.slice(3);
-    let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0,2)+this.confirmedTimeslot.startTime.slice(3);
+    let numericalpreferredTime = this.preferredHour?.value + this.preferredMinute?.value;
+    let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0, 2) + this.confirmedTimeslot.endTime.slice(3);
+    let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0, 2) + this.confirmedTimeslot.startTime.slice(3);
     let numericalDuration = BookingComponent.getNumericalDuration(Number(this.confirmedDuration));
 
-    if(numericalpreferredTime<=(Number(numericalTimeslotEndTime)-numericalDuration) && numericalpreferredTime>=numericalTimeslotstartTime){
+    if (numericalpreferredTime <= (Number(numericalTimeslotEndTime) - numericalDuration) && numericalpreferredTime >= numericalTimeslotstartTime) {
 
       this.fireStore.collection('bookings').add({
         userUid: firebase.auth().currentUser?.uid,
@@ -141,14 +142,52 @@ export class BookingComponent implements OnInit {
         this.fireStore.collection('bookings').doc(docRef.id).update({
           id: docRef.id
         }).then(() => {
-          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
-        }).then(() => {
           M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
+          this.fireStore.collection('mail').add({
+            to: firebase.auth().currentUser?.email,
+            from: 'info@sorelax.be',
+            message: {
+              subject: 'Bevestiging Boeking',
+              html: `<code>Beste,<br>' +
+                'bedankt om te boeken bij sorelax! <br>' +
+                'U heb een boeking geplaatst voor:<br>' +
+                '<strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
+                U zal nog een e-mail krijgen ter bevestiging/annulatie van deze boeking.
+
+                Mvg,
+                Sofie
+                </code>`,
+            },
+          }).then(() => {
+            let user = this.userService.getUser(firebase.auth().currentUser?.uid);
+            user.subscribe((user)=>{
+              this.fireStore.collection('mail').add({
+                to: 'info@sorelax.be',
+                from: 'info@sorelax.be',
+                message: {
+                  subject: `Nieuwe boeking van ${user?.firstName} ${user?.lastName}`,
+                  html: `<code>Beste,<br>' +
+                'bedankt om te boeken bij sorelax! <br>' +
+                'U heb een boeking geplaatst voor:<br>' +
+                '<strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration}<br>
+                U zal nog een e-mail krijgen ter bevestiging/annulatie van deze boeking.
+
+                Mvg,
+                Sofie
+                </code>`,
+                },
+              })
+            });
+          }).catch((error) => {
+            M.toast({html: error, classes: 'rounded red'});
+          })
+        }).then(() => {
+          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
         })
       }).catch(error => {
         M.toast({html: error, classes: 'rounded red'});
       })
-    }else{
+    } else {
       M.toast({html: 'Uw voorkeurs tijdstip valt buiten de geselecteerde timeslot', classes: 'rounded red'});
     }
   }
@@ -242,25 +281,31 @@ export class BookingComponent implements OnInit {
   get timeslot() {
     return this.bookingForm.get(['timeslot']);
   }
-  get preferredHour(){
+
+  get preferredHour() {
     return this.bookingForm.get(['preferredHour']);
   }
 
-  get preferredMinute(){
+  get preferredMinute() {
     return this.bookingForm.get(['preferredMinute']);
   }
 
-  get preferredTime(){
+  get preferredTime() {
     return `${this.preferredHour?.value} : ${this.preferredMinute?.value}`;
   }
 
   private static getNumericalDuration(duration: number): number {
-    switch(duration){
-      case 90: return (90+60);
-      case 60: return (60+40);
-      case 30: return (30+40);
-      case 15: return (15+40);
-      default: return duration;
+    switch (duration) {
+      case 90:
+        return (90 + 60);
+      case 60:
+        return (60 + 40);
+      case 30:
+        return (30 + 40);
+      case 15:
+        return (15 + 40);
+      default:
+        return duration;
     }
   }
 }
