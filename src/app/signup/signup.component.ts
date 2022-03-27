@@ -51,7 +51,7 @@ export class SignupComponent implements OnInit {
       $('.datepicker').datepicker({
         format: "dd/mm/yyyy",
         yearRange: [1900, new Date().getFullYear() - 18],
-        defaultDate: new Date(1989, new Date().getMonth(), new Date().getDay()),
+        defaultDate: new Date(new Date().getFullYear()-18, new Date().getMonth(), new Date().getDay()),
         maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDay() - 1),
         onSelect: () => {
           this.signupForm.patchValue({
