@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {InitService} from "../materialize/init.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-timeslot',
@@ -20,7 +21,8 @@ export class CreateTimeslotComponent implements OnInit {
 
   constructor(private fireStore: AngularFirestore,
               private formBuilder: FormBuilder,
-              private init: InitService) {
+              private init: InitService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -50,6 +52,11 @@ export class CreateTimeslotComponent implements OnInit {
       this.fireStore.collection('timeslots').doc(docRef.id).update({
         id: docRef.id
       })
+    }).then((a)=>{
+      this.router.navigate(['timeslots/overview']);
+      M.toast({html: `Timeslot created: ${this.date} from ${this.startTime} ${this.endTime}`, classes: 'rounded teal' })
+    }).catch((error)=>{
+      M.toast({html: error, classes: 'rounded red'});
     })
   }
 

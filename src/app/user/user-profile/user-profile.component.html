@@ -172,9 +172,15 @@
   <div id="unregisterModal" class="modal">
     <div class="modal-content">
       Bent u zeker dat u uw profiel wilt verwijderen?
+      <br>
+      <form [formGroup]="unRegisterPasswordForm">
+        <label>Vul uw paswoord in</label>
+        <input class="input" formControlName="deleteUserPassword" type="password">
+        <button class="btn waves-light waves-effect" (click)="confirmUnregisterProfile()">Verwijder profiel</button>
+      </form>
+
     </div>
     <div class="modal-footer">
-      <button class="btn waves-light waves-effect" (click)="confirmUnregisterProfile()">Verwijder profiel</button>
     </div>
   </div>
 
@@ -184,7 +190,7 @@
       <form [formGroup]="confirmPasswordForm">
         <label>Vul uw paswoord in</label>
         <input class="input" formControlName="password" type="password">
-        <button class="btn waves-light waves-effect" (click)="setPassword()">Bevestig paswoord</button>
+        <button class="btn waves-light waves-effect" (click)="setPasswordForEmailChange()">Bevestig paswoord</button>
       </form>
     </div>
     <div class="modal-footer">

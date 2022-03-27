@@ -53,7 +53,7 @@
         <ul class="collapsible" data-collapsible="expandable">
           <li
             *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
-            <div class="collapsible-header">
+            <div class="collapsible-header " *ngIf="booking.status!=='DELETED'">
               <div class="col l3 s4">
                 {{booking.date}}
               </div>

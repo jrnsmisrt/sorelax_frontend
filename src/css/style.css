@@ -20,6 +20,9 @@ p {
   line-height: 2rem;
 }
 
+img.sofie{
+  border-radius: 5%;
+}
 .about {
   font-size: larger;
   padding: 2px;
@@ -69,6 +72,7 @@ p {
   background-color: #ffffff;
   color: teal;
   font-weight: bold;
+  padding: 2px;
 }
 
 .sofiesignature {
@@ -92,7 +96,7 @@ p {
   background-color: #e1f5f5;
   border: 6px solid #97d2d2;
   border-radius: 20px;
-
+  padding: 2px;
 }
 .massagedescription {
   font-size: larger;

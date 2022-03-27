@@ -24,7 +24,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.init.initDropdown();
   }
 
   logout(): void {

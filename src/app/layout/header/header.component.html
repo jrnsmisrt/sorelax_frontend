@@ -15,7 +15,7 @@
           <a routerLink="/contact">Contact</a>
         </li>
         <li>
-          <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Book a Massage</a></li>
+          <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a></li>
       </ul>
     </div>
     <div class="col right">
@@ -42,10 +42,10 @@
   <div *ngIf="afAuthService.userLoggedIn">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
-        <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My Profile</a></li>
-        <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My Bookings</a>
+        <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">Mijn Profiel</a></li>
+        <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a>
         </li>
-        <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a>
+        <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
         </li>
       </ul>
     </div>
@@ -61,12 +61,12 @@
         <li class="tab">
           <a [routerLink]="['/', 'timeslots', 'overview']">View Timeslots</a>
         </li>
-        <li class="tab">
+        <!--<li class="tab">
           <a>Create User</a>
         </li>
         <li class="tab">
           <a>Create Massage</a>
-        </li>
+        </li>-->
         <li class="tab">
           <a [routerLink]="['/', 'timeslots', 'create-timeslot']">Create Timeslot</a>
         </li>
@@ -93,17 +93,16 @@
       <a routerLink="/contact">Contact</a>
     </li>
     <li>
-      <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Book a Massage</a>
+      <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a>
     </li>
     <li>
       <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
         <ul>
-          <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">My
-            Profile</a></li>
-          <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">My
-            Bookings</a></li>
+          <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">Mijn
+            Profiel</a></li>
+          <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a></li>
           <li class="tab">
-            <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Book a Massage</a>
+            <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
           </li>
         </ul>
         <div class="mobile-user-nav" *ngIf="isAdmin">

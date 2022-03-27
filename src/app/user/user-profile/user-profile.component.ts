@@ -22,6 +22,7 @@ export class UserProfileComponent implements OnInit {
   editProfileForm!: FormGroup;
   confirmPasswordForm!: FormGroup;
   changePasswordForm!: FormGroup;
+  unRegisterPasswordForm!: FormGroup
   isPasswordEqual!: boolean;
 
   constructor(private userService: UserService, private route: ActivatedRoute,
@@ -69,6 +70,10 @@ export class UserProfileComponent implements OnInit {
       'currentPassword': ['', Validators.required],
       'newPassword': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]],
       'newPasswordConfirmation': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$')]]
+    })
+
+    this.unRegisterPasswordForm = this.formBuilder.group({
+      'deleteUserPassword': ['', Validators.required]
     })
 
   }
@@ -126,19 +131,21 @@ export class UserProfileComponent implements OnInit {
       .catch((error) => {
         console.log(error)
       });
-    this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!)
-      .delete()
-      .then(() => {
-        auth().currentUser?.delete().then(() => {
-          M.toast({html: 'Succesfully unregistered', classes: 'rounded teal'});
-          this.router.navigate(['login']);
-        })
-      }).catch((error) => {
-      M.toast({html: `${error}`, classes: 'rounded red'})
-    })
+    UserProfileComponent.reauthenticate(this.deleteUserPassword?.value).then(() => {
+      this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!)
+        .delete()
+        .then(() => {
+          auth().currentUser?.delete().then(() => {
+            M.toast({html: 'Succesfully unregistered', classes: 'rounded teal'});
+            this.router.navigate(['login']);
+          })
+        }).catch((error) => {
+        M.toast({html: `${error}`, classes: 'rounded red'})
+      })
+    });
   }
 
-  setPassword() {
+  setPasswordForEmailChange() {
     UserProfileComponent.reauthenticate(this.password?.value).then(() => {
       auth().currentUser!.updateEmail(this.email?.value)
         .then(() => {
@@ -250,5 +257,9 @@ export class UserProfileComponent implements OnInit {
 
   get newPasswordConfirmation() {
     return this.changePasswordForm.get('newPasswordConfirmation');
+  }
+
+  get deleteUserPassword(){
+    return this.unRegisterPasswordForm.get('deleteUserPassword')
   }
 }

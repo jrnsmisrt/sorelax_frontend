@@ -64,8 +64,8 @@
                     <input id="timeslotdatepicker" class="timeslotdatepicker teal-text center-align">
                   </div>
                 </div>
-                <p *ngIf="timeslotDatePickerDateSelected as date">
-                  <strong class="teal-text">u selecteerde een Timeslot op datum :{{date}}</strong>
+                <p class="bookingSelectionInfo center-align" *ngIf="timeslotDatePickerDateSelected as date">
+                  U selecteerde timeslot op datum :{{date}}
                 </p><br><br>
                 <div *ngIf="timeslotDatePickerDateSelected">
                   <span *ngIf="!timeslotPickedTime">Selecteer een tijdstip</span>
@@ -98,7 +98,7 @@
         <div class="row">
           <div class="col s2 teal-text lighten-3"><h6>( 4 )</h6></div>
           <div class="col s8 center center-block center-align">
-            <button [disabled]="!bookingForm.valid" class="btn-large waves-effect waves-teal"
+            <button [disabled]="!bookingForm.valid" class="btn-large waves-effect waves-teal "
                     (click)="bookMassage()">Boek Massage
             </button>
           </div>

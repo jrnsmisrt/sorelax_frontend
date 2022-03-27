@@ -6,14 +6,14 @@
 
       <form [formGroup]="loginForm" (ngSubmit)="loginUser()" type="">
         <div class="row">
-          <label>Email</label></div>
+          <label>E-mail</label></div>
         <div class="row">
-          <input autocomplete="off" class="email" formControlName="email" type="email" placeholder="Email">
+          <input autocomplete="off" class="email" formControlName="email" type="email" placeholder="E-mail">
         </div>
         <div class="row">
-          <label>Password</label></div>
+          <label>Paswoord</label></div>
         <div class="row">
-          <input autocomplete="off" formControlName="password" type="password" placeholder="Password">
+          <input autocomplete="off" formControlName="password" type="password" placeholder="Paswoord">
         </div>
         <div class="row">
           <div *ngIf="firebaseErrorMessage != ''" class="error-style">
@@ -24,11 +24,6 @@
           <button class="btn-large waves-teal waves-effect">Login</button>
         </div>
       </form>
-      <div class="row center">
-          <button class="btn-small waves-teal waves-effect" (click)="signInWithGoogle()">
-            Sign in with Google
-          </button>
-      </div>
     </div>
 
   </div>
