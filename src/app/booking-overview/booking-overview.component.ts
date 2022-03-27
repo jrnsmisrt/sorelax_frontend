@@ -60,7 +60,6 @@ export class BookingOverviewComponent implements OnInit {
 
   getUserName(id: string) {
     this.fireStore.collection<User>('users').doc(id).valueChanges().subscribe((user) => {
-      console.log(user?.firstName);
       this.bookingUserFullName += user?.firstName + ' ' + user?.lastName
     })
   }

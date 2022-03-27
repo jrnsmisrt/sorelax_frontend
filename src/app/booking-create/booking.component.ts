@@ -65,16 +65,13 @@ export class BookingComponent implements OnInit {
     // @ts-ignore
     this.timeslots$ = this.getTimeslots();
     this.timeslots$ = this.timeslotCollection.valueChanges();
-
     this.initService.initModal();
-    this.initService.initSelect();
 
     $(document).ready(() => {
       let currYear = (new Date()).getFullYear();
       let currMonth = (new Date()).getMonth();
       let currDay = (new Date()).getDay();
       $(".timeslotdatepicker").datepicker({
-          //container: document.getElementById('#showdatepicker'),
           format: 'dd/mm/yyyy',
           defaultDate: new Date(currYear, currMonth, currDay),
           showClearBtn: true,
@@ -123,8 +120,9 @@ export class BookingComponent implements OnInit {
     let numericalpreferredTime = this.preferredHour?.value+this.preferredMinute?.value;
     let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0,2)+this.confirmedTimeslot.endTime.slice(3);
     let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0,2)+this.confirmedTimeslot.startTime.slice(3);
-    console.log(numericalpreferredTime.toString(), numericalTimeslotstartTime, numericalTimeslotEndTime);
-    if(numericalpreferredTime<(Number(numericalTimeslotEndTime)-this.duration?.value) && numericalpreferredTime>=numericalTimeslotstartTime){
+    let numericalDuration = BookingComponent.getNumericalDuration(Number(this.confirmedDuration));
+
+    if(numericalpreferredTime<=(Number(numericalTimeslotEndTime)-numericalDuration) && numericalpreferredTime>=numericalTimeslotstartTime){
 
       this.fireStore.collection('bookings').add({
         userUid: firebase.auth().currentUser?.uid,
@@ -254,5 +252,15 @@ export class BookingComponent implements OnInit {
 
   get preferredTime(){
     return `${this.preferredHour?.value} : ${this.preferredMinute?.value}`;
+  }
+
+  private static getNumericalDuration(duration: number): number {
+    switch(duration){
+      case 90: return (90+60);
+      case 60: return (60+40);
+      case 30: return (30+40);
+      case 15: return (15+40);
+      default: return duration;
+    }
   }
 }

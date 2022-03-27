@@ -59,7 +59,6 @@ export class UserService {
     let userFullName: string | undefined;
     return this.getUser(uid).subscribe((user) => {
       userFullName = user?.firstName + ' ' + user?.lastName!;
-      console.log(userFullName.toString());
       return userFullName.toString();
     });
   }

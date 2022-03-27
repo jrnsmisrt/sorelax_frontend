@@ -4,7 +4,6 @@ import {InitService} from "../../materialize/init.service";
 @Component({
   selector: 'app-massage',
   templateUrl: './massage.component.html',
-  styleUrls: ['./massage.component.css']
 })
 export class MassageComponent implements OnInit, AfterViewInit {
 
