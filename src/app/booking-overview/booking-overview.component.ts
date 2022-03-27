@@ -7,7 +7,6 @@ import {UserService} from "../services/user.service";
 import {User} from "../model/User";
 import firebase from "firebase/compat/app";
 import {InitService} from "../materialize/init.service";
-import {TimeSlot} from "../model/TimeSlot";
 
 @Component({
   selector: 'app-booking-overview',
@@ -73,6 +72,7 @@ export class BookingOverviewComponent implements OnInit {
         this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
           status: 'confirmed'
         }).catch(error => {
+          M.toast({html: `${error}`, classes: 'rounded red'});
           console.log('confirm booking: ' + error);
         })
       }
@@ -84,13 +84,8 @@ export class BookingOverviewComponent implements OnInit {
       status: 'cancelled',
     }).then(() => {
       M.toast({html: 'Boeking werd geannuleerd', classes: 'rounded teal'});
-    }).then(() => {
-      this.fireStore.doc<Booking>(`bookings/${bookingId}`).valueChanges().subscribe((b) => {
-        this.fireStore.doc<TimeSlot>(`timeslots/${b?.timeslot}`).update({
-          isAvailable: true
-        })
-      });
     }).catch(error => {
+      M.toast({html: `${error}`, classes: 'rounded red'});
       console.log('cancel booking: ' + error);
     });
   }

@@ -27,7 +27,7 @@
       *ngFor="let booking of bookings$ | async | filterDate:searchDate | filterStatus:searchStatus | filterMassage: searchMassage">
       <div class="collapsible-header row" *ngIf="booking.status!=='DELETED'">
         <div class="col m3 s4 teal-text center-align"><strong>{{booking.date}}</strong></div>
-        <div class="col m3 s4 teal-text center-align"><strong>{{booking.time}}</strong></div>
+        <div class="col m3 s4 teal-text center-align"><strong>{{booking.preferredTime}}</strong></div>
         <div class="col m3 s4 teal-text  center-align"><strong>{{booking.massage}}</strong></div>
         <div class="col m3 hide-on-small-and-down teal-text  center-align">
           <span *ngIf="booking.status==='pending'"><strong><span class="bookingStatusPending">{{booking.status}}</span></strong></span>

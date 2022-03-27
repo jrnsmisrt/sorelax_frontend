@@ -68,14 +68,44 @@
                   U selecteerde timeslot op datum :{{date}}
                 </p><br><br>
                 <div *ngIf="timeslotDatePickerDateSelected">
-                  <span *ngIf="!timeslotPickedTime">Selecteer een tijdstip</span>
+                  <span *ngIf="!timeslotPickedTime">Selecteer een beschikbare timeslot</span>
                   <div *ngFor="let timeslot of timeslotsPickedDate">
-                    <a *ngIf="timeslot.isAvailable" class="btn waves-effect waves-light"
+                    <a class="btn waves-effect waves-light"
                        (click)="confirmTimeslot(timeslot)">{{timeslot.startTime}} - {{timeslot.endTime}}</a>
                   </div>
                 </div>
                 <p class="bookingSelectionInfo center-align" *ngIf="confirmedTimeslot">
-                  U selecteerde: {{confirmedTimeslot.date}} om {{confirmedTimeslot.startTime}}</p>
+                  U selecteerde: {{confirmedTimeslot.date}} om {{confirmedTimeslot.startTime}} - {{confirmedTimeslot.endTime}}</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="confirmedTimeslot">
+              <div class="col s12">
+                <label>Voorkeur tijd</label><br>
+                <div class="row">
+                  <div class="col l2">
+                    <input class="input-field" type="text" formControlName="preferredHour" placeholder="uur">
+                  </div>
+                  <div class="col l1">:</div>
+                  <div class="col l2">
+                     <input class="input-field" type="text" formControlName="preferredMinute" placeholder="minuten">
+                  </div>
+                </div>
+                <div *ngIf="preferredHour!.invalid && (preferredHour!.dirty || preferredHour!.touched)">
+                  <div *ngIf="preferredHour!.errors?.['required']" class="text-error red-text">
+                    <small>Voorkeur tijd (Uur) is verplicht.</small>
+                  </div>
+                  <div *ngIf="preferredHour!.errors?.['pattern']" class="text-error red-text">
+                    <small>Voorkeur tijd (Uur) mag enkel uit cijfers bestaan (0-9).</small>
+                  </div>
+                </div>
+                <div *ngIf="preferredMinute!.invalid && (preferredMinute!.dirty || preferredMinute!.touched)">
+                  <div *ngIf="preferredMinute!.errors?.['required']" class="text-error red-text">
+                    <small>Voorkeur tijd (Minuten) is verplicht.</small>
+                  </div>
+                  <div *ngIf="preferredHour!.errors?.['pattern']" class="text-error red-text">
+                    <small>Voorkeur tijd (Minuten) mag enkel uit cijfers bestaan (0-9).</small>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

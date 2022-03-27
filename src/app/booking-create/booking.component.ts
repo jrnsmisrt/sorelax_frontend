@@ -58,6 +58,8 @@ export class BookingComponent implements OnInit {
       timeslot: ['', [Validators.required]],
       massage: ['', [Validators.required]],
       duration: ['', [Validators.required]],
+      preferredHour: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+      preferredMinute: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       message: ['']
     })
     // @ts-ignore
@@ -105,7 +107,7 @@ export class BookingComponent implements OnInit {
   setTimeslotDates() {
     this.getTimeslots().subscribe((data) => {
       data.forEach((timeslot) => {
-        if (!this.arrayOfDates.includes(timeslot.date) && timeslot.isAvailable) {
+        if (!this.arrayOfDates.includes(timeslot.date)) {
           this.arrayOfDates.push(timeslot.date);
         }
       });
@@ -118,31 +120,39 @@ export class BookingComponent implements OnInit {
 
 
   bookMassage() {
-    this.fireStore.collection('bookings').add({
-      userUid: firebase.auth().currentUser?.uid,
-      timeslot: this.confirmedTimeslot.id,
-      date: this.confirmedTimeslot.date,
-      time: this.confirmedTimeslot.startTime,
-      massage: this.confirmedMassage,
-      duration: this.confirmedDuration,
-      personalMessage: this.bookingForm.get(['message'])?.value,
-      requestedOn: JSON.stringify(new Date(Date.now())),
-      status: 'pending'
-    }).then((docRef) => {
-      this.fireStore.collection('bookings').doc(docRef.id).update({
-        id: docRef.id
-      }).then(() => {
-        this.fireStore.collection('timeslots').doc(this.confirmedTimeslot.id).update({
-          customerId: firebase.auth().currentUser?.uid,
-          isAvailable: false
-        });
-        this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
-      }).then(() => {
-        M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
+    let numericalpreferredTime = this.preferredHour?.value+this.preferredMinute?.value;
+    let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0,2)+this.confirmedTimeslot.endTime.slice(3);
+    let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0,2)+this.confirmedTimeslot.startTime.slice(3);
+    console.log(numericalpreferredTime.toString(), numericalTimeslotstartTime, numericalTimeslotEndTime);
+    if(numericalpreferredTime<(Number(numericalTimeslotEndTime)-this.duration?.value) && numericalpreferredTime>=numericalTimeslotstartTime){
+
+      this.fireStore.collection('bookings').add({
+        userUid: firebase.auth().currentUser?.uid,
+        timeslot: this.confirmedTimeslot.id,
+        date: this.confirmedTimeslot.date,
+        time: this.confirmedTimeslot.startTime,
+        preferredHour: this.preferredHour?.value,
+        preferredMinute: this.preferredMinute?.value,
+        preferredTime: this.preferredTime,
+        massage: this.confirmedMassage,
+        duration: this.confirmedDuration,
+        personalMessage: this.bookingForm.get(['message'])?.value,
+        requestedOn: JSON.stringify(new Date(Date.now())),
+        status: 'pending'
+      }).then((docRef) => {
+        this.fireStore.collection('bookings').doc(docRef.id).update({
+          id: docRef.id
+        }).then(() => {
+          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
+        }).then(() => {
+          M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
+        })
+      }).catch(error => {
+        M.toast({html: error, classes: 'rounded red'});
       })
-    }).catch(error => {
-      M.toast({html: error, classes: 'rounded red'});
-    })
+    }else{
+      M.toast({html: 'Uw voorkeurs tijdstip valt buiten de geselecteerde timeslot', classes: 'rounded red'});
+    }
   }
 
   changeDuration(minutes: any) {
@@ -234,5 +244,15 @@ export class BookingComponent implements OnInit {
   get timeslot() {
     return this.bookingForm.get(['timeslot']);
   }
+  get preferredHour(){
+    return this.bookingForm.get(['preferredHour']);
+  }
 
+  get preferredMinute(){
+    return this.bookingForm.get(['preferredMinute']);
+  }
+
+  get preferredTime(){
+    return `${this.preferredHour?.value} : ${this.preferredMinute?.value}`;
+  }
 }

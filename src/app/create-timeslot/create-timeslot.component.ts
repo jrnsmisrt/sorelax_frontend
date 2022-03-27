@@ -46,13 +46,11 @@ export class CreateTimeslotComponent implements OnInit {
       date: this.date,
       startTime: this.startTime,
       endTime: this.endTime,
-      isAvailable: true,
-      confirmed: false
     }).then((docRef) => {
       this.fireStore.collection('timeslots').doc(docRef.id).update({
         id: docRef.id
       })
-    }).then((a)=>{
+    }).then(()=>{
       this.router.navigate(['timeslots/overview']);
       M.toast({html: `Timeslot created: ${this.date} from ${this.startTime} ${this.endTime}`, classes: 'rounded teal' })
     }).catch((error)=>{
