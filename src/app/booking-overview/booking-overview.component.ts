@@ -95,10 +95,8 @@ export class BookingOverviewComponent implements OnInit {
               html: `<code>Beste,<br>
                 Volgende boeking werd zonet geannuleerd:<br>
                 Van: ${usr?.firstName} ${usr?.lastName} <br>
-                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration}<br>
-                ${this.userService.getUser(booking?.userUid).subscribe((usr) => {
-                return `${usr?.firstName} ${usr?.lastName}`
-              })}
+                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration} minuten<br>
+                <br><br>
 
                 Mvg,
                 Sorelax

@@ -53,7 +53,7 @@ export class BookingComponent implements OnInit {
 
   ngOnInit(): void {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
-    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc').orderBy('isAvailable', 'desc'));
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc'));
     this.setTimeslotDates();
 
     this.bookingForm = this.formBuilder.group({

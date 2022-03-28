@@ -16,7 +16,7 @@ export class TimeslotOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.timeslots = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc').orderBy('isAvailable', 'desc')).valueChanges();
+    this.timeslots = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc')).valueChanges();
     this.users = this.fireStore.collection<User>('users').valueChanges();
   }
 
