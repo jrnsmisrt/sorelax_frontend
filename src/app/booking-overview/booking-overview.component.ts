@@ -81,8 +81,34 @@ export class BookingOverviewComponent implements OnInit {
   cancelBooking(bookingId: string) {
     this.fireStore.doc<Booking>(`bookings/${bookingId}`).update({
       status: 'cancelled',
-    }).then(() => {
+    }).then(async () => {
       M.toast({html: 'Boeking werd geannuleerd', classes: 'rounded teal'});
+      let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+      booking.subscribe((booking) => {
+        let usr = this.fireStore.collection<User>('users').doc(booking?.userUid).valueChanges();
+        usr.subscribe((usr) => {
+          this.fireStore.collection('mail').add({
+            to: 'sverkouille@sorelax.be',
+            from: firebase.auth().currentUser?.email,
+            message: {
+              subject: `Sorelax: Annulatie Boeking ${booking?.date} ${usr?.lastName}`,
+              html: `<code>Beste,<br>
+                Volgende boeking werd zonet geannuleerd:<br>
+                Van: ${usr?.firstName} ${usr?.lastName} <br>
+                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration}<br>
+                ${this.userService.getUser(booking?.userUid).subscribe((usr) => {
+                return `${usr?.firstName} ${usr?.lastName}`
+              })}
+
+                Mvg,
+                Sorelax
+                </code>`,
+            },
+          }).catch((error) => {
+            M.toast({html: `${error}`, classes: 'rounded red'});
+          });
+        });
+      })
     }).catch(error => {
       M.toast({html: `${error}`, classes: 'rounded red'});
       console.log('cancel booking: ' + error);

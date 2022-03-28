@@ -158,9 +158,9 @@ export class BookingComponent implements OnInit {
                 Sofie
                 </code>`,
             },
-          }).then(() => {
+          }).then(async () => {
             let user = this.userService.getUser(firebase.auth().currentUser?.uid);
-            user.subscribe((user) => {
+            await user.subscribe((user) => {
               this.fireStore.collection('mail').add({
                 to: 'info@sorelax.be',
                 from: 'web@sorelax.be',

@@ -50,10 +50,10 @@ export class AdminBookingOverviewComponent implements OnInit {
   confirmBooking(bookingId: string) {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'confirmed'
-    }).then(() => {
+    }).then(async () => {
       M.toast({html: 'Booking confirmed', classes: 'rounded teal'});
       let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-      booking.subscribe((booking) => {
+      await booking.subscribe((booking) => {
 
         this.fireStore.collection('mail').add({
           to: firebase.auth().currentUser?.email,
@@ -81,10 +81,10 @@ export class AdminBookingOverviewComponent implements OnInit {
   cancelBooking(bookingId: string) {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'cancelled'
-    }).then(() => {
+    }).then(async () => {
       M.toast({html: 'Booking cancelled', classes: 'rounded teal'});
       let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-      booking.subscribe((booking) => {
+      await booking.subscribe((booking) => {
 
         this.fireStore.collection('mail').add({
           to: firebase.auth().currentUser?.email,
