@@ -162,7 +162,7 @@ export class BookingComponent implements OnInit {
             let user = this.userService.getUser(firebase.auth().currentUser?.uid);
             await user.subscribe((user) => {
               this.fireStore.collection('mail').add({
-                to: 'info@sorelax.be',
+                to: 'sverkouille@hotmail.com',
                 from: 'web@sorelax.be',
                 message: {
                   subject: `Nieuwe boeking van ${user?.firstName} ${user?.lastName}`,

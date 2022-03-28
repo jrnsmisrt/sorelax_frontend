@@ -88,7 +88,7 @@ export class BookingOverviewComponent implements OnInit {
         let usr = this.fireStore.collection<User>('users').doc(booking?.userUid).valueChanges();
         usr.subscribe((usr) => {
           this.fireStore.collection('mail').add({
-            to: 'sverkouille@sorelax.be',
+            to: 'sverkouille@hotmail.com',
             from: firebase.auth().currentUser?.email,
             message: {
               subject: `Sorelax: Annulatie Boeking ${booking?.date} ${usr?.lastName}`,
