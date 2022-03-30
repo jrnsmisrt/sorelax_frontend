@@ -4,7 +4,6 @@ import {Booking} from "../model/Booking";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
 import {InitService} from "../materialize/init.service";
-import firebase from "firebase/compat/app";
 import {FormBuilder, FormGroup} from "@angular/forms";
 
 @Component({
@@ -35,6 +34,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     this.init.initDatePicker();
     this.init.initSelect();
     this.init.initCollapsible();
+
     $(document).ready(function () {
       $('.collapsible2').collapsible();
     });
@@ -45,6 +45,7 @@ export class AdminBookingOverviewComponent implements OnInit {
 
 
   openViewBookingModal(bookingId: string, userId: string) {
+    this.message = '';
     this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges().subscribe((booking) => {
       return this.selectedBooking = booking;
     });
@@ -55,22 +56,24 @@ export class AdminBookingOverviewComponent implements OnInit {
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).open();
   }
 
-  confirmBooking(bookingId: string) {
-    this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
-      status: 'confirmed'
-    }).then(async () => {
-      M.toast({html: 'Booking confirmed', classes: 'rounded teal'});
-      let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-      await booking.subscribe((booking) => {
+  async confirmBooking(bookingId: string, userId: string) {
+    await this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe((u) => {
 
-        this.fireStore.collection('mail').add({
-          to: firebase.auth().currentUser?.email,
-          from: 'info@sorelax.be',
-          message: {
-            subject: 'Bevestiging Boeking',
-            html: `<code>Beste,<br>
-                Uw boeking werd bevestigd!
-                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration}<br>
+      this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
+        status: 'confirmed'
+      }).then(async () => {
+        M.toast({html: 'Booking confirmed', classes: 'rounded teal'});
+        let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+        await booking.subscribe((booking) => {
+
+          this.fireStore.collection('mail').add({
+            to: u?.email,
+            from: 'info@sorelax.be',
+            message: {
+              subject: 'Bevestiging Boeking',
+              html: `<code>Beste,<br><br>
+                Uw boeking werd bevestigd!<br>
+                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration} minuten.<br>
                 <br>
                 Boodschap:
                 <br>
@@ -79,33 +82,36 @@ export class AdminBookingOverviewComponent implements OnInit {
                 Mvg,<br>
                 Sofie
                 </code>`,
-          },
-        }).catch((error) => {
-          M.toast({html: `${error}`, classes: 'rounded red'});
+            },
+          }).catch((error) => {
+            M.toast({html: `${error}`, classes: 'rounded red'});
+          })
         })
+      }).catch(error => {
+        M.toast({html: `${error}`, classes: 'rounded red'});
+        console.log(error);
       })
-    }).catch(error => {
-      M.toast({html: `${error}`, classes: 'rounded red'});
-      console.log(error);
-    })
+    });
+    M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
   }
 
-  cancelBooking(bookingId: string) {
-    this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
-      status: 'cancelled'
-    }).then(async () => {
-      M.toast({html: 'Booking cancelled', classes: 'rounded teal'});
-      let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-      await booking.subscribe((booking) => {
+  async cancelBooking(bookingId: string, userId: string) {
+    await this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe((u) => {
+      this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
+        status: 'cancelled'
+      }).then(async () => {
+        M.toast({html: 'Booking cancelled', classes: 'rounded teal'});
+        let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+        await booking.subscribe((booking) => {
 
-        this.fireStore.collection('mail').add({
-          to: firebase.auth().currentUser?.email,
-          from: 'info@sorelax.be',
-          message: {
-            subject: 'Annulatie Boeking',
-            html: `<code>Beste,<br>
-                Uw boeking werd helaas geannuleerd!
-                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration}<br>
+          this.fireStore.collection('mail').add({
+            to: u?.email,
+            from: 'info@sorelax.be',
+            message: {
+              subject: 'Annulatie Boeking',
+              html: `<code>Beste,<br><br>
+                Uw boeking werd helaas geannuleerd!<br>
+                <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration} minuten<br>
                 Deze boeking kan helaas niet doorgaan.
                 <br>
                 Boodschap:<br>
@@ -114,15 +120,18 @@ export class AdminBookingOverviewComponent implements OnInit {
                 Mvg,<br>
                 Sofie
                 </code>`,
-          },
-        }).catch((error) => {
-          M.toast({html: `${error}`, classes: 'rounded red'});
+            },
+          }).catch((error) => {
+            M.toast({html: `${error}`, classes: 'rounded red'});
+          })
         })
+      }).catch(error => {
+        M.toast({html: `${error}`, classes: 'rounded red'});
+        console.log(error);
       })
-    }).catch(error => {
-      M.toast({html: `${error}`, classes: 'rounded red'});
-      console.log(error);
-    })
+    });
+
+    M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
   }
 
   deleteBooking(bookingId: string) {
@@ -134,6 +143,8 @@ export class AdminBookingOverviewComponent implements OnInit {
       M.toast({html: `${error}`, classes: 'rounded red'});
       console.log(error);
     })
+
+    M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
   }
 
   setDate(searchDate: string) {

@@ -129,7 +129,7 @@ export class BookingComponent implements OnInit {
         userUid: firebase.auth().currentUser?.uid,
         timeslot: this.confirmedTimeslot.id,
         date: this.confirmedTimeslot.date,
-        time: this.confirmedTimeslot.startTime,
+        time: this.preferredTime,
         preferredHour: this.preferredHour?.value,
         preferredMinute: this.preferredMinute?.value,
         preferredTime: this.preferredTime,
