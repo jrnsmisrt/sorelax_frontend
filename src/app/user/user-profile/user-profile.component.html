@@ -187,58 +187,55 @@
         </div>
         <div class="row  teal lighten-3 white-text overviewheadrow">
           <div class="col s4">
+            Country
+          </div>
+          <div class="col s3">
             City
           </div>
           <div class="col s3">
             Postal code
           </div>
-          <div class="col s3">
-            Country
-          </div>
         </div>
         <div class="row overviewrow">
           <div class="col s4">
-            {{user.address.city}}
+            {{user.address.country}}
           </div>
           <div class="col s3">
-            {{user.address.postalCode}}
+            {{user.address.city}}
           </div>
-          <div class="col s3">{{user.address.country}}
+          <div class="col s3">{{user.address.postalCode}}
           </div>
           <div class="input-field" *ngIf="isEditable">
-            <div class="col s4">
-              <input class="input validate teal-text" formControlName="city" type="text"
-                                       placeholder="{{user.address.city}}">
+            <div class="col s4"><select class="select-dropdown"
+                                        (change)="setCountry($any($event).target.value)">
+              <option *ngFor="let country of countries" [value]="country.iso2">{{country.name}}</option>
+            </select>
+              <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
+                <div *ngIf="country!.errors?.['required']" class="text-error red-text">
+                  <small>Land is verplicht.</small>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div *ngIf="isEditable" class="col s3">
+              <select class="select-dropdown" (change)="setCity($any($event).target.value)">
+                <option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+              </select>
               <div *ngIf="city!.invalid && (city!.dirty || city!.touched)">
                 <div *ngIf="city!.errors?.['required']" class="text-error red-text">
                   <small>Stad is verplicht.</small>
                 </div>
-                <div *ngIf="city!.errors?.['pattern']" class="text-error red-text">
-                  <small>Stad mag enkel uit letters bestaan (a-z).</small>
-                </div>
               </div>
             </div>
-            <div class="col s3">
-              <input class="input validate teal-text" formControlName="postalCode" type="text"
+            <div *ngIf="isEditable" class="col s3"><input class="input validate teal-text" formControlName="postalCode" type="text"
                                        placeholder="{{user.address.postalCode}}">
               <div *ngIf="postalCode!.invalid && (postalCode!.dirty || postalCode!.touched)">
                 <div *ngIf="postalCode!.errors?.['required']" class="text-error red-text">
                   <small>Postcode is verplicht.</small>
                 </div>
               </div>
-            </div>
-            <div class="col s3">
-              <input class="input validate teal-text" formControlName="country" type="text"
-                                       placeholder="{{user.address.country}}">
-              <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
-                <div *ngIf="country!.errors?.['required']" class="text-error red-text">
-                  <small>Land is required.</small>
-                </div>
-                <div *ngIf="country!.errors?.['pattern']" class="text-error red-text">
-                  <small>Land mag enkel uit letters bestaan (a-z).</small>
-                </div>
-              </div>
-            </div>
+
+
           </div>
         </div>
       </div>

@@ -94,6 +94,30 @@
               </div>
             </div>
             <div class="row">
+              <div class="col s4">
+                <select class="select-dropdown"
+                        (change)="setCountry($any($event).target.value)">
+                  <option *ngFor="let country of countries" [value]="country.iso2">{{country.name}}</option>
+                </select>
+
+                <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
+                  <div *ngIf="country!.errors?.['required']" class="text-error red-text">
+                    <small>Land is verplicht.</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col s4">
+                <select class="select-dropdown" (change)="setCity($any($event).target.value)">
+                  <option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+                </select>
+                <div *ngIf="city!.invalid && (city!.dirty || city!.touched)">
+                  <div *ngIf="city!.errors?.['required']" class="text-error red-text">
+                    <small>Stad is verplicht.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
               <div class="col s3">
                 <input class="validate" autocomplete="on" formControlName="postalCode" type="text"
                        placeholder="Postcode">
@@ -103,34 +127,12 @@
                   </div>
                 </div>
               </div>
-              <div class="col s9"><input class="validate" autocomplete="on" formControlName="city" type="text"
-                                         placeholder="Stad">
-                <div *ngIf="city!.invalid && (city!.dirty || city!.touched)">
-                  <div *ngIf="city!.errors?.['required']" class="text-error red-text">
-                    <small>Stad is verplicht.</small>
-                  </div>
-                  <div *ngIf="city!.errors?.['pattern']" class="text-error red-text">
-                    <small>Stad mag enkel uit letters bestaan (a-z).</small>
-                  </div>
-                </div>
-              </div>
             </div>
-            <div class="row">
-              <div class="col s12">
-                <input class="validate" autocomplete="on" formControlName="country" type="text" placeholder="Land">
-                <div *ngIf="country!.invalid && (country!.dirty || country!.touched)">
-                  <div *ngIf="country!.errors?.['required']" class="text-error red-text">
-                    <small>Land is required.</small>
-                  </div>
-                  <div *ngIf="country!.errors?.['pattern']" class="text-error red-text">
-                    <small>Land mag enkel uit letters bestaan (a-z).</small>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col">
           <label>E-mail</label>
@@ -153,11 +155,13 @@
               <small>Paswoord is verplicht.</small>
             </div>
             <div *ngIf="passWord!.errors?.['pattern']" class="text-error red-text">
-              <small>Paswoord moet bestaan uit min: 8 karakters, 1 hoofdletter, 1 kleine letter, 1 cijfer, 1 speciaal teken.</small>
+              <small>Paswoord moet bestaan uit min: 8 karakters, 1 hoofdletter, 1 kleine letter, 1 cijfer, 1 speciaal
+                teken.</small>
             </div>
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col s12">
           <div *ngIf="firebaseErrorMessage != ''" class="error-style">
@@ -165,6 +169,7 @@
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col s6 push-l1 push-s3">
           <button class="btn-small" [disabled]="!signupForm.valid" (click)="onSubmit()">Signup</button>
@@ -173,6 +178,7 @@
           <button class="btn-small" (click)="clear()">Clear</button>
         </div>
       </div>
+
     </form>
   </div>
 </div>

@@ -9,6 +9,7 @@ import {InitService} from "../../materialize/init.service";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import firebase from "firebase/compat/app";
 import auth = firebase.auth;
+import {Cities, Countries} from "countries-states-cities-service/lib/src";
 
 @Component({
   selector: 'app-user-profile',
@@ -25,6 +26,12 @@ export class UserProfileComponent implements OnInit {
   unRegisterPasswordForm!: FormGroup
   isPasswordEqual!: boolean;
 
+  countries!: any[];
+  cities!: any[];
+  countrySelect: any;
+  countryCode: string = 'BE';
+  citySelect: any;
+
   constructor(private userService: UserService, private route: ActivatedRoute,
               private router: Router,
               private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
@@ -33,7 +40,9 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.countries = Countries.getCountries();
     this.init.initModal();
+    this.init.initSelect();
     this.setUser();
     this.currentUserEmail = auth().currentUser!.email;
     this.editProfileForm = this.formBuilder.group({
@@ -47,8 +56,8 @@ export class UserProfileComponent implements OnInit {
         'houseNumber': ['', [Validators.required, Validators.minLength(1), Validators.min(1)]],
         'postBox': [''],
         'postalCode': ['', [Validators.required]],
-        'city': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
-        'country': ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]]
+        'city': ['', [Validators.required]],
+        'country': ['', [Validators.required]]
       })
     });
     this.user.subscribe((user) => {
@@ -84,6 +93,7 @@ export class UserProfileComponent implements OnInit {
 
   editProfile() {
     this.isEditable = true;
+    this.init.initSelect();
     $(document).ready(function () {
       var currYear = (new Date()).getFullYear();
       let currMonth = (new Date()).getMonth();
@@ -273,5 +283,35 @@ export class UserProfileComponent implements OnInit {
 
   get deleteUserPassword() {
     return this.unRegisterPasswordForm.get('deleteUserPassword')
+  }
+
+  setCountry(countryCode: string) {
+    this.countryCode = countryCode;
+
+    this.cities = Cities.getCities({
+        filters:
+          {country_code: `${this.countryCode}`}
+      }
+    )
+    this.init.initSelect();
+    let cntry = Countries.getCountries({
+        filters: {
+          iso2: this.countryCode
+        }
+      }
+    );
+
+    this.editProfileForm.get(['address'])?.patchValue({
+      country: cntry.map((c) => {
+        return c.name
+      })
+    })
+  }
+
+  setCity(city: string) {
+    this.citySelect = city;
+    this.editProfileForm.get(['address'])?.patchValue({
+      city: this.citySelect
+    })
   }
 }
