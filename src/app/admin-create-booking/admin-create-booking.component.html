@@ -1,0 +1,150 @@
+<div class="row"></div>
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <form [formGroup]="bookingForm">
+        <div class="row">
+          <div class="col s2  teal-text lighten-3"><h6>( 1 )</h6></div>
+          <div class="col s10">
+            Selecteer een klant:
+            <select class="select-dropdown" [(ngModel)]="selectedUser" (change)="selectUser($any($event).target.value)" [ngModelOptions]="{standalone: true}">
+              <option *ngFor="let user of userList" [value]="user">{{user.lastName}} {{user.firstName}}</option>
+            </select>
+            {{selectedUser?.firstName}}{{selectedUser?.lastName}}
+          </div>
+        </div>
+        <div class="row bookingRow">
+          <div class="col s2  teal-text lighten-3"><h6>( 2 )</h6></div>
+          <div class="col s10">
+            <label>Massage</label>
+            <div>
+              <ng-container>
+                <div class="row">
+                  <div class="col s7">
+                    <h6>Massage selectie</h6>
+                    <ul>
+                      <li *ngFor="let massage of dbMassages | async">
+
+                        <div class="row">
+                          <a (click)="selectMassage(massage)">
+                            <div class="col m6 s10 center-align selectmassagelink">
+                              {{massage.type}}
+                            </div>
+                          </a>
+                        </div>
+
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="col s5 center-block">
+                    <h6>Tijdsduur selectie</h6>
+                    <ul class="center-block center center-align">
+                      <li *ngFor="let duration of dbMassageDurations">
+                        <div class="row">
+                          <a (click)="selectDuration(duration)">
+                            <div class="col s6 selectmassagelink  center center-align center-block">
+                              {{duration}}
+                            </div>
+                          </a>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <p class="bookingSelectionInfo center-align" *ngIf="confirmedMassage">
+              U selecteerde: {{confirmedMassage}} massage van {{confirmedDuration}} minuten</p>
+          </div>
+        </div>
+        <div class="row center-block bookingRow">
+          <div class="col s2  teal-text lighten-3"><h6>( 3 )</h6></div>
+          <div class="col S10">
+            <div class="row">
+              <div class="col s12">
+                <label>Timeslot</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s12 input-field">
+                Selecteer een datum<br>
+                <div class="row">
+                  <div class="col input-field s12">
+                    <label for="timeslotdatepicker"><i class="material-icons teal-text">calendar_month</i></label>
+                    <input id="timeslotdatepicker" class="timeslotdatepicker teal-text center-align">
+                  </div>
+                </div>
+                <p class="bookingSelectionInfo center-align" *ngIf="timeslotDatePickerDateSelected as date">
+                  U selecteerde timeslot op datum :{{date}}
+                </p><br><br>
+                <div *ngIf="timeslotDatePickerDateSelected">
+                  <span *ngIf="!timeslotPickedTime">Selecteer een beschikbare timeslot</span>
+                  <div *ngFor="let timeslot of timeslotsPickedDate">
+                    <a class="btn waves-effect waves-light"
+                       (click)="confirmTimeslot(timeslot)">{{timeslot.startTime}} - {{timeslot.endTime}}</a>
+                  </div>
+                </div>
+                <p class="bookingSelectionInfo center-align" *ngIf="confirmedTimeslot">
+                  U selecteerde: {{confirmedTimeslot.date}} om {{confirmedTimeslot.startTime}}
+                  - {{confirmedTimeslot.endTime}}</p>
+              </div>
+            </div>
+            <div class="row" *ngIf="confirmedTimeslot">
+              <div class="col s12">
+                <label>Voorkeur tijd</label><br>
+                <div class="row">
+                  <div class="col l2">
+                    <input class="input-field" type="text" formControlName="preferredHour" placeholder="uur">
+                  </div>
+                  <div class="col l1">:</div>
+                  <div class="col l2">
+                    <input class="input-field" type="text" formControlName="preferredMinute" placeholder="minuten">
+                  </div>
+                </div>
+                <div *ngIf="preferredHour!.invalid && (preferredHour!.dirty || preferredHour!.touched)">
+                  <div *ngIf="preferredHour!.errors?.['required']" class="text-error red-text">
+                    <small>Voorkeur tijd (Uur) is verplicht.</small>
+                  </div>
+                  <div *ngIf="preferredHour!.errors?.['pattern']" class="text-error red-text">
+                    <small>Voorkeur tijd (Uur) mag enkel uit cijfers bestaan (0-9).</small>
+                  </div>
+                </div>
+                <div *ngIf="preferredMinute!.invalid && (preferredMinute!.dirty || preferredMinute!.touched)">
+                  <div *ngIf="preferredMinute!.errors?.['required']" class="text-error red-text">
+                    <small>Voorkeur tijd (Minuten) is verplicht.</small>
+                  </div>
+                  <div *ngIf="preferredHour!.errors?.['pattern']" class="text-error red-text">
+                    <small>Voorkeur tijd (Minuten) mag enkel uit cijfers bestaan (0-9).</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row  bookingRow">
+          <div class="col s2 teal-text lighten-3"><h6>( 4 )</h6></div>
+          <div class="col s10 input-field">
+            <div class="row">
+              <div class="col s12">
+                <label>Nuttige informatie / toevoegingen</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col s6">
+                <textarea formControlName="message" class="materialize-textarea validate"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s2 teal-text lighten-3"><h6>( 5 )</h6></div>
+          <div class="col s8 center center-block center-align">
+            <button [disabled]="!bookingForm.valid" class="btn-large waves-effect waves-teal "
+                    (click)="bookMassage()">Boek Massage
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
