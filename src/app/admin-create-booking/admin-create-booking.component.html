@@ -5,12 +5,29 @@
       <form [formGroup]="bookingForm">
         <div class="row">
           <div class="col s2  teal-text lighten-3"><h6>( 1 )</h6></div>
-          <div class="col s10">
-            Selecteer een klant:
-            <select class="select-dropdown" [(ngModel)]="selectedUser" (change)="selectUser($any($event).target.value)" [ngModelOptions]="{standalone: true}">
-              <option *ngFor="let user of userList" [value]="user">{{user.lastName}} {{user.firstName}}</option>
-            </select>
-            {{selectedUser?.firstName}}{{selectedUser?.lastName}}
+          <div class="col">
+            <button class="btn-large" (click)="openModalUserSelection()">Selecteer een klant</button>
+            <br>
+            <span *ngIf="selectedUser">{{selectedUser.firstName}} {{selectedUser.lastName}}</span>
+            <!--<div class="input-field">
+              <select id="selectUser" class="select-dropdown teal-text" [(ngModel)]="selectedUser"
+                      (change)="selectUser($any($event).target.value)" [ngModelOptions]="{standalone: true}">
+                <option value="" disabled selected *ngIf="userList">{{userList[0].lastName}} {{userList[0].firstName}} <span *ngIf="userList.length>1">...</span></option>
+                <option *ngFor="let user of userList" [value]="user">{{user.lastName}} {{user.firstName}}</option>
+              </select>
+            </div>-->
+
+            <!--<a class='dropdown-trigger btn' href='#' data-target='dropdown1'>Drop Me!</a>
+            <div class="input-field">
+              <label for="filterUserName">filter op naam</label>
+              <input id="filterUserName" class="input teal-text" type="text"
+                     (ngModelChange)="filterUserSelect($event)"
+                     [(ngModel)]="filterUser" [ngModelOptions]="{standalone: true}"></div>
+
+             Dropdown Structure
+            <ul id='dropdown1' class='dropdown-content'>
+              <li *ngFor="let user of userList"><a href="#!">{{user.lastName}} {{user.firstName}}</a></li>
+            </ul>-->
           </div>
         </div>
         <div class="row bookingRow">
@@ -147,4 +164,40 @@
       </form>
     </div>
   </div>
+</div>
+<div class="modal" id="selectUserModal">
+  <div class="modal-content">
+    <div class="container">
+      <div class="row center-block">
+        <div class="col s3"></div>
+        <div class="col s6">
+          <div class="input-field">
+            <label for="filterUserName">filter op naam</label>
+            <input id="filterUserName" class="input teal-text" type="text"
+                   (ngModelChange)="filterUserSelect($event)"
+                   [(ngModel)]="filterUser" [ngModelOptions]="{standalone: true}"></div>
+
+          <div class="row">
+            <div class="col m10 s12 center-block">
+              <label for="selectUser">Selecteer een klant</label>
+              <div class="input-field">
+                <ul id="selectUser" style="color: teal; height: 50%; overflow:scroll;">
+                  <div *ngFor="let user of userList">
+                    <a  (click)="selectUser(user)">
+                      <li class="selectUserListLink">
+                        {{user.lastName}} {{user.firstName}}
+                      </li>
+                    </a></div>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="col s3"></div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer"></div>
 </div>

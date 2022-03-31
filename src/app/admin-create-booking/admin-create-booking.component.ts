@@ -44,7 +44,9 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
 
   users$!: Observable<User[]>;
   userList!: User[];
+  originalUserList!: User[];
   selectedUser!: User;
+  filterUser!: string;
 
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
               private formBuilder: FormBuilder,
@@ -58,11 +60,18 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc'));
-    this.users$ = this.fireStore.collection<User>('users').valueChanges();
-    this.users$.subscribe((usr)=>{
+    this.users$ = this.fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc').orderBy('firstName', 'asc')).valueChanges();
+    this.users$.subscribe((usr) => {
       this.userList = usr;
+      this.originalUserList = usr;
     })
     this.setTimeslotDates();
+    $('.dropdown-trigger').dropdown({
+      alignment: 'right',
+      constrainWidth: false,
+      hover: true,
+    });
+
 
     this.bookingForm = this.formBuilder.group({
       timeslot: ['', [Validators.required]],
@@ -141,7 +150,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
     if (numericalpreferredTime <= (Number(numericalTimeslotEndTime) - numericalDuration) && numericalpreferredTime >= numericalTimeslotstartTime) {
 
       this.fireStore.collection('bookings').add({
-        userUid: firebase.auth().currentUser?.uid,
+        userUid: this.selectedUser.id,
         timeslot: this.confirmedTimeslot.id,
         date: this.confirmedTimeslot.date,
         time: this.preferredTime,
@@ -324,6 +333,31 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
       userUid: user.id
     });
     this.selectedUser = user;
+    M.Modal.getInstance(document.querySelector('#selectUserModal')!).close();
+    console.log(this.selectedUser.firstName);
+    console.log(this.selectedUser.id);
   }
 
+  filterUserSelect(userName: any) {
+    this.initService.initSelect();
+
+    if (userName === undefined ||
+      this.userList === null ||
+      userName === null) {
+      this.userList = this.originalUserList;
+    }
+
+    this.userList =  this.originalUserList
+      .filter(
+        (user) => user.firstName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase()) ||
+          user.lastName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase())
+      );
+    console.log(this.userList);
+    this.initService.initSelect();
+  }
+
+  openModalUserSelection() {
+    let userSelectModal = M.Modal.getInstance(document.querySelector('#selectUserModal')!);
+    userSelectModal.open();
+  }
 }

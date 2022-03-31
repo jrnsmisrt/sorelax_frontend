@@ -16,13 +16,31 @@ nav .brand-logo {
   color: #444;
 }
 
+.selectUserListLink {
+  padding-left: 10px;
+  margin-bottom: 2px;
+  background-color: #c3dbde;
+  color: teal;
+  border: 2px teal solid;
+  border-radius: 6px;
+  transition-property: background-color;
+  transition-duration: 1s;
+}
+
+.selectUserListLink:hover {
+  background-color: #83c0c5;
+  border: 2px black solid;
+  color: white;
+}
+
 p {
   line-height: 2rem;
 }
 
-img.sofie{
+img.sofie {
   border-radius: 5%;
 }
+
 .about {
   font-size: larger;
   padding: 2px;
@@ -43,6 +61,7 @@ img.sofie{
   border-radius: 10px;
   padding: 4px;
 }
+
 .bookingStatusConfirmed {
   font-weight: bold;
   background-color: #50beb4;
@@ -50,6 +69,7 @@ img.sofie{
   border-radius: 10px;
   padding: 4px;
 }
+
 .bookingStatusPending {
   font-style: italic;
   background-color: slategrey;
@@ -58,7 +78,7 @@ img.sofie{
   padding: 4px;
 }
 
-.bookingData{
+.bookingData {
   background-color: #ffffff;
   color: #50beb4;
   font-weight: bold;
@@ -66,7 +86,7 @@ img.sofie{
   padding: 6px;
 }
 
-.bookingSelectionInfo{
+.bookingSelectionInfo {
   border-radius: 20px;
   border: 2px #50beb4 solid;
   background-color: #ffffff;
@@ -90,7 +110,8 @@ img.sofie{
   color: #50beb4;
   font-weight: bold;
 }
-.bookingRow{
+
+.bookingRow {
   font-size: larger;
   color: teal;
   background-color: #e1f5f5;
@@ -98,6 +119,7 @@ img.sofie{
   border-radius: 20px;
   padding: 2px;
 }
+
 .massagedescription {
   font-size: larger;
   color: teal;
@@ -110,21 +132,24 @@ img.sofie{
 .massagedescription:hover {
   background-color: #e1f5f5;
 }
-.selectmassagelink{
-  color:white;
+
+.selectmassagelink {
+  color: white;
   background-color: teal;
   border: 1px white solid;
   border-radius: 6px;
   transition-property: background-color;
   transition-duration: 0.8s;
 }
-.selectmassagelink:hover{
+
+.selectmassagelink:hover {
   color: teal;
   background-color: #5ecece;
   border: 1px white solid;
   border-radius: 6px;
   font-weight: bold;
 }
+
 .sidenav-trigger {
   color: #26a69a;
 }
