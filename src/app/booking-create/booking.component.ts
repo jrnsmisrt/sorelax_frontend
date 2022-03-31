@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
 import {Massage} from "../model/Massage";
 import {UserService} from "../services/user.service";
+import {User} from "../model/User";
 
 @Component({
   selector: 'app-booking',
@@ -41,7 +42,6 @@ export class BookingComponent implements OnInit {
 
   timeslotsPickedDate!: TimeSlot[];
 
-
   constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
               private formBuilder: FormBuilder,
               private initService: InitService,
@@ -55,6 +55,7 @@ export class BookingComponent implements OnInit {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc'));
     this.setTimeslotDates();
+
 
     this.bookingForm = this.formBuilder.group({
       timeslot: ['', [Validators.required]],

@@ -19,6 +19,7 @@ import {
 import {RoleGuard} from "../services/role.guard";
 import {TimeslotOverviewComponent} from "../timeslot-overview/timeslot-overview.component";
 import {ContactComponent} from "../static-web-pages/contact/contact.component";
+import {AdminCreateBookingComponent} from "../admin-create-booking/admin-create-booking.component";
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -36,6 +37,7 @@ const routes: Routes = [
   {path: 'timeslots/create-timeslot', component: CreateTimeslotComponent, canActivate: [RoleGuard, AuthGuard]},
   {path: 'timeslots/overview', component: TimeslotOverviewComponent, canActivate: [RoleGuard, AuthGuard]},
   {path: 'bookings/overview', component: AdminBookingOverviewComponent, canActivate: [RoleGuard, AuthGuard]},
+  {path: 'bookings/create', component: AdminCreateBookingComponent, canActivate: [RoleGuard, AuthGuard]},
   {path: '**', component: HomeComponent}
 ]
 

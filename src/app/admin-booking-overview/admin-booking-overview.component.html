@@ -120,18 +120,22 @@
             <div class="col m12 overviewcol center"><strong>{{user.firstName}} {{user.lastName}}</strong></div>
           </div>
           <div class="row teal lighten-3 white-text overviewheadrow">
-            <div class="col m2"><strong>Datum</strong></div>
-            <div class="col m2"><strong>Tijd</strong></div>
-            <div class="col m3"><strong>Massage</strong></div>
-            <div class="col m2"><strong>Duur</strong></div>
-            <div class="col m3"><strong>Status</strong></div>
+            <div class="col m2 s5"><strong>Datum</strong></div>
+            <div class="col m2 s3"><strong>Tijd</strong></div>
+            <div class="col m3 s4"><strong>Massage</strong></div>
           </div>
           <div class="row overviewrow">
-            <div class="col m2 overviewcol">{{booking.date}}</div>
-            <div class="col m2 overviewcol">{{booking.time}}</div>
-            <div class="col m3 overviewcol">{{booking.massage}}</div>
-            <div class="col m2  overviewcol">{{booking.duration}}</div>
-            <div class="col m3  overviewcol">{{booking.status}}</div>
+            <div class="col m2 s5 overviewcol">{{booking.date}}</div>
+            <div class="col m2 s3 overviewcol">{{booking.time}}</div>
+            <div class="col m3 s4 overviewcol">{{booking.massage}}</div>
+          </div>
+          <div class="row teal lighten-3 white-text overviewheadrow">
+            <div class="col m2 s6"><strong>Duur</strong></div>
+            <div class="col m3 s6"><strong>Status</strong></div>
+          </div>
+          <div class="row overviewrow">
+            <div class="col m2 s6  overviewcol">{{booking.duration}}</div>
+            <div class="col m3  s6 overviewcol">{{booking.status}}</div>
           </div>
           <div class="row teal lighten-3 white-text overviewheadrow">
             <div class="col m12 center"><strong>Boodschap</strong></div>
@@ -155,13 +159,13 @@
               </div>
               <div class="row center-block center-align">
                 <div class="col s4">
-                  <a class="btn-small waves-light waves-effect"
+                  <button [disabled]="booking.status === 'confirmed'"  class="btn-small waves-light waves-effect"
                      (click)="confirmBooking(booking.id!, booking.userUid!)">Confirm
-                  </a>
+                  </button>
                 </div>
                 <div class="col s4">
-                  <a class="btn-small waves-light waves-effect"
-                     (click)="cancelBooking(booking.id!, booking.userUid!)">Cancel</a>
+                  <button [disabled]="booking.status === 'cancelled'" class="btn-small waves-light waves-effect"
+                     (click)="cancelBooking(booking.id!, booking.userUid!)">Cancel</button>
                 </div>
                 <div class="col s4">
                   <a class="btn-small waves-light waves-effect" (click)="deleteBooking(booking.id!)">Delete</a>

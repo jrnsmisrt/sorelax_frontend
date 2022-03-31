@@ -61,6 +61,9 @@
         <li class="tab">
           <a [routerLink]="['/', 'timeslots', 'overview']">View Timeslots</a>
         </li>
+        <li class="tab">
+          <a [routerLink]="['/', 'bookings', 'create']">Create Booking</a>
+        </li>
         <!--<li class="tab">
           <a>Create User</a>
         </li>
@@ -118,11 +121,14 @@
               <a [routerLink]="['/', 'timeslots', 'overview']">View Timeslots</a>
             </li>
             <li class="mobile-user-nav-link">
+              <a [routerLink]="['/', 'bookings', 'create']">Create Booking</a>
+            </li>
+            <!--<li class="mobile-user-nav-link">
               <a>Create User</a>
             </li>
             <li class="mobile-user-nav-link">
               <a>Create Massage</a>
-            </li>
+            </li>-->
             <li class="mobile-user-nav-link">
               <a [routerLink]="['/', 'timeslots', 'create-timeslot']">Create Timeslot</a>
             </li>

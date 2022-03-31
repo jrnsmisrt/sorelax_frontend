@@ -42,7 +42,6 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     this.countries = Countries.getCountries();
     this.init.initModal();
-    this.init.initSelect();
     this.setUser();
     this.currentUserEmail = auth().currentUser!.email;
     this.editProfileForm = this.formBuilder.group({

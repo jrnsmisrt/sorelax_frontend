@@ -32,6 +32,7 @@ import {FilterUserName} from "./pipes/Filter-UserName";
 import {FilterDate} from "./pipes/Filter-Date";
 import {FilterStatus} from "./pipes/Filter-Status";
 import {FilterMassage} from "./pipes/Filter-Massage";
+import { AdminCreateBookingComponent } from './admin-create-booking/admin-create-booking.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import {FilterMassage} from "./pipes/Filter-Massage";
     FilterUserName,
     FilterDate,
     FilterStatus,
-    FilterMassage
+    FilterMassage,
+    AdminCreateBookingComponent
 
 
   ],
