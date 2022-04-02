@@ -57,7 +57,7 @@ import { AdminCreateBookingComponent } from './admin-create-booking/admin-create
     FilterDate,
     FilterStatus,
     FilterMassage,
-    AdminCreateBookingComponent
+    AdminCreateBookingComponent,
 
 
   ],
