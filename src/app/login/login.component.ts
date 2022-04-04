@@ -2,6 +2,9 @@ import {Component} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
+import {Observable} from "rxjs";
+import {User} from "../model/User";
+import {AngularFirestore} from "@angular/fire/compat/firestore";
 
 
 @Component({
@@ -10,6 +13,7 @@ import {AuthService} from "../services/auth.service";
 })
 
 export class LoginComponent {
+  userLoggedIn!: Observable<User | undefined>;
   loginForm = this.formBuilder.group({
     'email': new FormControl('', [Validators.required, Validators.email]),
     'password': new FormControl('', Validators.required)
@@ -17,21 +21,28 @@ export class LoginComponent {
 
   firebaseErrorMessage: string;
 
-  constructor(public auth: AuthService, private router: Router,
+  constructor(public auth: AuthService, private fireStore: AngularFirestore, private router: Router,
               private formBuilder: FormBuilder
   ) {
     this.firebaseErrorMessage = '';
   }
 
   loginUser() {
-    if (this.loginForm.invalid)
+    if (this.loginForm.invalid) {
       return;
+    }
 
-    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then((result) => {
+    this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then(async (result) => {
       if (result == null) {
         M.toast({html: `Logging in...`, classes: 'rounded teal'});
         M.toast({html: `Succesfully logged in!`, classes: 'rounded teal'});
-        this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
+
+        if (this.loginForm.value.email === 'info@sorelax.be' || this.loginForm.value.email === 'jeroen.smissaert@hotmail.com') {
+          await this.auth.loginWithGoogle();
+        }
+
+
+        await this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
       } else if (result.isValid == false) {
         console.log('login error', result);
         this.firebaseErrorMessage = result.message;

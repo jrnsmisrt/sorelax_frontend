@@ -1,12 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
-import {Observable, of, switchMap} from "rxjs";
+import {map, mergeMap, Observable, of, switchMap} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {getAuth, onAuthStateChanged, signInWithPopup, signOut} from "@angular/fire/auth";
 import firebase from "firebase/compat/app";
 import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
+import auth = firebase.auth;
+
+declare let gapi: any;
 
 @Injectable({
   providedIn: 'root'
@@ -15,25 +18,118 @@ export class AuthService {
   userLoggedIn!: boolean;
   user$: Observable<User> | any;
   authState: any = null;
+  calendarItems!: any[];
+  calendarId = 'rsbbr4bmo3p52o0e3omtdm3vko@group.calendar.google.com';
 
-
-  constructor(private router: Router, private afAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
+  constructor(private router: Router,
+              private afAuth: AngularFireAuth,
+              private fireStore: AngularFirestore,
+  ) {
     onAuthStateChanged(getAuth(), (user) => {
       this.userLoggedIn = !!user;
+      this.initClient();
     });
-
     this.afAuth.authState.subscribe(authState => {
       this.authState = authState;
     });
-
     this.addUserToFireStore();
+  }
+
+  //initialize google api
+  initClient() {
+    gapi.load('client', () => {
+      console.log('loaded client');
+
+      gapi.client.init({
+        apiKey: 'AIzaSyCbmaY4uOWxP0OWglx9k04EBXdsQOcXRxk',
+        clientId: '416230477435-41f0n1atdfc278fba9n0qls0q7o37bg9.apps.googleusercontent.com',
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+        scope: 'https://www.googleapis.com/auth/calendar'
+      })
+
+      gapi.client.load('calendar', 'v3', () => console.log('loaded calendar'));
+    })
+  }
+
+  async loginWithGoogle() {
+    const googleAuth = gapi.auth2.getAuthInstance();
+    const googleUser = await googleAuth.signIn();
+
+    const token = googleUser.getAuthResponse().id_token;
+
+    const credential = auth.GoogleAuthProvider.credential(token);
+
+    await this.afAuth.signInAndRetrieveDataWithCredential(credential).then(async (u) => {
+
+        await this.fireStore.collection<User>('users').doc(u.user?.uid).set({
+          address: {city: "", country: "", houseNumber: "", postBox: "", postalCode: "", street: ""},
+          dateOfBirth: "",
+          firstName: "",
+          id: "",
+          lastName: "",
+          phoneNumber: "",
+          status: "",
+          role: 'admin',
+          // @ts-ignore
+          email: u.user?.email
+        }).catch((err) => {
+          console.log(err);
+        })
+
+      }
+    );
+
+
+  }
+
+  async logOut() {
+    await this.afAuth.signOut();
+  }
+
+  async getCalendar() {
+    let events: any;
+    events = await gapi.client.calendar.events.list({
+      calendarId: this.calendarId,
+      timeMin: new Date().toISOString(),
+      showDeleted: false,
+      singleEvents: true,
+      maxResults: 10,
+      orderBy: 'startTime',
+    })
+
+    console.log(events);
+    this.calendarItems = events.result.items;
+  }
+
+  async insertEvent(startDateTime: Date, endDateTime: Date, description: string, summary: string) {
+    await gapi.client.calendar.events.insert({
+      calendarId: this.calendarId,
+      start: {
+        dateTime: startDateTime,
+        timeZone: 'Europe/Brussels'
+      },
+      end: {
+        dateTime: endDateTime,
+        timeZone: 'Europe/Brussels'
+      },
+      summary: summary,
+      description: description
+    }).then(() => {
+      M.toast({html: 'boeking toegevoegd aan agenda', classes: 'rounded teal'})
+    }).catch((error: Error) => {
+      M.toast({html: `Er liep iets fout: ${error}`, classes: 'rounded red'});
+    })
+  }
+
+  hoursFromNow(n: number) {
+    return new Date(Date.now() + n * 1000 * 60 * 60).toISOString();
   }
 
   private addUserToFireStore() {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
-          return this.angularFirestore.doc<User>(`users/${user.uid}`).valueChanges();
+          return this.fireStore.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
           return of(null);
         }
@@ -41,15 +137,16 @@ export class AuthService {
     )
   }
 
-  loginUser(email: string, password: string): Promise<any> {
+  async loginUser(email: string, password: string): Promise<any> {
+
     return this.afAuth.signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
         console.log('Auth Service: loginUser: success');
         this.userLoggedIn = true;
-        this.router.navigate(['/dashboard']);
+
       })
       .catch(error => {
-        console.log('Auth Service: login error...');
+        console.log('login error...');
         console.log('error code', error.code);
         console.log('error', error);
         this.userLoggedIn = false;
@@ -104,5 +201,4 @@ export class AuthService {
       }
     ];
   }
-
 }

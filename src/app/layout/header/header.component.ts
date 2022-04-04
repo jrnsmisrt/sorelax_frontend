@@ -11,7 +11,7 @@ import {InitService} from "../../materialize/init.service";
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit {
-  user!: Observable<User | any>;
+  user!: Observable<User> | undefined;
   user$: Observable<User | undefined>
   isAdmin!: boolean;
 
@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   }
 
   setAdmin() {
-    this.user.subscribe((user) => {
+    this.user?.subscribe((user) => {
       if (user?.role === 'admin') {
         this.isAdmin = true;
       } else {
