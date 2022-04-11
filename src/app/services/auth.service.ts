@@ -100,11 +100,11 @@ export class AuthService {
     await gapi.client.calendar.events.insert({
       calendarId: this.calendarId,
       start: {
-        dateTime: startDateTime,
+        dateTime: startDateTime.toISOString(),
         timeZone: 'Europe/Brussels'
       },
       end: {
-        dateTime: endDateTime,
+        dateTime: endDateTime.toISOString(),
         timeZone: 'Europe/Brussels'
       },
       summary: summary,

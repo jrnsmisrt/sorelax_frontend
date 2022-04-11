@@ -54,7 +54,6 @@ export class AdminBookingOverviewComponent implements OnInit {
       return this.selectedBooking = booking;
     });
     this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe((user) => {
-      console.log(user?.firstName);
       return this.selectedUser = user;
     });
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).open();
@@ -84,13 +83,13 @@ export class AdminBookingOverviewComponent implements OnInit {
 
         let startHourInMinutes = calculateMinutes(Number(hour), Number(minutes));
         let startDateTime = new Date(Number(year), Number(month) - 1, Number(day));
-        startDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes() + startHourInMinutes));
-        let endDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes() + Number(booking?.duration)));
+        let newStartDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes() + startHourInMinutes));
+        let endDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes()  + Number(booking?.duration)));
         let description = `${booking?.massage} massage van ${booking?.duration} minuten; \n ${booking?.personalMessage}`;
         let summary = `${booking?.massage} massage : ${u?.firstName} ${u?.lastName}`;
 
         await this.auth.insertEvent(
-          startDateTime,
+          newStartDateTime,
           endDateTime,
           description,
           summary
@@ -171,7 +170,6 @@ export class AdminBookingOverviewComponent implements OnInit {
       M.toast({html: 'Booking deleted', classes: 'rounded teal'});
     }).catch(error => {
       M.toast({html: `${error}`, classes: 'rounded red'});
-      console.log(error);
     })
 
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
@@ -179,8 +177,6 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   setDate(searchDate: string) {
     this.searchDate = searchDate;
-
-    console.log(this.searchDate);
   }
 
   getBookingUser(id: string | undefined): Observable<User | undefined> {
@@ -193,6 +189,5 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   messageChange(message: string) {
     this.message = message;
-    console.log(this.message, message);
   }
 }
