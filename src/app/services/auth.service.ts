@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
-import {map, mergeMap, Observable, of, switchMap} from "rxjs";
+import {Observable, of, switchMap} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {getAuth, onAuthStateChanged, signInWithPopup, signOut} from "@angular/fire/auth";
+import {getAuth, onAuthStateChanged, signInWithPopup} from "@angular/fire/auth";
 import firebase from "firebase/compat/app";
 import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 import auth = firebase.auth;
@@ -19,7 +19,7 @@ export class AuthService {
   user$: Observable<User> | any;
   authState: any = null;
   calendarItems!: any[];
-  calendarId = 'rsbbr4bmo3p52o0e3omtdm3vko@group.calendar.google.com';
+  calendarId = 'sofieverkouille@gmail.com';
 
   constructor(private router: Router,
               private afAuth: AngularFireAuth,
@@ -38,16 +38,13 @@ export class AuthService {
   //initialize google api
   initClient() {
     gapi.load('client', () => {
-      console.log('loaded client');
-
       gapi.client.init({
         apiKey: 'AIzaSyCbmaY4uOWxP0OWglx9k04EBXdsQOcXRxk',
         clientId: '416230477435-41f0n1atdfc278fba9n0qls0q7o37bg9.apps.googleusercontent.com',
         discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
         scope: 'https://www.googleapis.com/auth/calendar'
       })
-
-      gapi.client.load('calendar', 'v3', () => console.log('loaded calendar'));
+      gapi.client.load('calendar', 'v3');
     })
   }
 
@@ -96,8 +93,6 @@ export class AuthService {
       maxResults: 10,
       orderBy: 'startTime',
     })
-
-    console.log(events);
     this.calendarItems = events.result.items;
   }
 
@@ -141,7 +136,6 @@ export class AuthService {
 
     return this.afAuth.signInWithEmailAndPassword(email, password)
       .then(async () => {
-        console.log('Auth Service: loginUser: success');
         this.userLoggedIn = true;
 
       })

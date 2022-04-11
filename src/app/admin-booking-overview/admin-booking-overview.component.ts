@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable, take} from "rxjs";
 import {Booking} from "../model/Booking";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
@@ -23,6 +23,7 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   bookingStatusChangeForm!: FormGroup;
   message!: string;
+  isEmailSent = false;
 
   constructor(private fireStore: AngularFirestore,
               public auth: AuthService,
@@ -33,8 +34,6 @@ export class AdminBookingOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-//    this.auth.loginWithGoogle();
-    //  this.auth.getCalendar();
     this.init.initModal();
     this.init.initDatePicker();
     this.init.initSelect();
@@ -62,59 +61,49 @@ export class AdminBookingOverviewComponent implements OnInit {
   }
 
   async confirmBooking(bookingId: string, userId: string) {
+    let booking = await this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
 
-    await this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe((u) => {
-
+    await this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe(async (u) => {
       this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
         status: 'confirmed'
-      }).then(async () => {
+      }).then(() => {
         M.toast({html: 'Booking confirmed', classes: 'rounded teal'});
-        let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+      });
 
 
-        await booking.subscribe(async (booking) => {
+      await booking.pipe(take(1)).subscribe(async (booking) => {
+        let year = booking?.date.slice(6);
+        let month = booking?.date.slice(3, 5);
+        let day = booking?.date.slice(0, 2);
+        let hour = booking?.preferredTime.slice(0, 3);
+        let minutes = booking?.preferredTime.slice(4);
 
+        function calculateMinutes(hours: number, minutes: number): number {
+          return (hours * 60) + minutes;
+        }
 
-          let year = booking?.date.slice(6);
-          let month = booking?.date.slice(3, 5);
-          let day = booking?.date.slice(0, 2)
+        let startHourInMinutes = calculateMinutes(Number(hour), Number(minutes));
+        let startDateTime = new Date(Number(year), Number(month) - 1, Number(day));
+        startDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes() + startHourInMinutes));
+        let endDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes() + Number(booking?.duration)));
+        let description = `${booking?.massage} massage van ${booking?.duration} minuten; \n ${booking?.personalMessage}`;
+        let summary = `${booking?.massage} massage : ${u?.firstName} ${u?.lastName}`;
 
-          let hour = booking?.preferredTime.slice(0,3);
-          let minutes = booking?.preferredTime.slice(4);
+        await this.auth.insertEvent(
+          startDateTime,
+          endDateTime,
+          description,
+          summary
+        );
+      });
 
-          function calculateMinutes(hours: number, minutes: number): number{
-            return (hours*60)+minutes;
-          }
-
-          let startHourInMinutes= calculateMinutes(Number(hour), Number(minutes));
-
-          console.log(year, month, day);
-
-          let startDateTime = new Date(Number(year), Number(month), Number(day));
-          startDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes()+startHourInMinutes));
-          console.log('startdate', startDateTime);
-
-          let endDateTime = new Date(startDateTime.setMinutes(startDateTime.getMinutes() + Number(booking?.duration)));
-          console.log('endate', endDateTime);
-          let description = `${booking?.massage} massage van ${booking?.duration} minuten; \n ${booking?.personalMessage}`;
-          console.log('description', description)
-          let summary = `${booking?.massage} massage : ${u?.firstName} ${u?.lastName}`;
-          console.log('summary', summary);
-          console.log('insertevent');
-          await this.auth.insertEvent(
-            startDateTime,
-            endDateTime,
-            description,
-            summary
-          );
-          console.log('end insertevent');
-
-          await this.fireStore.collection('mail').add({
-            to: u?.email,
-            from: 'info@sorelax.be',
-            message: {
-              subject: 'Bevestiging Boeking',
-              html: `<code>Beste,<br><br>
+      booking.pipe(take(1)).subscribe((booking) => {
+        this.fireStore.collection('mail').add({
+          to: u?.email,
+          from: 'info@sorelax.be',
+          message: {
+            subject: 'Bevestiging Boeking',
+            html: `<code>Beste,<br><br>
                 Uw boeking werd bevestigd!<br>
                 <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration} minuten.<br>
                 <br>
@@ -125,34 +114,36 @@ export class AdminBookingOverviewComponent implements OnInit {
                 Mvg,<br>
                 Sofie
                 </code>`,
-            },
-          }).catch((error) => {
-            M.toast({html: `${error}`, classes: 'rounded red'});
-          })
-        })
-      }).catch(error => {
-        M.toast({html: `${error}`, classes: 'rounded red'});
-        console.log(error);
-      })
-    });
+          },
+        }).catch((error) => {
+          M.toast({html: `${error}`, classes: 'rounded red'});
+        });
+      });
+
+    })
+
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
   }
 
   async cancelBooking(bookingId: string, userId: string) {
-    await this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe((u) => {
-      this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
-        status: 'cancelled'
-      }).then(async () => {
-        M.toast({html: 'Booking cancelled', classes: 'rounded teal'});
-        let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-        await booking.subscribe((booking) => {
+    let booking = await this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
 
-          this.fireStore.collection('mail').add({
-            to: u?.email,
-            from: 'info@sorelax.be',
-            message: {
-              subject: 'Annulatie Boeking',
-              html: `<code>Beste,<br><br>
+    await this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe(async (u) => {
+
+
+      this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
+        status: 'cancelled',
+      }).then(() => {
+        M.toast({html: 'boeking geannuleerd', classes: 'rounded teal'});
+      });
+
+      booking.pipe(take(1)).subscribe((booking) => {
+        this.fireStore.collection('mail').add({
+          to: u?.email,
+          from: 'info@sorelax.be',
+          message: {
+            subject: 'Annulatie Boeking',
+            html: `<code>Beste,<br><br>
                 Uw boeking werd helaas geannuleerd!<br>
                 <strong>${booking!.massage}</strong> massage op ${booking!.date} om ${booking?.preferredTime} voor ${booking?.duration} minuten<br>
                 Deze boeking kan helaas niet doorgaan.
@@ -163,15 +154,11 @@ export class AdminBookingOverviewComponent implements OnInit {
                 Mvg,<br>
                 Sofie
                 </code>`,
-            },
-          }).catch((error) => {
-            M.toast({html: `${error}`, classes: 'rounded red'});
-          })
-        })
-      }).catch(error => {
-        M.toast({html: `${error}`, classes: 'rounded red'});
-        console.log(error);
-      })
+          }
+        }).catch((error) => {
+          M.toast({html: `${error}`, classes: 'rounded red'});
+        });
+      });
     });
 
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
