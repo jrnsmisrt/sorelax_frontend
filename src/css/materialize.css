@@ -8752,11 +8752,13 @@ input[type=range]::-ms-thumb {
 
 .datepicker-table td.is-outside-current-month, .datepicker-table td.is-disabled {
   color: rgba(0, 0, 0, 0.3);
+  text-decoration: line-through;
   pointer-events: none;
 }
 
 .datepicker-day-button {
   background-color: transparent;
+  font-weight: bold;
   border: none;
   line-height: 38px;
   display: block;

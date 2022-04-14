@@ -66,7 +66,8 @@ export class SignupComponent implements OnInit {
           this.signupForm.patchValue({
             dateOfBirth: this
           })
-        }
+        },
+        autoClose: true,
       });
     });
     this.init.initSelect();
