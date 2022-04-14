@@ -47,31 +47,56 @@
 <div class="modal" id="adjustTimeslotModal">
   <div class="modal-content">
     <div class="row center-block center center-align">
-      <div class="col">
+      <div class="col m12">
+        <label>Date</label>
         <form [formGroup]="adjustTimeslotForm" (submit)="adjustTimeSlotModal()">
-          <label>Date</label>
-          <div class="input-field">
-            <label>day</label>
-            <input formControlName="day" class="input">
+          <div class="row">
+            <div class="col m4">
+              <div class="input-field">
+                <input id="day" formControlName="day" type="text" class="input validate">
+                <label for="day">day (dd)</label>
+              </div>
+            </div>
+            <div class="col m4">
+              <div class="input-field">
+                <input id="month" formControlName="month" type="text" class="input validate">
+                <label for="month">month (MM)</label>
+              </div>
+            </div>
+            <div class="col m4">
+              <div class="input-field">
+                <input id="year" formControlName="year" type="text" class="input validate">
+                <label for="year">year (yyyy)</label>
+              </div>
+            </div>
           </div>
-          <div class="input-field">
-            <label>month</label>
-            <input formControlName="month" class="input">
+          <div class="row">
+            <div class="col m3">
+              <label>Start Time</label>
+              <div class="input-field">
+                <input id="startHour" formControlName="startHour" type="text" class="input validate">
+                <label for="startHour">Hour (hh)</label>
+              </div>
+              <div class="input-field">
+                <input id="startMinutes" formControlName="startMinutes" type="text" class="input validate"
+                      >
+                <label for="startMinutes">Minutes (mm)</label>
+              </div>
+            </div>
+            <div class="col m3">
+              <label>End Time</label>
+              <div class="input-field">
+                <input id="endHour" formControlName="endHour" type="text" class="input validate">
+                <label for="endHour">Hour (hh)</label>
+              </div>
+              <div class="input-field">
+                <input id="endMinutes" formControlName="endMinutes" type="text" class="input validate">
+                <label for="endMinutes">Minutes (mm)</label>
+              </div>
+            </div>
           </div>
-          <div class="input-field">
-            <label>year</label>
-            <input formControlName="year" class="input">
-          </div>
-          <label>Time</label>
-          <div class="input-field">
-            <label>Hour</label>
-            <input formControlName="hour" class="input">
-          </div>
-          <div class="input-field">
-            <label>Minutes</label>
-            <input formControlName="minutes" class="input">
-          </div>
-          <a type="submit" class="btn  waves-effect waves-light">adjust timeslot</a>
+
+          <button type="submit" class="btn  waves-effect waves-light">adjust timeslot</button>
         </form>
       </div>
     </div>

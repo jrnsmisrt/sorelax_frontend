@@ -28,13 +28,14 @@ export class TimeslotOverviewComponent implements OnInit {
     this.users = this.fireStore.collection<User>('users').valueChanges();
 
     this.adjustTimeslotForm = this.formBuilder.group({
-      day: ['', Validators.required],
-      month: ['', Validators.required],
-      year: ['', Validators.required],
-      hour: ['', Validators.required],
-      minutes: ['', Validators.required],
+      day: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[0-9]*$')]],
+      month: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[0-9]*$')]],
+      year: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(4), Validators.pattern('^[0-9]*$')]],
+      startHour: ['',[Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[0-9]*$')]],
+      startMinutes: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[0-9]*$')]],
+      endHour: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[0-9]*$')]],
+      endMinutes: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[0-9]*$')]],
       date: [''],
-      time: ['']
     })
   }
 
@@ -49,16 +50,24 @@ export class TimeslotOverviewComponent implements OnInit {
   }
 
   adjustTimeSlotModal() {
+    if(this.adjustTimeslotForm.valid){
     this.adjustTimeslotForm.patchValue({
       date: `${this.day}/${this.month}/${this.year}`,
-      time: `${this.hour}:${this.minutes}`
+      startTime: `${this.startHour}:${this.startMinutes}`,
+      endTime: `${this.endHour}:${this.endMinutes}`
     });
     this.fireStore.collection('timeslots').doc(this.timeslotId).update({
       date: this.date,
-      time: this.time,
+      startTime: `${this.startHour}:${this.startMinutes}`,
+      endTime: `${this.endHour}:${this.endMinutes}`,
     }).catch((err)=>{
       M.toast({html: err});
     });
+    M.Modal.getInstance(document.getElementById('adjustTimeslotModal')!).close();
+    }
+    else{
+      return;
+    }
   }
 
   removeTimeslot() {
@@ -66,6 +75,7 @@ export class TimeslotOverviewComponent implements OnInit {
       .catch((err) => {
         M.toast({html: err, classes: 'rounded red'});
       });
+    M.Modal.getInstance(document.getElementById('removeTimeslotModal')!).close();
   }
 
   get date() {
@@ -88,11 +98,17 @@ export class TimeslotOverviewComponent implements OnInit {
     return this.adjustTimeslotForm.get(['year'])?.value;
   }
 
-  get hour(){
-    return this.adjustTimeslotForm.get(['hour'])?.value;
+  get startHour(){
+    return this.adjustTimeslotForm.get(['startHour'])?.value;
   }
-  get minutes(){
-    return this.adjustTimeslotForm.get(['minutes'])?.value;
+  get startMinutes(){
+    return this.adjustTimeslotForm.get(['startMinutes'])?.value;
+  }
+  get endHour(){
+    return this.adjustTimeslotForm.get(['endHour'])?.value;
+  }
+  get endMinutes(){
+    return this.adjustTimeslotForm.get(['endMinutes'])?.value;
   }
 
 }
