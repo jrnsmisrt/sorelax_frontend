@@ -4,9 +4,8 @@ import {Observable, of, switchMap} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {getAuth, onAuthStateChanged, signInWithPopup} from "@angular/fire/auth";
+import {Auth, getAuth, onAuthStateChanged, sendPasswordResetEmail} from "@angular/fire/auth";
 import firebase from "firebase/compat/app";
-import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 import auth = firebase.auth;
 
 declare let gapi: any;
@@ -35,7 +34,6 @@ export class AuthService {
     this.addUserToFireStore();
   }
 
-  //initialize google api
   initClient() {
     gapi.load('client', () => {
       gapi.client.init({
@@ -75,8 +73,6 @@ export class AuthService {
 
       }
     );
-
-
   }
 
   async logOut() {
@@ -140,18 +136,23 @@ export class AuthService {
 
       })
       .catch(error => {
-        console.log('login error...');
-        console.log('error code', error.code);
-        console.log('error', error);
+        console.log('login error...', error);
         this.userLoggedIn = false;
         if (error.code)
           return {isValid: false, message: error.message};
       });
   }
 
-  async signInWithGoogle() {
-    let provider = new GoogleAuthProvider();
-    await signInWithPopup(getAuth(), provider);
+  resetPassword(email: string) {
+    if (!email.length) {
+      sendPasswordResetEmail(getAuth()!, this.getUserEmail()!).then((x) => {
+        console.log('e-mail has been sent');
+      });
+    } else {
+      sendPasswordResetEmail(getAuth()!, email).then((x) => {
+        console.log('e-mail has been sent');
+      });
+    }
   }
 
   async signOut() {
@@ -164,15 +165,15 @@ export class AuthService {
   }
 
   getUserName() {
-    return getAuth().currentUser?.displayName;
+    return getAuth()?.currentUser?.displayName;
   }
 
   getUserEmail() {
-    return getAuth().currentUser?.email;
+    return getAuth()?.currentUser?.email;
   }
 
   getUserUid() {
-    return getAuth().currentUser?.uid;
+    return getAuth()?.currentUser?.uid;
   }
 
   get isAuthenticated(): boolean {
@@ -180,7 +181,7 @@ export class AuthService {
   }
 
   get currentUserId(): string {
-    return this.isAuthenticated ? this.authState.uid : null;
+    return this.isAuthenticated ? this.authState?.uid : null;
   }
 
   get userData(): any {

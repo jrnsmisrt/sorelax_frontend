@@ -1,6 +1,5 @@
 <div class="container">
   <div class="row teal-text center"><h4>Timeslots Overview</h4></div>
-
   <div class="row center-block">
     <div class="col s12">
       <div class="row center overviewheadrow teal lighten-3 white-text show-on-medium-and-up hide-on-med-and-down">
@@ -10,7 +9,7 @@
         <div class="col l2"></div>
         <div class="col l2"></div>
       </div>
-      <div *ngFor="let timeslot of timeslots|async">
+      <div *ngFor="let timeslot of timeslotsReplay|async">
         <div class="row center overviewrow show-on-medium-and-up hide-on-small-and-down">
           <div class="col l2">{{timeslot.date}}</div>
           <div class="col l3">{{timeslot.startTime}}</div>

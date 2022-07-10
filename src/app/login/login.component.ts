@@ -19,7 +19,8 @@ export class LoginComponent {
     'password': new FormControl('', Validators.required)
   });
 
-  firebaseErrorMessage: string;
+  firebaseErrorMessage: string = '';
+  passwordReset: boolean = false;
 
   constructor(public auth: AuthService, private fireStore: AngularFirestore, private router: Router,
               private formBuilder: FormBuilder
@@ -33,7 +34,7 @@ export class LoginComponent {
     }
 
     this.auth.loginUser(this.loginForm.value.email, this.loginForm.value.password).then(async (result) => {
-      if (result == null) {
+      if (!result) {
         M.toast({html: `Logging in...`, classes: 'rounded teal'});
         M.toast({html: `Succesfully logged in!`, classes: 'rounded teal'});
 
@@ -41,24 +42,25 @@ export class LoginComponent {
           await this.auth.loginWithGoogle();
         }
 
-
         await this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
-      } else if (result.isValid == false) {
-        console.log('login error', result);
+      } else if (!result.isValid) {
         this.firebaseErrorMessage = result.message;
       }
     });
   }
 
-  signInWithGoogle() {
-    this.auth.signInWithGoogle().then(() => {
-      if (this.auth.isUserSignedIn()) {
-        M.toast({html: `Succesfully signed in with Google!`, classes: 'rounded teal'});
-        this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
-      } else {
-        M.toast({html: 'Sign in was unsuccessful please try again', classes: 'rounded teal'})
-      }
-    });
+  resetPassword(email: string) {
+    const userEmail = this.auth.getUserEmail();
+    if (userEmail?.length && userEmail === email) {
+      this.auth.resetPassword(userEmail);
+    } else if (email.length) {
+      this.auth.resetPassword(email);
+    } else {
+      console.log('please provide an e-mail address');
+    }
   }
 
+  wantsPasswordReset() {
+    this.passwordReset = !this.passwordReset;
+  }
 }

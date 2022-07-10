@@ -38,13 +38,12 @@ export class SignupComponent implements OnInit {
     'role': new FormControl('')
   });
 
-  firebaseErrorMessage: string;
+  firebaseErrorMessage: string = '';
 
 
   constructor(private formBuilder: FormBuilder, private afAuth: AngularFireAuth,
               private fireStore: AngularFirestore, private router: Router, private init: InitService
   ) {
-    this.firebaseErrorMessage = '';
   }
 
   ngOnInit(): void {
