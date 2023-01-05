@@ -15,7 +15,8 @@
           <a routerLink="/contact">Contact</a>
         </li>
         <li>
-          <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a></li>
+          <!--<a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a></li>-->
+          <a [routerLink]="['']">Boek een Massage</a></li>
       </ul>
     </div>
     <div class="col right">
@@ -45,7 +46,8 @@
         <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">Mijn Profiel</a></li>
         <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a>
         </li>
-        <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
+        <!--<li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>-->
+        <li class="tab"><a [routerLink]="['']">Boek een Massage</a>
         </li>
       </ul>
     </div>
@@ -99,7 +101,8 @@
       <a routerLink="/contact">Contact</a>
     </li>
     <li>
-      <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a>
+      <!--<a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a>-->
+      <a [routerLink]="['']">Boek een Massage</a>
     </li>
     <li>
       <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
@@ -108,7 +111,8 @@
             Profiel</a></li>
           <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a></li>
           <li class="tab">
-            <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
+            <!--<a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>-->
+            <a [routerLink]="['']">Boek een Massage</a>
           </li>
         </ul>
         <div class="mobile-user-nav" *ngIf="isAdmin">
