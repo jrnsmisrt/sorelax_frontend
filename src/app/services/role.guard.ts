@@ -1,19 +1,25 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs';
+import {Observable, Subject, takeUntil} from 'rxjs';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
 import {getAuth} from "@angular/fire/auth";
-import {UserService} from "./user.service";
 import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RoleGuard implements CanActivate {
+
+export class RoleGuard implements CanActivate, OnDestroy {
   user = this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges();
+  private destroyer$ = new Subject();
 
   constructor(private fireStore: AngularFirestore, private router: Router, private auth: AuthService) {
+  }
+
+  ngOnDestroy(): void {
+    this.destroyer$.next(true);
+    this.destroyer$.complete();
   }
 
   canActivate(
@@ -22,7 +28,8 @@ export class RoleGuard implements CanActivate {
 
     if (!this?.isAdmin()) {
       M.toast({html: 'Access Denied, You are not an administrator!', classes: 'rounded custom-toast'})
-      this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);      return false;
+      this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
+      return false;
     } else {
       return true;
     }
@@ -30,9 +37,11 @@ export class RoleGuard implements CanActivate {
 
   async isAdmin(): Promise<boolean> {
     let isAdmin!: boolean;
-    await this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges().subscribe((user) => {
-      isAdmin = user?.role === 'admin';
-    });
+    this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges()
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe((user) => {
+        isAdmin = user?.role === 'admin';
+      });
     return isAdmin;
   }
 
