@@ -14,8 +14,6 @@ const TOKEN_PATH = 'token.json';
 export class CalendarService implements OnInit {
   oAuth2Client :any;
   calendarId = 'rsbbr4bmo3p52o0e3omtdm3vko@group.calendar.google.com'
-  constructor() {
-  }
 
   ngOnInit(): void {
     fs.readFile('credentials.json', (err, content) => {

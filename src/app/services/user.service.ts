@@ -30,10 +30,9 @@ export class UserService {
     this.userCollection = fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc')
       .orderBy('firstName', 'asc')
       .orderBy('dateOfBirth', 'asc'));
-    this.allUsers = this.userCollection.valueChanges({idField: 'uid'});
 
+    this.allUsers = this.userCollection.valueChanges({idField: 'uid'});
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
-    // @ts-ignore
   }
 
   async setCurrentUserRole(id: string){
@@ -56,11 +55,10 @@ export class UserService {
 
   getUserFirstName(uid: string): Subscription {
     let userFullName: string | undefined;
+
     return this.getUser(uid).subscribe((user) => {
       userFullName = user?.firstName + ' ' + user?.lastName!;
       return userFullName.toString();
     });
   }
-
-
 }
