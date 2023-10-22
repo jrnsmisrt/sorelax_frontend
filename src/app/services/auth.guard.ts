@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
-import {map, Observable, take, tap} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {noop, Observable} from 'rxjs';
 import {AuthService} from "./auth.service";
 
 @Injectable({
@@ -15,7 +15,7 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     if(!this.auth.userLoggedIn) {
       M.toast({html:'Access Denied, Login is Required to Access This Page!'})
-      this.router.navigate(['login']);
+      this.router.navigate(['login']).then(r => noop());
     }
     return true;
   }

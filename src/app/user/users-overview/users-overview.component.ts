@@ -16,17 +16,18 @@ export class UsersOverviewComponent implements OnInit {
 
   constructor(private userService: UserService, private fireStore:AngularFirestore,
               private init: InitService) {
-    this.users = this.fireStore.collection<User>('users',ref => ref.orderBy('lastName','asc').orderBy('firstName', 'asc')).valueChanges();
   }
 
   ngOnInit(): void {
+    this.users = this.fireStore.collection<User>('users',ref =>
+      ref.orderBy('lastName','asc').orderBy('firstName', 'asc')).valueChanges();
+
     this.init.initModal();
   }
 
   openUserOverViewModal(userId: string){
-    this.user = this.fireStore.collection<User>('users').doc(userId).valueChanges()
+    this.user = this.fireStore.collection<User>('users').doc(userId).valueChanges();
+
     M.Modal.getInstance(document.getElementById('userOverViewModal')!).open();
   }
-
-
 }
