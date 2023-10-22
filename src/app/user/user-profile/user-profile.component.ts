@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
-import {Observable} from "rxjs";
+import {mergeMap, Observable} from "rxjs";
 import {User} from "../../model/User";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
@@ -87,7 +87,8 @@ export class UserProfileComponent implements OnInit {
   }
 
   setUser() {
-    this.user = this.fireStore.collection<User>('users').doc(this.route.snapshot.paramMap.get('id')!).valueChanges();
+    const id = this.route.snapshot.paramMap.get('id');
+    this.user = this.fireStore.collection<User>('users').valueChanges().pipe(mergeMap(u => u.filter(uu => uu.id === id)));
   }
 
   editProfile() {

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {User} from "../model/User";
-import {Observable, Subscription} from "rxjs";
+import {filter, mergeMap, Observable, Subscription} from "rxjs";
 import {AuthService} from "./auth.service";
 import {
   AngularFirestore,
@@ -51,7 +51,8 @@ export class UserService {
   }
 
   getUser(uid: string | undefined): Observable<User | undefined> {
-    return this.fireStore.collection<User>('users').doc(uid).valueChanges();
+    return this.fireStore.collection<User>('users').valueChanges()?.pipe(mergeMap(y => y.filter(a => a?.id === uid)));
+   // return this.fireStore.collection<User>('users').doc(uid).valueChanges();
   }
 
   getUserFirstName(uid: string): Subscription {

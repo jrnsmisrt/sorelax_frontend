@@ -3,7 +3,7 @@ import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../model/User";
 import {UserService} from "../../services/user.service";
-import {Observable} from "rxjs";
+import {firstValueFrom, Observable, subscribeOn} from "rxjs";
 import {InitService} from "../../materialize/init.service";
 
 @Component({
@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit {
     this.user$ = this.userService.user;
     this.isAdmin = userService.isAdmin;
     this.setAdmin();
+
   }
 
   ngOnInit(): void {
@@ -37,12 +38,10 @@ export class HeaderComponent implements OnInit {
   }
 
   setAdmin() {
-    this.user?.subscribe((user) => {
-      if (user?.role === 'admin') {
-        this.isAdmin = true;
-      } else {
-        this.isAdmin = false
-      }
-    })
+    this.afAuth.user.subscribe((x) => {
+      this.userService.getUser(x?.uid).subscribe((y) => {
+        this.isAdmin = (y?.role === 'admin');
+      });
+    });
   }
 }

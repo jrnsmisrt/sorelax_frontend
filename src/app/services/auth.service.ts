@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
-import {Observable, of, switchMap} from "rxjs";
+import {Observable, of, switchMap, tap} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
@@ -128,7 +128,7 @@ export class AuthService {
         } else {
           return of(null);
         }
-      })
+      }), tap(u => console.log(u))
     )
   }
 
