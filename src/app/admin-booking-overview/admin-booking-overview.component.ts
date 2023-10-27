@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {combineLatest, Observable, take} from "rxjs";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {combineLatest, Observable, Subject, takeUntil} from "rxjs";
 import {Booking} from "../model/Booking";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
@@ -11,7 +11,7 @@ import {AuthService} from "../services/auth.service";
   selector: 'app-admin-booking-overview',
   templateUrl: './admin-booking-overview.component.html',
 })
-export class AdminBookingOverviewComponent implements OnInit {
+export class AdminBookingOverviewComponent implements OnInit, OnDestroy {
   bookings$!: Observable<Booking[]>;
   selectedBooking!: Booking | undefined;
   users$!: Observable<User[]>;
@@ -23,15 +23,20 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   bookingStatusChangeForm!: FormGroup;
   message!: string;
-  isEmailSent = false;
+  private destroy$ = new Subject();
 
   constructor(private fireStore: AngularFirestore,
               public auth: AuthService,
               private init: InitService,
               private formBuilder: FormBuilder) {
     this.bookings$ = this.fireStore.collection<Booking>('bookings', ref => ref.orderBy('date', 'asc')
-      .orderBy('time', 'asc')).valueChanges();
-    this.users$ = this.fireStore.collection<User>('users').valueChanges();
+      .orderBy('time', 'asc')).valueChanges().pipe(takeUntil(this.destroy$));
+    this.users$ = this.fireStore.collection<User>('users').valueChanges().pipe(takeUntil(this.destroy$));
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   ngOnInit(): void {
@@ -51,20 +56,21 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   openViewBookingModal(bookingId: string, userId: string) {
     this.message = '';
-    this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges().subscribe((booking) => {
+    this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges()
+      .pipe(takeUntil(this.destroy$)).subscribe((booking) => {
       return this.selectedBooking = booking;
     });
-    this.fireStore.collection<User>('users').doc(userId).valueChanges().subscribe((user) => {
+    this.fireStore.collection<User>('users').doc(userId).valueChanges().pipe(takeUntil(this.destroy$)).subscribe((user) => {
       return this.selectedUser = user;
     });
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).open();
   }
 
   confirmBooking(bookingId: string, userId: string) {
-    let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-    let user = this.fireStore.collection<User>('users').doc(userId).valueChanges();
+    let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges().pipe(takeUntil(this.destroy$));
+    let user = this.fireStore.collection<User>('users').doc(userId).valueChanges().pipe(takeUntil(this.destroy$));
 
-    combineLatest([booking, user]).pipe(take(1)).subscribe(([b, u]) => {
+    combineLatest([booking, user]).pipe(takeUntil(this.destroy$)).subscribe(([b, u]) => {
       this.fireStore.collection<Booking>('bookings').doc(b!.id).update({
         status: 'confirmed'
       }).then(() => {
@@ -125,7 +131,7 @@ export class AdminBookingOverviewComponent implements OnInit {
     let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
     let user = this.fireStore.collection<User>('users').doc(userId).valueChanges();
 
-    combineLatest([booking, user]).pipe(take(1)).subscribe(([b, u]) => {
+    combineLatest([booking, user]).pipe(takeUntil(this.destroy$)).subscribe(([b, u]) => {
       this.fireStore.collection<Booking>('bookings').doc(b!.id).update({
         status: 'cancelled',
       }).then(() => {
@@ -172,17 +178,5 @@ export class AdminBookingOverviewComponent implements OnInit {
 
   setDate(searchDate: string) {
     this.searchDate = searchDate;
-  }
-
-  getBookingUser(id: string | undefined): Observable<User | undefined> {
-    return this.fireStore.collection<User>('users').doc(id).valueChanges();
-  }
-
-  getUsersBookings(id: string | undefined): Observable<Booking[] | undefined> {
-    return this.fireStore.collection<Booking>('bookings', ref => ref.where('userUid', '==', id)).valueChanges();
-  }
-
-  messageChange(message: string) {
-    this.message = message;
   }
 }
