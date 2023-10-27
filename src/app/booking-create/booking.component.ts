@@ -120,9 +120,10 @@ export class BookingComponent implements OnInit, OnDestroy {
     let numericalpreferredTime = this.preferredHour?.value + this.preferredMinute?.value;
     let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0, 2) + this.confirmedTimeslot.endTime.slice(3);
     let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0, 2) + this.confirmedTimeslot.startTime.slice(3);
-    let numericalDuration = BookingComponent.getNumericalDuration(Number(this.confirmedDuration));
+    let numericalDuration = Number(this.confirmedDuration);
 
-    if (numericalpreferredTime <= (Number(numericalTimeslotEndTime) - numericalDuration) && numericalpreferredTime >= numericalTimeslotstartTime) {
+    if (Number(numericalpreferredTime) <= (Number(numericalTimeslotEndTime) - numericalDuration) &&
+      Number(numericalpreferredTime) >= Number(numericalTimeslotstartTime)) {
 
       this.fireStore.collection('bookings').add({
         userUid: firebase.auth().currentUser?.uid,
