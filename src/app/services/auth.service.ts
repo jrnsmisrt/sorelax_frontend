@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router} from "@angular/router";
-import {Observable, of, switchMap, tap} from "rxjs";
+import {Observable, of, switchMap} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
@@ -128,8 +128,7 @@ export class AuthService {
         } else {
           return of(null);
         }
-      }), tap(u => console.log(u))
-    )
+      }));
   }
 
   async loginUser(email: string, password: string): Promise<any> {
@@ -140,9 +139,7 @@ export class AuthService {
 
       })
       .catch(error => {
-        console.log('login error...');
-        console.log('error code', error.code);
-        console.log('error', error);
+        console.error('error', error);
         this.userLoggedIn = false;
         if (error.code)
           return {isValid: false, message: error.message};

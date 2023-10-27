@@ -53,7 +53,6 @@ export class CalendarService implements OnInit {
       access_type: 'offline',
       scope: SCOPES,
     });
-    console.log('Authorize this app by visiting this url:', authUrl);
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -66,7 +65,6 @@ export class CalendarService implements OnInit {
         // Store the token to disk for later program executions
         fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
           if (err) return console.error(err);
-          console.log('Token stored to', TOKEN_PATH);
         });
         callback(oAuth2Client);
       });
@@ -88,17 +86,6 @@ export class CalendarService implements OnInit {
       orderBy: 'startTime',
     }, (err, res) => {
       if (err) return console.log('The API returned an error: ' + err);
-      const events = res.data.items;
-      if (events.length) {
-        console.log('Upcoming 10 events:');
-        list = events.map((event, i) => {
-          const start = event.start.dateTime || event.start.date;
-          console.log(`${start} - ${event.summary}`);
-
-        });
-      } else {
-        console.log('No upcoming events found.');
-      }
     });
     return list;
   }

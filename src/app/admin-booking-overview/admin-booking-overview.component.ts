@@ -29,7 +29,8 @@ export class AdminBookingOverviewComponent implements OnInit {
               public auth: AuthService,
               private init: InitService,
               private formBuilder: FormBuilder) {
-    this.bookings$ = this.fireStore.collection<Booking>('bookings', ref => ref.orderBy('date', 'asc').orderBy('time', 'asc')).valueChanges();
+    this.bookings$ = this.fireStore.collection<Booking>('bookings', ref => ref.orderBy('date', 'asc')
+      .orderBy('time', 'asc')).valueChanges();
     this.users$ = this.fireStore.collection<User>('users').valueChanges();
   }
 
@@ -64,8 +65,6 @@ export class AdminBookingOverviewComponent implements OnInit {
     let user = this.fireStore.collection<User>('users').doc(userId).valueChanges();
 
     combineLatest([booking, user]).pipe(take(1)).subscribe(([b, u]) => {
-      console.log('test fork');
-      console.log('fork ', b?.id, u?.id);
       this.fireStore.collection<Booking>('bookings').doc(b!.id).update({
         status: 'confirmed'
       }).then(() => {

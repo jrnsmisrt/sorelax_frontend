@@ -334,8 +334,6 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
     });
     this.selectedUser = user;
     M.Modal.getInstance(document.querySelector('#selectUserModal')!).close();
-    console.log(this.selectedUser.firstName);
-    console.log(this.selectedUser.id);
   }
 
   filterUserSelect(userName: any) {
@@ -352,7 +350,6 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
         (user) => user.firstName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase()) ||
           user.lastName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase())
       );
-    console.log(this.userList);
     this.initService.initSelect();
   }
 
