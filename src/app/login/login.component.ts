@@ -1,10 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
-import {Observable} from "rxjs";
-import {User} from "../model/User";
-import {AngularFirestore} from "@angular/fire/compat/firestore";
+import {InitService} from "../materialize/init.service";
 
 
 @Component({
@@ -12,8 +10,7 @@ import {AngularFirestore} from "@angular/fire/compat/firestore";
   templateUrl: './login.component.html',
 })
 
-export class LoginComponent {
-  userLoggedIn!: Observable<User | undefined>;
+export class LoginComponent implements OnInit {
   loginForm = this.formBuilder.group({
     'email': new FormControl('', [Validators.required, Validators.email]),
     'password': new FormControl('', Validators.required)
@@ -21,10 +18,15 @@ export class LoginComponent {
 
   firebaseErrorMessage: string;
 
-  constructor(public auth: AuthService, private fireStore: AngularFirestore, private router: Router,
+  constructor(public auth: AuthService, private router: Router,
+              private initService: InitService,
               private formBuilder: FormBuilder
   ) {
     this.firebaseErrorMessage = '';
+  }
+
+  ngOnInit() {
+    this.initService.initModal();
   }
 
   loginUser() {
@@ -38,7 +40,7 @@ export class LoginComponent {
         M.toast({html: `Succesfully logged in!`, classes: 'rounded teal'});
 
         if (this.loginForm.value.email === 'info@sorelax.be' || this.loginForm.value.email === 'jeroen.smissaert@hotmail.com') {
-          await this.auth.loginWithGoogle();
+          this.loginWithGoogle();
         }
 
 
@@ -50,15 +52,7 @@ export class LoginComponent {
     });
   }
 
-  signInWithGoogle() {
-    this.auth.signInWithGoogle().then(() => {
-      if (this.auth.isUserSignedIn()) {
-        M.toast({html: `Succesfully signed in with Google!`, classes: 'rounded teal'});
-        this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
-      } else {
-        M.toast({html: 'Sign in was unsuccessful please try again', classes: 'rounded teal'})
-      }
-    });
+  private loginWithGoogle() {
+    M.Modal.getInstance(document.querySelector('#googleSignIn')!).open();
   }
-
 }

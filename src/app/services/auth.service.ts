@@ -4,10 +4,7 @@ import {Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {getAuth, onAuthStateChanged, signInWithPopup} from "@angular/fire/auth";
-import firebase from "firebase/compat/app";
-import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
-import auth = firebase.auth;
+import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
 
 declare let gapi: any;
 
@@ -18,7 +15,6 @@ export class AuthService implements OnDestroy {
   userLoggedIn!: boolean;
   user$: Observable<User> | any;
   authState: any = null;
-  calendarItems!: any[];
   calendarId = 'sofieverkouille@gmail.com';
   private destroy$ = new Subject();
 
@@ -30,9 +26,11 @@ export class AuthService implements OnDestroy {
       this.userLoggedIn = !!user;
       this.initClient();
     });
-    this.afAuth.authState.pipe(takeUntil(this.destroy$)).subscribe(authState => {
+
+    this.afAuth.authState.subscribe(authState => {
       this.authState = authState;
     });
+
     this.addUserToFireStore();
   }
 
@@ -52,37 +50,6 @@ export class AuthService implements OnDestroy {
       })
       gapi.client.load('calendar', 'v3');
     })
-  }
-
-  async loginWithGoogle() {
-    const googleAuth = gapi.auth2.getAuthInstance();
-    const googleUser = await googleAuth.signIn();
-
-    const token = googleUser.getAuthResponse().id_token;
-
-    const credential = auth.GoogleAuthProvider.credential(token);
-
-    await this.afAuth.signInAndRetrieveDataWithCredential(credential).then(async (u) => {
-
-        await this.fireStore.collection<User>('users').doc(u.user?.uid).set({
-          address: {city: "", country: "", houseNumber: "", postBox: "", postalCode: "", street: ""},
-          dateOfBirth: "",
-          firstName: "",
-          id: "",
-          lastName: "",
-          phoneNumber: "",
-          status: "",
-          role: 'admin',
-          // @ts-ignore
-          email: u.user?.email
-        }).catch((err) => {
-          console.log(err);
-        })
-
-      }
-    );
-
-
   }
 
   async insertEvent(startDateTime: Date, endDateTime: Date, description: string, summary: string) {
@@ -129,11 +96,6 @@ export class AuthService implements OnDestroy {
         if (error.code)
           return {isValid: false, message: error.message};
       });
-  }
-
-  async signInWithGoogle() {
-    let provider = new GoogleAuthProvider();
-    await signInWithPopup(getAuth(), provider);
   }
 
   async signOut() {
