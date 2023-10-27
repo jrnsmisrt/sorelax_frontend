@@ -1,30 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../model/User";
 import {UserService} from "../../services/user.service";
-import {firstValueFrom, Observable, subscribeOn} from "rxjs";
-import {InitService} from "../../materialize/init.service";
+import {Observable, Subject, takeUntil} from "rxjs";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   user!: Observable<User> | undefined;
-  user$: Observable<User | undefined>
+  user$!: Observable<User | undefined>;
   isAdmin!: boolean;
+  private destroy$ = new Subject();
 
   constructor(public afAuthService: AuthService, public afAuth: AngularFireAuth,
-              private userService: UserService, private init: InitService) {
-    this.user = this.afAuthService.user$;
-    this.user$ = this.userService.user;
-    this.isAdmin = userService.isAdmin;
-    this.setAdmin();
-
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
+    this.user = this.afAuthService.user$;
+    this.user$ = this.userService.user;
+    //this.isAdmin = this.userService.isAdmin;
+    this.setAdmin();
   }
 
   logout(): void {
@@ -38,10 +37,16 @@ export class HeaderComponent implements OnInit {
   }
 
   setAdmin() {
-    this.afAuth.user.subscribe((x) => {
-      this.userService.getUser(x?.uid).subscribe((y) => {
-        this.isAdmin = (y?.role === 'admin');
-      });
+    this.afAuth.user.pipe(takeUntil(this.destroy$)).subscribe((x) => {
+      this.userService.getUser(x?.uid).pipe(takeUntil(this.destroy$))
+        .subscribe((y) => {
+          this.isAdmin = (y?.role === 'admin');
+        });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 }
