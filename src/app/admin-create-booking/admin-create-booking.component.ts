@@ -1,11 +1,10 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InitService} from "../materialize/init.service";
 import {AuthService} from "../services/auth.service";
 import {TimeSlot} from "../model/TimeSlot";
-import {Observable} from "rxjs";
+import {map, Observable, Subject, takeUntil} from "rxjs";
 import {Booking} from "../model/Booking";
 import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
@@ -17,18 +16,15 @@ import {User} from "../model/User";
   selector: 'app-admin-create-booking',
   templateUrl: './admin-create-booking.component.html',
 })
-export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
+export class AdminCreateBookingComponent implements OnInit, AfterViewInit, OnDestroy {
   uid!: string;
   timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
   timeslots$!: Observable<TimeSlot[]>;
   timeslots!: TimeSlot[];
-  selectedTimeslot!: TimeSlot;
   confirmedTimeslot!: TimeSlot;
-  formValid = false;
 
   dbMassages = this.fireStore.collection<Massage>('massages').valueChanges();
-  dbMassage: Observable<any> | undefined;
   dbMassageDurations!: string[]
   selectedMassage!: Massage;
   confirmedMassage!: string;
@@ -47,8 +43,9 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
   originalUserList!: User[];
   selectedUser!: User;
   filterUser!: string;
+  private destroy$ = new Subject();
 
-  constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
+  constructor(private fireStore: AngularFirestore,
               private formBuilder: FormBuilder,
               private initService: InitService,
               public afAuthService: AuthService,
@@ -61,10 +58,11 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc'));
     this.users$ = this.fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc').orderBy('firstName', 'asc')).valueChanges();
-    this.users$.subscribe((usr) => {
+    this.users$.pipe(takeUntil(this.destroy$)).subscribe((usr) => {
       this.userList = usr;
       this.originalUserList = usr;
-    })
+    });
+
     this.setTimeslotDates();
     $('.dropdown-trigger').dropdown({
       alignment: 'right',
@@ -82,7 +80,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
       message: ['']
     })
     this.timeslots$ = this.getTimeslots();
-    this.timeslots$ = this.timeslotCollection.valueChanges();
+    this.timeslots$ = this.timeslotCollection.valueChanges().pipe(takeUntil(this.destroy$));
     this.initService.initModal();
 
     $(document).ready(() => {
@@ -99,8 +97,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
             return !this.arrayOfDates.includes(convertedDate);
           },
           onSelect: (date) => {
-            let selectedDate = date.toLocaleString('en-GB').slice(0, 10);
-            this.timeslotDatePickerDateSelected = selectedDate;
+            this.timeslotDatePickerDateSelected = date.toLocaleString('en-GB').slice(0, 10);
             this.getTimeSlotsFromDate(this.timeslotDatePickerDateSelected);
             M.Datepicker.getInstance(document.getElementById('timeslotdatepicker')!).close();
           }
@@ -108,6 +105,11 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
       );
     });
 
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   ngAfterViewInit(): void {
@@ -119,27 +121,24 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
 
   getTimeSlotsFromDate(date: string) {
     this.fireStore.collection<TimeSlot>('timeslots', ref => ref.where('date', '==', date))
-      .valueChanges()
+      .valueChanges().pipe(takeUntil(this.destroy$))
       .subscribe((timeslots) => {
-        let timeslotsArray = timeslots;
-        this.timeslotsPickedDate = timeslotsArray;
+        this.timeslotsPickedDate = timeslots;
       });
   }
 
   setTimeslotDates() {
-    this.getTimeslots().subscribe((data) => {
-      data.forEach((timeslot) => {
-        if (!this.arrayOfDates.includes(timeslot.date)) {
-          this.arrayOfDates.push(timeslot.date);
-        }
-      });
-    })
+    this.getTimeslots().pipe(
+      takeUntil(this.destroy$),
+      map(t => t.map(i => i.date)))
+      .subscribe((dates) => {
+        dates.forEach((date) => {
+          if (!this.arrayOfDates.includes(date)) {
+            this.arrayOfDates.push(date);
+          }
+        });
+      })
   }
-
-  getDates() {
-    return this.arrayOfDates;
-  }
-
 
   bookMassage() {
     let numericalpreferredTime = this.preferredHour?.value + this.preferredMinute?.value;
@@ -166,7 +165,8 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
         this.fireStore.collection('bookings').doc(docRef.id).update({
           id: docRef.id
         }).then(() => {
-          M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
+          M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'});
+
           this.fireStore.collection('mail').add({
             to: firebase.auth().currentUser?.email,
             from: 'info@sorelax.be',
@@ -184,7 +184,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
             },
           }).then(async () => {
             let user = this.userService.getUser(firebase.auth().currentUser?.uid);
-            await user.subscribe((user) => {
+            user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
               this.fireStore.collection('mail').add({
                 to: 'sverkouille@hotmail.com',
                 from: 'web@sorelax.be',
@@ -200,8 +200,8 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
           }).catch((error) => {
             M.toast({html: error, classes: 'rounded red'});
           })
-        }).then(() => {
-          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
+        }).then(async () => {
+          await this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
         })
       }).catch(error => {
         M.toast({html: error, classes: 'rounded red'});
@@ -209,27 +209,6 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
     } else {
       M.toast({html: 'Uw voorkeurs tijdstip valt buiten de geselecteerde timeslot', classes: 'rounded red'});
     }
-  }
-
-  changeDuration(minutes: any) {
-    this.duration!.setValue(minutes.target.value, {
-      onlySelf: true
-    });
-  }
-
-  openModalBookingConfirmation() {
-    let bookingModal = M.Modal.getInstance(document.querySelector('#bookingModal')!);
-    bookingModal.open();
-  }
-
-  openModalMassageSelection() {
-    let massageModal = M.Modal.getInstance(document.querySelector('#massageModal')!);
-    massageModal.open();
-  }
-
-  openModalTimeslotSelection() {
-    let timeslotModal = M.Modal.getInstance(document.querySelector('#timeslotModal')!);
-    timeslotModal.open();
   }
 
   getTimeslots(): Observable<TimeSlot[]> {
@@ -240,15 +219,11 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
     this.confirmedTimeslot = timeslot;
     this.bookingForm.patchValue({
       timeslot: timeslot.id
-    })
+    });
     M.toast({
       html: `Timeslot op ${this.confirmedTimeslot.date} om ${this.confirmedTimeslot.startTime} geselecteerd`,
       classes: 'rounded teal'
     });
-  }
-
-  selectTimeslot(timeslot: any) {
-    this.selectedTimeslot = timeslot;
   }
 
   selectMassage(massage: Massage) {
@@ -345,7 +320,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit {
       this.userList = this.originalUserList;
     }
 
-    this.userList =  this.originalUserList
+    this.userList = this.originalUserList
       .filter(
         (user) => user.firstName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase()) ||
           user.lastName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase())
