@@ -1,23 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from "@angular/fire/compat/firestore";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {InitService} from "../materialize/init.service";
 import {AuthService} from "../services/auth.service";
 import {TimeSlot} from "../model/TimeSlot";
-import {Observable} from "rxjs";
+import {Observable, Subject, takeUntil} from "rxjs";
 import {Booking} from "../model/Booking";
 import {Router} from "@angular/router";
 import firebase from "firebase/compat/app";
 import {Massage} from "../model/Massage";
 import {UserService} from "../services/user.service";
-import {User} from "../model/User";
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
 })
-export class BookingComponent implements OnInit {
+export class BookingComponent implements OnInit, OnDestroy {
   uid!: string;
   timeslotCollection!: AngularFirestoreCollection<TimeSlot>;
   bookingCollection!: AngularFirestoreCollection<Booking>;
@@ -25,10 +23,8 @@ export class BookingComponent implements OnInit {
   timeslots!: TimeSlot[];
   selectedTimeslot!: TimeSlot;
   confirmedTimeslot!: TimeSlot;
-  formValid = false;
 
-  dbMassages = this.fireStore.collection<Massage>('massages').valueChanges();
-  dbMassage: Observable<any> | undefined;
+  dbMassages!: Observable<Massage[]>;
   dbMassageDurations!: string[]
   selectedMassage!: Massage;
   confirmedMassage!: string;
@@ -41,8 +37,9 @@ export class BookingComponent implements OnInit {
   timeslotPickedTime!: string;
 
   timeslotsPickedDate!: TimeSlot[];
+  private destroy$ = new Subject();
 
-  constructor(private fireStore: AngularFirestore, private afAuth: AngularFireAuth,
+  constructor(private fireStore: AngularFirestore,
               private formBuilder: FormBuilder,
               private initService: InitService,
               public afAuthService: AuthService,
@@ -50,10 +47,18 @@ export class BookingComponent implements OnInit {
               private userService: UserService) {
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
 
   ngOnInit(): void {
+    this.dbMassages = this.fireStore.collection<Massage>('massages').valueChanges().pipe(takeUntil(this.destroy$));
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
-    this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc'));
+    this.timeslotCollection = this.fireStore.collection<TimeSlot>(
+      'timeslots', ref => ref.orderBy('date', 'asc')
+        .orderBy('startTime', 'asc'));
     this.setTimeslotDates();
 
 
@@ -66,7 +71,7 @@ export class BookingComponent implements OnInit {
       message: ['']
     })
     this.timeslots$ = this.getTimeslots();
-    this.timeslots$ = this.timeslotCollection.valueChanges();
+    this.timeslots$ = this.timeslotCollection.valueChanges().pipe(takeUntil(this.destroy$));
     this.initService.initModal();
 
     $(document).ready(() => {
@@ -83,8 +88,7 @@ export class BookingComponent implements OnInit {
             return !this.arrayOfDates.includes(convertedDate);
           },
           onSelect: (date) => {
-            let selectedDate = date.toLocaleString('en-GB').slice(0, 10);
-            this.timeslotDatePickerDateSelected = selectedDate;
+            this.timeslotDatePickerDateSelected = date.toLocaleString('en-GB').slice(0, 10);
             this.getTimeSlotsFromDate(this.timeslotDatePickerDateSelected);
             M.Datepicker.getInstance(document.getElementById('timeslotdatepicker')!).close();
           }
@@ -96,15 +100,14 @@ export class BookingComponent implements OnInit {
 
   getTimeSlotsFromDate(date: string) {
     this.fireStore.collection<TimeSlot>('timeslots', ref => ref.where('date', '==', date))
-      .valueChanges()
+      .valueChanges().pipe(takeUntil(this.destroy$))
       .subscribe((timeslots) => {
-        let timeslotsArray = timeslots;
-        this.timeslotsPickedDate = timeslotsArray;
+        this.timeslotsPickedDate = timeslots;
       });
   }
 
   setTimeslotDates() {
-    this.getTimeslots().subscribe((data) => {
+    this.getTimeslots().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       data.forEach((timeslot) => {
         if (!this.arrayOfDates.includes(timeslot.date)) {
           this.arrayOfDates.push(timeslot.date);
@@ -112,11 +115,6 @@ export class BookingComponent implements OnInit {
       });
     })
   }
-
-  getDates() {
-    return this.arrayOfDates;
-  }
-
 
   bookMassage() {
     let numericalpreferredTime = this.preferredHour?.value + this.preferredMinute?.value;
@@ -161,7 +159,7 @@ export class BookingComponent implements OnInit {
             },
           }).then(async () => {
             let user = this.userService.getUser(firebase.auth().currentUser?.uid);
-            await user.subscribe((user) => {
+            user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
               this.fireStore.collection('mail').add({
                 to: 'sverkouille@hotmail.com',
                 from: 'web@sorelax.be',
@@ -178,7 +176,7 @@ export class BookingComponent implements OnInit {
             M.toast({html: error, classes: 'rounded red'});
           })
         }).then(() => {
-          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`])
+          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`]).finally();
         })
       }).catch(error => {
         M.toast({html: error, classes: 'rounded red'});
@@ -186,27 +184,6 @@ export class BookingComponent implements OnInit {
     } else {
       M.toast({html: 'Uw voorkeurs tijdstip valt buiten de geselecteerde timeslot', classes: 'rounded red'});
     }
-  }
-
-  changeDuration(minutes: any) {
-    this.duration!.setValue(minutes.target.value, {
-      onlySelf: true
-    });
-  }
-
-  openModalBookingConfirmation() {
-    let bookingModal = M.Modal.getInstance(document.querySelector('#bookingModal')!);
-    bookingModal.open();
-  }
-
-  openModalMassageSelection() {
-    let massageModal = M.Modal.getInstance(document.querySelector('#massageModal')!);
-    massageModal.open();
-  }
-
-  openModalTimeslotSelection() {
-    let timeslotModal = M.Modal.getInstance(document.querySelector('#timeslotModal')!);
-    timeslotModal.open();
   }
 
   getTimeslots(): Observable<TimeSlot[]> {
@@ -222,10 +199,6 @@ export class BookingComponent implements OnInit {
       html: `Timeslot op ${this.confirmedTimeslot.date} om ${this.confirmedTimeslot.startTime} geselecteerd`,
       classes: 'rounded teal'
     });
-  }
-
-  selectTimeslot(timeslot: any) {
-    this.selectedTimeslot = timeslot;
   }
 
   selectMassage(massage: Massage) {
