@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Router} from "@angular/router";
-import {Observable, of, switchMap} from "rxjs";
+import {Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
@@ -14,12 +14,13 @@ declare let gapi: any;
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   userLoggedIn!: boolean;
   user$: Observable<User> | any;
   authState: any = null;
   calendarItems!: any[];
   calendarId = 'sofieverkouille@gmail.com';
+  private destroy$ = new Subject();
 
   constructor(private router: Router,
               private afAuth: AngularFireAuth,
@@ -29,10 +30,15 @@ export class AuthService {
       this.userLoggedIn = !!user;
       this.initClient();
     });
-    this.afAuth.authState.subscribe(authState => {
+    this.afAuth.authState.pipe(takeUntil(this.destroy$)).subscribe(authState => {
       this.authState = authState;
     });
     this.addUserToFireStore();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   //initialize google api
@@ -79,23 +85,6 @@ export class AuthService {
 
   }
 
-  async logOut() {
-    await this.afAuth.signOut();
-  }
-
-  async getCalendar() {
-    let events: any;
-    events = await gapi.client.calendar.events.list({
-      calendarId: this.calendarId,
-      timeMin: new Date().toISOString(),
-      showDeleted: false,
-      singleEvents: true,
-      maxResults: 10,
-      orderBy: 'startTime',
-    })
-    this.calendarItems = events.result.items;
-  }
-
   async insertEvent(startDateTime: Date, endDateTime: Date, description: string, summary: string) {
     await gapi.client.calendar.events.insert({
       calendarId: this.calendarId,
@@ -116,15 +105,11 @@ export class AuthService {
     })
   }
 
-  hoursFromNow(n: number) {
-    return new Date(Date.now() + n * 1000 * 60 * 60).toISOString();
-  }
-
   private addUserToFireStore() {
-    this.user$ = this.afAuth.authState.pipe(
+    this.user$ = this.afAuth.authState.pipe(takeUntil(this.destroy$),
       switchMap(user => {
         if (user) {
-          return this.fireStore.doc<User>(`users/${user.uid}`).valueChanges();
+          return this.fireStore.doc<User>(`users/${user.uid}`).valueChanges().pipe(takeUntil(this.destroy$));
         } else {
           return of(null);
         }
@@ -160,36 +145,7 @@ export class AuthService {
     return !!getAuth().currentUser;
   }
 
-  getUserName() {
-    return getAuth().currentUser?.displayName;
-  }
-
-  getUserEmail() {
-    return getAuth().currentUser?.email;
-  }
-
   getUserUid() {
     return getAuth().currentUser?.uid;
-  }
-
-  get isAuthenticated(): boolean {
-    return this.authState !== null;
-  }
-
-  get currentUserId(): string {
-    return this.isAuthenticated ? this.authState.uid : null;
-  }
-
-  get userData(): any {
-    if (!this.isAuthenticated) {
-      return [];
-    }
-
-    return [
-      {
-        id: this.authState.uid,
-        email: this.authState.email,
-      }
-    ];
   }
 }
