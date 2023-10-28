@@ -117,38 +117,38 @@ export class BookingComponent implements OnInit, OnDestroy {
   }
 
   bookMassage() {
-    let numericalpreferredTime = this.preferredHour?.value + this.preferredMinute?.value;
-    let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0, 2) + this.confirmedTimeslot.endTime.slice(3);
-    let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0, 2) + this.confirmedTimeslot.startTime.slice(3);
-    let numericalDuration = Number(this.confirmedDuration);
+    //  let numericalpreferredTime = this.preferredHour?.value + this.preferredMinute?.value;
+    //  let numericalTimeslotEndTime = this.confirmedTimeslot.endTime.slice(0, 2) + this.confirmedTimeslot.endTime.slice(3);
+    //  let numericalTimeslotstartTime = this.confirmedTimeslot.startTime.slice(0, 2) + this.confirmedTimeslot.startTime.slice(3);
+    //  let numericalDuration = Number(this.confirmedDuration);
 
-    if (Number(numericalpreferredTime) <= (Number(numericalTimeslotEndTime) - numericalDuration) &&
-      Number(numericalpreferredTime) >= Number(numericalTimeslotstartTime)) {
+    // if (Number(numericalpreferredTime) <= (Number(numericalTimeslotEndTime) - numericalDuration) &&
+    // Number(numericalpreferredTime) >= Number(numericalTimeslotstartTime)) {
 
-      this.fireStore.collection('bookings').add({
-        userUid: firebase.auth().currentUser?.uid,
-        timeslot: this.confirmedTimeslot.id,
-        date: this.confirmedTimeslot.date,
-        time: this.preferredTime,
-        preferredHour: this.preferredHour?.value,
-        preferredMinute: this.preferredMinute?.value,
-        preferredTime: this.preferredTime,
-        massage: this.confirmedMassage,
-        duration: this.confirmedDuration,
-        personalMessage: this.bookingForm.get(['message'])?.value,
-        requestedOn: JSON.stringify(new Date(Date.now())),
-        status: 'pending'
-      }).then((docRef) => {
-        this.fireStore.collection('bookings').doc(docRef.id).update({
-          id: docRef.id
-        }).then(() => {
-          M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
-          this.fireStore.collection('mail').add({
-            to: firebase.auth().currentUser?.email,
-            from: 'info@sorelax.be',
-            message: {
-              subject: 'Boeking Sorelax',
-              html: `<code>Beste,<br>
+    this.fireStore.collection('bookings').add({
+      userUid: firebase.auth().currentUser?.uid,
+      timeslot: this.confirmedTimeslot.id,
+      date: this.confirmedTimeslot.date,
+      time: this.preferredTime,
+      preferredHour: this.preferredHour?.value,
+      preferredMinute: this.preferredMinute?.value,
+      preferredTime: this.preferredTime,
+      massage: this.confirmedMassage,
+      duration: this.confirmedDuration,
+      personalMessage: this.bookingForm.get(['message'])?.value,
+      requestedOn: JSON.stringify(new Date(Date.now())),
+      status: 'pending'
+    }).then((docRef) => {
+      this.fireStore.collection('bookings').doc(docRef.id).update({
+        id: docRef.id
+      }).then(() => {
+        M.toast({html: 'Uw boeking werd geplaatst', classes: 'rounded teal'})
+        this.fireStore.collection('mail').add({
+          to: firebase.auth().currentUser?.email,
+          from: 'info@sorelax.be',
+          message: {
+            subject: 'Boeking Sorelax',
+            html: `<code>Beste,<br>
                 bedankt om te boeken bij sorelax! <br>
                 U hebt een boeking geplaatst voor:<br>
                 <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration} minuten<br>
@@ -157,34 +157,34 @@ export class BookingComponent implements OnInit, OnDestroy {
                 Mvg,
                 Sofie
                 </code>`,
-            },
-          }).then(async () => {
-            let user = this.userService.getUser(firebase.auth().currentUser?.uid);
-            user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-              this.fireStore.collection('mail').add({
-                to: 'sverkouille@hotmail.com',
-                from: 'web@sorelax.be',
-                message: {
-                  subject: `Nieuwe boeking van ${user?.firstName} ${user?.lastName}`,
-                  html: `<code>Beste,<br>
+          },
+        }).then(async () => {
+          let user = this.userService.getUser(firebase.auth().currentUser?.uid);
+          user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+            this.fireStore.collection('mail').add({
+              to: 'sverkouille@hotmail.com',
+              from: 'web@sorelax.be',
+              message: {
+                subject: `Nieuwe boeking van ${user?.firstName} ${user?.lastName}`,
+                html: `<code>Beste,<br>
                 Nieuwe boeking van ${user?.firstName} ${user?.lastName} <br>
                 <strong>${this.confirmedMassage}</strong> massage op ${this.confirmedTimeslot.date} om ${this.preferredTime} voor ${this.confirmedDuration} minuten<br>
                </code>`,
-                },
-              })
-            });
-          }).catch((error) => {
-            M.toast({html: error, classes: 'rounded red'});
-          })
-        }).then(() => {
-          this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`]).finally();
+              },
+            })
+          });
+        }).catch((error) => {
+          M.toast({html: error, classes: 'rounded red'});
         })
-      }).catch(error => {
-        M.toast({html: error, classes: 'rounded red'});
+      }).then(() => {
+        this.router.navigate([`users/${this.afAuthService.getUserUid()}/booking-overview`]).finally();
       })
-    } else {
-      M.toast({html: 'Uw voorkeurs tijdstip valt buiten de geselecteerde timeslot', classes: 'rounded red'});
-    }
+    }).catch(error => {
+      M.toast({html: error, classes: 'rounded red'});
+    })
+    // } else {
+    //  M.toast({html: 'Uw voorkeurs tijdstip valt buiten de geselecteerde timeslot', classes: 'rounded red'});
+    //}
   }
 
   getTimeslots(): Observable<TimeSlot[]> {
