@@ -5,6 +5,7 @@ import {User} from "../model/User";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {getAuth, onAuthStateChanged} from "@angular/fire/auth";
+import firebase from "firebase/compat/app";
 
 declare let gapi: any;
 
@@ -14,7 +15,7 @@ declare let gapi: any;
 export class AuthService implements OnDestroy {
   userLoggedIn!: boolean;
   user$: Observable<User> | any;
-  authState: any = null;
+  authState: Observable<firebase.User | null>;
   calendarId = 'sofieverkouille@gmail.com';
   private destroy$ = new Subject();
 
@@ -27,9 +28,7 @@ export class AuthService implements OnDestroy {
       this.initClient();
     });
 
-    this.afAuth.authState.subscribe(authState => {
-      this.authState = authState;
-    });
+    this.authState = this.afAuth.authState;
 
     this.addUserToFireStore();
   }

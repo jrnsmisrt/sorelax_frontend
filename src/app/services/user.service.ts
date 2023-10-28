@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {User} from "../model/User";
-import {filter, mergeMap, Observable, Subscription} from "rxjs";
+import {mergeMap, Observable, Subscription} from "rxjs";
 import {AuthService} from "./auth.service";
 import {
   AngularFirestore,
@@ -23,25 +23,30 @@ export class UserService {
   user!: Observable<User>;
   userRole!: string | undefined;
   isAdmin!: boolean;
-  currentUserRole!: string|undefined;
+  currentUserRole!: string | undefined;
 
 
-  constructor(private fireStore: AngularFirestore, private fireAuth: AngularFireAuth, private firestoreService: FirestoreService, private afAuth: AuthService) {
-    this.userCollection = fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc')
-      .orderBy('firstName', 'asc')
-      .orderBy('dateOfBirth', 'asc'));
+  constructor(private fireStore: AngularFirestore,
+              private fireAuth: AngularFireAuth,
+              private firestoreService: FirestoreService,
+              private afAuth: AuthService) {
+    this.userCollection = fireStore.collection<User>('users', ref =>
+      ref.orderBy('lastName', 'asc')
+        .orderBy('firstName', 'asc')
+        .orderBy('dateOfBirth', 'asc'));
 
     this.allUsers = this.userCollection.valueChanges({idField: 'uid'});
+      //.pipe(takeUntil(this.destroy$));
     this.userDoc = fireStore.doc<User>(`users/${afAuth.getUserUid()}`);
   }
 
-  async setCurrentUserRole(id: string){
-    await this.fireStore.collection<User>('users').doc(id).valueChanges().subscribe((u)=>{
+  async setCurrentUserRole(id: string) {
+    await this.fireStore.collection<User>('users').doc(id).valueChanges().subscribe((u) => {
       this.currentUserRole = u?.role;
     })
   }
 
-  async getCurrentUserRole():Promise<string | undefined>{
+  async getCurrentUserRole(): Promise<string | undefined> {
     return this.currentUserRole;
   }
 
@@ -51,7 +56,7 @@ export class UserService {
 
   getUser(uid: string | undefined): Observable<User | undefined> {
     return this.fireStore.collection<User>('users').valueChanges()?.pipe(mergeMap(y => y.filter(a => a?.id === uid)));
-   // return this.fireStore.collection<User>('users').doc(uid).valueChanges();
+    // return this.fireStore.collection<User>('users').doc(uid).valueChanges();
   }
 
   getUserFirstName(uid: string): Subscription {

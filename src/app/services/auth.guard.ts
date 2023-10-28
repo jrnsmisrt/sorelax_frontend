@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Observable} from 'rxjs';
+import {firstValueFrom, map, Observable} from 'rxjs';
 import {AuthService} from "./auth.service";
-import firebase from "firebase/compat/app";
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +13,19 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    const currentUser = firebase.auth().currentUser;
-    if (!currentUser) {
-      M.toast({html: 'Access Denied, Login is Required to Access This Page!'})
-      this.router.navigate(['login']).then();
+
+    const userSignedIn = async () => {
+      const f = await firstValueFrom(this.auth.authState.pipe(map(a => a?.uid)));
+      return (!!f);
     }
-    return true;
+
+    return userSignedIn().then((s) => {
+      if (!s) {
+        M.toast({html: 'Access Denied, Login is Required to Access This Page!'})
+        this.router.navigate(['login']).then();
+      }
+
+      return s;
+    });
   }
-
-
 }
