@@ -24,8 +24,6 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.initMatElements();
-    this.userService.userDoc.valueChanges().subscribe(x => console.log(x));
-    this.authService.authState.subscribe(x=>console.log(x));
   }
 
   private initMatElements() {

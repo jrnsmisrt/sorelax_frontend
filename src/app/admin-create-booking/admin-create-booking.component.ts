@@ -55,6 +55,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit, OnDes
 
 
   ngOnInit(): void {
+    this.initService.initSelect();
     this.bookingCollection = this.fireStore.collection<Booking>('bookings');
     this.timeslotCollection = this.fireStore.collection<TimeSlot>('timeslots', ref => ref.orderBy('date', 'asc').orderBy('startTime', 'asc'));
     this.users$ = this.fireStore.collection<User>('users', ref => ref.orderBy('lastName', 'asc').orderBy('firstName', 'asc')).valueChanges();
@@ -113,9 +114,9 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initService.initSelect();
-    }, 1000);
+  //  setTimeout(() => {
+   //   this.initService.initSelect();
+   // }, 1000);
 
   }
 
@@ -312,7 +313,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit, OnDes
   }
 
   filterUserSelect(userName: any) {
-    this.initService.initSelect();
+   // this.initService.initSelect();
 
     if (userName === undefined ||
       this.userList === null ||
@@ -325,7 +326,7 @@ export class AdminCreateBookingComponent implements OnInit, AfterViewInit, OnDes
         (user) => user.firstName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase()) ||
           user.lastName?.trim().toLocaleLowerCase().includes(userName.trim().toLocaleLowerCase())
       );
-    this.initService.initSelect();
+   // this.initService.initSelect();
   }
 
   openModalUserSelection() {
