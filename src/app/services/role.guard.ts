@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-import {Observable, Subject, takeUntil} from 'rxjs';
+import {firstValueFrom, map, mergeMap, Observable, Subject, takeUntil} from 'rxjs';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
 import {getAuth} from "@angular/fire/auth";
@@ -26,23 +26,20 @@ export class RoleGuard implements CanActivate, OnDestroy {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
 
-    if (!this?.isAdmin()) {
-      M.toast({html: 'Access Denied, You are not an administrator!', classes: 'rounded custom-toast'})
-      this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
-      return false;
-    } else {
-      return true;
+    const isAdmin = async () => {
+      const isAdmin = await firstValueFrom(this.fireStore.collection<User>('users').valueChanges().pipe(takeUntil(this.destroyer$),
+        mergeMap((users) => {
+          return users.filter(u => u.id === getAuth().currentUser?.uid);
+        }), map(user => user.role === 'admin')));
+      return isAdmin;
     }
-  }
 
-  async isAdmin(): Promise<boolean> {
-    let isAdmin!: boolean;
-    this.fireStore.collection<User>('users').doc(getAuth().currentUser?.uid).valueChanges()
-      .pipe(takeUntil(this.destroyer$))
-      .subscribe((user) => {
-        isAdmin = user?.role === 'admin';
-      });
-    return isAdmin;
+    return isAdmin().then((isAdmin) => {
+      if (!isAdmin) {
+        M.toast({html: 'Access Denied, You are not an administrator!', classes: 'rounded custom-toast'})
+        this.router.navigate([`users/${this.auth.getUserUid()}/profile`]);
+      }
+      return isAdmin;
+    })
   }
-
 }
