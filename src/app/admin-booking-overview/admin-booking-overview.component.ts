@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {combineLatest, Observable, Subject, takeUntil} from "rxjs";
+import {combineLatest, mergeMap, Observable, Subject, takeUntil} from "rxjs";
 import {Booking} from "../model/Booking";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {User} from "../model/User";
@@ -44,10 +44,6 @@ export class AdminBookingOverviewComponent implements OnInit, OnDestroy {
     this.init.initDatePicker();
     this.init.initSelect();
     this.init.initCollapsible();
-
-    $(document).ready(function () {
-      $('.collapsible2').collapsible();
-    });
     this.bookingStatusChangeForm = this.formBuilder.group({
       message: ['']
     });
@@ -56,25 +52,37 @@ export class AdminBookingOverviewComponent implements OnInit, OnDestroy {
 
   openViewBookingModal(bookingId: string, userId: string) {
     this.message = '';
-    this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges()
-      .pipe(takeUntil(this.destroy$)).subscribe((booking) => {
-      return this.selectedBooking = booking;
-    });
-    this.fireStore.collection<User>('users').doc(userId).valueChanges().pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      return this.selectedUser = user;
-    });
+    const booking$ = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
+    const user$ = this.fireStore.collection<User>('users')
+      .valueChanges()
+      .pipe(mergeMap(u => {
+        return u.filter(usr => usr.id === userId);
+      }));
+
+    combineLatest([booking$, user$]).pipe(takeUntil(this.destroy$))
+      .subscribe(([booking, user]) => {
+        this.selectedBooking = booking;
+        this.selectedUser = user;
+      })
+
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).open();
   }
 
   confirmBooking(bookingId: string, userId: string) {
     let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges().pipe(takeUntil(this.destroy$));
-    let user = this.fireStore.collection<User>('users').doc(userId).valueChanges().pipe(takeUntil(this.destroy$));
+    let user = this.fireStore.collection<User>('users').valueChanges()
+      .pipe(takeUntil(this.destroy$), mergeMap(u => {
+        return u.filter(usr => usr.id === userId);
+      }));
+    const complete = new Subject();
 
-    combineLatest([booking, user]).pipe(takeUntil(this.destroy$)).subscribe(([b, u]) => {
+    combineLatest([booking, user]).pipe(takeUntil(complete)).subscribe(([b, u]) => {
       this.fireStore.collection<Booking>('bookings').doc(b!.id).update({
         status: 'confirmed'
-      }).then(() => {
+      }).finally(() => {
         M.toast({html: 'boeking bevestigd', classes: 'rounded teal'});
+        complete.next(true);
+        complete.complete();
       }).catch((err) => {
         M.toast({html: `${err}`})
       });
@@ -124,24 +132,31 @@ export class AdminBookingOverviewComponent implements OnInit, OnDestroy {
         M.toast({html: `${error}`, classes: 'rounded red'});
       });
     });
+
     M.Modal.getInstance(document.getElementById('viewBookingModal')!).close();
   }
 
   cancelBooking(bookingId: string, userId: string) {
     let booking = this.fireStore.collection<Booking>('bookings').doc(bookingId).valueChanges();
-    let user = this.fireStore.collection<User>('users').doc(userId).valueChanges();
+    let user = this.fireStore.collection<User>('users').valueChanges()
+      .pipe(mergeMap(u => {
+        return u.filter(usr => usr.id === userId);
+      }));
+    const complete = new Subject();
 
-    combineLatest([booking, user]).pipe(takeUntil(this.destroy$)).subscribe(([b, u]) => {
+    combineLatest([booking, user]).pipe(takeUntil(complete)).subscribe(([b, u]) => {
       this.fireStore.collection<Booking>('bookings').doc(b!.id).update({
         status: 'cancelled',
-      }).then(() => {
+      }).finally(() => {
         M.toast({html: 'boeking geannuleerd', classes: 'rounded teal'});
+        complete.next(true);
+        complete.complete();
       }).catch((err) => {
         M.toast({html: `${err}`})
       });
 
       this.fireStore.collection('mail').add({
-        to: u!.email,
+        to: u?.email,
         from: 'info@sorelax.be',
         message: {
           subject: 'Annulatie Boeking',
@@ -167,7 +182,7 @@ export class AdminBookingOverviewComponent implements OnInit, OnDestroy {
   deleteBooking(bookingId: string) {
     this.fireStore.collection<Booking>('bookings').doc(bookingId).update({
       status: 'DELETED'
-    }).then(() => {
+    }).finally(() => {
       M.toast({html: 'Booking deleted', classes: 'rounded teal'});
     }).catch(error => {
       M.toast({html: `${error}`, classes: 'rounded red'});
