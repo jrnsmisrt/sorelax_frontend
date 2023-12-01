@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import {InitService} from "../materialize/init.service";
+import {BehaviorSubject} from "rxjs";
 
 
 @Component({
@@ -17,8 +18,14 @@ export class LoginComponent implements OnInit {
   });
 
   firebaseErrorMessage: string;
+  _enableReset$ = new BehaviorSubject<boolean>(false);
+  resetPassword = this.formBuilder.group({
+    'email': new FormControl('', [Validators.required, Validators.email])
+  });
+  resetEmail = '';
 
-  constructor(public auth: AuthService, private router: Router,
+  constructor(public auth: AuthService,
+              private router: Router,
               private initService: InitService,
               private formBuilder: FormBuilder
   ) {
@@ -54,5 +61,13 @@ export class LoginComponent implements OnInit {
 
   private loginWithGoogle() {
     M.Modal.getInstance(document.querySelector('#googleSignIn')!).open();
+  }
+
+  resetPw(email: string) {
+    this.auth.resetPassword(email);
+  }
+
+  enableReset() {
+    this._enableReset$.next(!this._enableReset$.value);
   }
 }

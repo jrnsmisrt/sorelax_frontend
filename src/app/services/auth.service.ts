@@ -109,4 +109,10 @@ export class AuthService implements OnDestroy {
   getUserUid() {
     return getAuth().currentUser?.uid;
   }
+
+  resetPassword(email: string) {
+    this.afAuth.sendPasswordResetEmail(email).then((r) => {
+      console.log(email);
+    }).catch((e) => console.error(e));
+  }
 }

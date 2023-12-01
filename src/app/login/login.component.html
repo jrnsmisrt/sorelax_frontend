@@ -11,7 +11,7 @@
           <input autocomplete="off" class="email" formControlName="email" type="email" placeholder="E-mail">
         </div>
         <div class="row">
-          <label>Paswoord</label></div>
+          <label>Wachtwoord</label></div>
         <div class="row">
           <input autocomplete="off" formControlName="password" type="password" placeholder="Paswoord">
         </div>
@@ -23,24 +23,20 @@
         <div class="row center">
           <button class="btn-large waves-teal waves-effect">Login</button>
         </div>
+        <div class="row center">
+          <button class="btn-small" (click)="enableReset()"><small>Wachtwoord vergeten?</small></button>
+          <ng-container *ngIf="_enableReset$.value">
+            <form [formGroup]="resetPassword">
+              <input autocomplete="off" class="email" formControlName="email" type="email" placeholder="E-mail"
+                     [(ngModel)]="resetEmail">
+              <button (submit)="resetPw(resetEmail)" (click)="resetPw(resetEmail)">Reset wachtwoord</button>
+            </form>
+          </ng-container>
+        </div>
       </form>
     </div>
 
   </div>
 
   <div class="col s3"></div>
-
 </div>
-
-<ng-container>
-  <div class="modal" id="googleSignIn">
-    <div class="modal-content">
-      <div id="g_id_onload"
-           data-client_id="YOUR_CLIENT_ID"
-           data-callback="handleCredentialResponse">
-      </div>
-      <div class="g_id_signin" data-type="standard"></div>
-    </div>
-    <div class="modal-footer"></div>
-  </div>
-</ng-container>
