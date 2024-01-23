@@ -23,8 +23,7 @@ import {AdminCreateBookingComponent} from "../admin-create-booking/admin-create-
 import {AdminCalendarComponent} from "../admin-calendar/admin-calendar.component";
 
 const routes: Routes = [
-  {path: '', redirectTo: 'home', pathMatch: 'full'},
-  {path: 'home', component: HomeComponent},
+  {path: '', component: HomeComponent},
   {path: 'about', component: AboutComponent},
   {path: 'massages', component: MassageComponent},
   {path: 'contact', component: ContactComponent},

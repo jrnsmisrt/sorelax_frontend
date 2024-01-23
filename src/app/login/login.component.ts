@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         M.toast({html: `Logging in...`, classes: 'rounded teal'});
         M.toast({html: `Succesfully logged in!`, classes: 'rounded teal'});
 
-        if (this.loginForm.value.email === 'info@sorelax.be' || this.loginForm.value.email === 'jeroen.smissaert@hotmail.com') {
+        if (this.loginForm.value.email === 'info@sorelax.be') {
           this.loginWithGoogle();
         }
 
