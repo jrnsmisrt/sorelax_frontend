@@ -64,7 +64,11 @@ export class LoginComponent implements OnInit {
   }
 
   resetPw(email: string) {
-    this.auth.resetPassword(email);
+    this.resetPassword.markAllAsTouched();
+
+    if (this.resetPassword.valid) {
+      this.auth.resetPassword(email);
+    }
   }
 
   enableReset() {

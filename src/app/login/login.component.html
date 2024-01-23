@@ -29,7 +29,7 @@
             <form [formGroup]="resetPassword">
               <input autocomplete="off" class="email" formControlName="email" type="email" placeholder="E-mail"
                      [(ngModel)]="resetEmail">
-              <button (submit)="resetPw(resetEmail)" (click)="resetPw(resetEmail)">Reset wachtwoord</button>
+              <button class="btn-small" (submit)="resetPw(resetEmail)" (click)="resetPw(resetEmail)">Reset wachtwoord</button>
             </form>
           </ng-container>
         </div>
