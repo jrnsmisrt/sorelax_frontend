@@ -14,11 +14,12 @@
         <li>
           <a routerLink="/contact">Contact</a>
         </li>
-        <li>
-          <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a></li>
+        <!--       <li>
+                 <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a></li>
+                 -->
       </ul>
     </div>
-    <div class="col right">
+   <!-- <div class="col right">
       <ul class="right">
         <li *ngIf="!(afAuthService.userLoggedIn)">
           <button class="waves-teal waves-effect btn" routerLink="/signup">
@@ -37,13 +38,14 @@
           </button>
         </li>
       </ul>
-    </div>
+    </div>-->
   </div>
-  <div *ngIf="afAuthService.userLoggedIn">
+ <!-- <div *ngIf="afAuthService.userLoggedIn">
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
         <li class="tab"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">Mijn Profiel</a></li>
-        <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a>
+        <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn
+          Boekingen</a>
         </li>
         <li class="tab"><a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
         </li>
@@ -67,18 +69,18 @@
         <li class="tab">
           <a [routerLink]="['/', 'bookings', 'create']">Create Booking</a>
         </li>
-        <!--<li class="tab">
+        <li class="tab">
           <a>Create User</a>
         </li>
         <li class="tab">
           <a>Create Massage</a>
-        </li>-->
+        </li>
         <li class="tab">
           <a [routerLink]="['/', 'timeslots', 'create-timeslot']">Create Timeslot</a>
         </li>
       </ul>
     </div>
-  </div>
+  </div>-->
 </nav>
 
 <!-- mobile navbar -->
@@ -98,64 +100,64 @@
     <li>
       <a routerLink="/contact">Contact</a>
     </li>
-    <li>
-      <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a>
-    </li>
-    <li>
-      <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
-        <ul>
-          <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">Mijn
-            Profiel</a></li>
-          <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a></li>
-          <li class="tab">
-            <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
-          </li>
-        </ul>
-        <div class="mobile-user-nav" *ngIf="isAdmin">
-          <ul>
-            <li class="tab">Admin panel</li>
-            <li class="mobile-user-nav-link">
-              <a [routerLink]="['/', 'calendar']">Calendar</a>
-            </li>
-            <li class="mobile-user-nav-link">
-              <a [routerLink]="['/', 'users', 'overview']">View All User</a>
-            </li>
-            <li class="mobile-user-nav-link">
-              <a [routerLink]="['/','bookings','overview']">View All Bookings</a>
-            </li>
-            <li class="mobile-user-nav-link">
-              <a [routerLink]="['/', 'timeslots', 'overview']">View Timeslots</a>
-            </li>
-            <li class="mobile-user-nav-link">
-              <a [routerLink]="['/', 'bookings', 'create']">Create Booking</a>
-            </li>
-            <!--<li class="mobile-user-nav-link">
-              <a>Create User</a>
-            </li>
-            <li class="mobile-user-nav-link">
-              <a>Create Massage</a>
-            </li>-->
-            <li class="mobile-user-nav-link">
-              <a [routerLink]="['/', 'timeslots', 'create-timeslot']">Create Timeslot</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </li>
-    <li *ngIf="!(afAuthService.userLoggedIn)">
-      <a routerLink="/signup">
-        Signup
-      </a>
-    </li>
-    <li *ngIf="!(afAuthService.userLoggedIn)">
-      <a routerLink="/login">
-        Login
-      </a>
-    </li>
-    <li *ngIf="(afAuthService.userLoggedIn)">
-      <a (click)="logout()">
-        Log out
-      </a>
-    </li>
+    <!--   <li>
+         <a *ngIf="!afAuthService.userLoggedIn" [routerLink]="['/', 'login']">Boek een Massage</a>
+       </li>
+       <li>
+         <div class="mobile-user-nav" *ngIf="afAuthService.userLoggedIn">
+           <ul>
+             <li class="mobile-user-nav-link"><a [routerLink]="['/','users',afAuthService.getUserUid(),'profile']">Mijn
+               Profiel</a></li>
+             <li class="tab"><a [routerLink]="['/', 'users', afAuthService.getUserUid(), 'booking-overview']">Mijn Boekingen</a></li>
+             <li class="tab">
+               <a [routerLink]="['/', 'users',afAuthService.getUserUid(), 'bookmassage']">Boek een Massage</a>
+             </li>
+           </ul>
+           <div class="mobile-user-nav" *ngIf="isAdmin">
+             <ul>
+               <li class="tab">Admin panel</li>
+               <li class="mobile-user-nav-link">
+                 <a [routerLink]="['/', 'calendar']">Calendar</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a [routerLink]="['/', 'users', 'overview']">View All User</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a [routerLink]="['/','bookings','overview']">View All Bookings</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a [routerLink]="['/', 'timeslots', 'overview']">View Timeslots</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a [routerLink]="['/', 'bookings', 'create']">Create Booking</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a>Create User</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a>Create Massage</a>
+               </li>
+               <li class="mobile-user-nav-link">
+                 <a [routerLink]="['/', 'timeslots', 'create-timeslot']">Create Timeslot</a>
+               </li>
+             </ul>
+           </div>
+         </div>
+       </li>
+       <li *ngIf="!(afAuthService.userLoggedIn)">
+         <a routerLink="/signup">
+           Signup
+         </a>
+       </li>
+       <li *ngIf="!(afAuthService.userLoggedIn)">
+         <a routerLink="/login">
+           Login
+         </a>
+       </li>
+       <li *ngIf="(afAuthService.userLoggedIn)">
+         <a (click)="logout()">
+           Log out
+         </a>
+       </li> -->
   </ul>
 </div>
